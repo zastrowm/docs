@@ -11,7 +11,7 @@
       
       
       
-        <link rel="prev" href="../ollama/">
+        <link rel="prev" href="../llamaapi/">
       
       
         <link rel="next" href="../../streaming/async-iterators/">
@@ -852,6 +852,29 @@
   
   
     <li class="md-nav__item">
+      <a href="../anthropic/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Anthropic
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../litellm/" class="md-nav__link">
         
   
@@ -881,6 +904,29 @@
   
   <span class="md-ellipsis">
     Ollama
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../llamaapi/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    LlamaAPI
     
   </span>
   
@@ -1317,80 +1363,6 @@
   
   <span class="md-ellipsis">
     Workflow
-    
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-          </ul>
-        </nav>
-      
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    
-    
-    
-    
-      
-      
-        
-      
-    
-    
-    <li class="md-nav__item md-nav__item--nested">
-      
-        
-        
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_1_3_6" >
-        
-          
-          <label class="md-nav__link" for="__nav_1_3_6" id="__nav_1_3_6_label" tabindex="0">
-            
-  
-  
-  <span class="md-ellipsis">
-    Workflows
-    
-  </span>
-  
-
-            <span class="md-nav__icon md-icon"></span>
-          </label>
-        
-        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_1_3_6_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_1_3_6">
-            <span class="md-nav__icon md-icon"></span>
-            Workflows
-          </label>
-          <ul class="md-nav__list" data-md-scrollfix>
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../../../examples/python/knowledge_base_agent/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    Code-defined AI Workflows
     
   </span>
   
@@ -2027,6 +1999,29 @@
   
   
     <li class="md-nav__item">
+      <a href="../../../../examples/python/knowledge_base_agent/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Knowledge-Base Workflow
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../../../../examples/python/multi_agent_example/multi_agent_example/" class="md-nav__link">
         
   
@@ -2511,6 +2506,7 @@
 <p>Strands Agents uses an abstract <code>Model</code> class that defines the standard interface all model providers must implement:</p>
 <pre class="mermaid"><code>flowchart TD
     Base["Model (Base)"] --&gt; Bedrock["Bedrock Model Provider"]
+    Base --&gt; Anthropic["Anthropic Model Provider"]
     Base --&gt; LiteLLM["LiteLLM Model Provider"]
     Base --&gt; Ollama["Ollama Model Provider"]
     Base --&gt; Custom["Custom Model Provider"]</code></pre>

@@ -548,18 +548,9 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#ollama-local-models" class="md-nav__link">
+  <a href="#additional-model-providers" class="md-nav__link">
     <span class="md-ellipsis">
-      Ollama (Local Models)
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#custom-model-providers" class="md-nav__link">
-    <span class="md-ellipsis">
-      Custom Model Providers
+      Additional Model Providers
     </span>
   </a>
   
@@ -2425,18 +2416,9 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#ollama-local-models" class="md-nav__link">
+  <a href="#additional-model-providers" class="md-nav__link">
     <span class="md-ellipsis">
-      Ollama (Local Models)
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#custom-model-providers" class="md-nav__link">
-    <span class="md-ellipsis">
-      Custom Model Providers
+      Additional Model Providers
     </span>
   </a>
   
@@ -2663,36 +2645,15 @@ strands-agents-tools&gt;=0.1.0
 <p>For the Amazon Bedrock model provider, see the <a href="https://boto3.amazonaws.com/v1/documentation/api/latest/guide/credentials.html">Boto3 documentation</a> to configure credentials for your environment. For development, AWS credentials are typically defined in <code>AWS_</code> prefixed environment variables or configured with the <code>aws configure</code> CLI command.</p>
 <p>You will also need to enable model access in Amazon Bedrock for the models that you choose to use with your agents, following the <a href="https://docs.aws.amazon.com/bedrock/latest/userguide/model-access-modify.html">AWS documentation</a> to enable access.</p>
 <p>More details in the <a href="../concepts/model-providers/amazon-bedrock/">Amazon Bedrock Model Provider</a> documentation.</p>
-<h3 id="ollama-local-models">Ollama (Local Models)<a class="headerlink" href="#ollama-local-models" title="Permanent link">&para;</a></h3>
-<p>First install the <code>ollama</code> python client:</p>
-<div class="highlight"><pre><span></span><code>pip<span class="w"> </span>install<span class="w"> </span>strands-agents<span class="o">[</span>ollama<span class="o">]</span>
-</code></pre></div>
-<p>Next, import and intialize the <code>OllamaModel</code> provider:</p>
-<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">strands</span><span class="w"> </span><span class="kn">import</span> <span class="n">Agent</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">strands.models.ollama</span><span class="w"> </span><span class="kn">import</span> <span class="n">OllamaModel</span>
-
-<span class="n">ollama_model</span> <span class="o">=</span> <span class="n">OllamaModel</span><span class="p">(</span>
-    <span class="n">host</span><span class="o">=</span><span class="s2">&quot;http://localhost:11434&quot;</span>  <span class="c1"># Ollama server address</span>
-    <span class="n">model_id</span><span class="o">=</span><span class="s2">&quot;llama3&quot;</span><span class="p">,</span>  <span class="c1"># Specify which model to use</span>
-    <span class="n">temperature</span><span class="o">=</span><span class="mf">0.3</span><span class="p">,</span>
-<span class="p">)</span>
-
-<span class="n">agent</span> <span class="o">=</span> <span class="n">Agent</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="n">ollama_model</span><span class="p">)</span>
-</code></pre></div>
-<p>More details in the <a href="../concepts/model-providers/ollama/">Ollama Model Provider</a> documentation.</p>
-<h3 id="custom-model-providers">Custom Model Providers<a class="headerlink" href="#custom-model-providers" title="Permanent link">&para;</a></h3>
-<p>We can even connect our agents to custom model providers to use any model from anywhere!</p>
-<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">strands</span><span class="w"> </span><span class="kn">import</span> <span class="n">Agent</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">your_company.models.custom_model</span><span class="w"> </span><span class="kn">import</span> <span class="n">CustomModel</span>
-
-<span class="n">custom_model</span> <span class="o">=</span> <span class="n">CustomModel</span><span class="p">(</span>
-    <span class="n">model_id</span><span class="o">=</span><span class="s2">&quot;your-model-id</span>
-    <span class="n">temperature</span><span class="o">=</span><span class="mf">0.3</span><span class="p">,</span>
-<span class="p">)</span>
-
-<span class="n">agent</span> <span class="o">=</span> <span class="n">Agent</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="n">custom_model</span><span class="p">)</span>
-</code></pre></div>
-<p>See the <a href="../concepts/model-providers/custom_model_provider/">Custom Providers</a> documentation for more information on creating your own model provider.</p>
+<h3 id="additional-model-providers">Additional Model Providers<a class="headerlink" href="#additional-model-providers" title="Permanent link">&para;</a></h3>
+<p>Strands Agents supports several other model providers beyond Amazon Bedrock:</p>
+<ul>
+<li><strong><a href="../concepts/model-providers/anthropic/">Anthropic</a></strong> - Direct API access to Claude models</li>
+<li><strong><a href="../concepts/model-providers/litellm/">LiteLLM</a></strong> - Unified interface for OpenAI, Mistral, and other providers</li>
+<li><strong><a href="../concepts/model-providers/llamaapi/">Llama API</a></strong> - Access to Meta's Llama models</li>
+<li><strong><a href="../concepts/model-providers/ollama/">Ollama</a></strong> - Run models locally for privacy or offline use</li>
+<li><strong><a href="../concepts/model-providers/custom_model_provider/">Custom Providers</a></strong> - Build your own provider for specialized needs</li>
+</ul>
 <h2 id="capturing-streamed-data-events">Capturing Streamed Data &amp; Events<a class="headerlink" href="#capturing-streamed-data-events" title="Permanent link">&para;</a></h2>
 <p>Strands provides two main approaches to capture streaming events from an agent: async iterators and callback functions.</p>
 <h3 id="async-iterators">Async Iterators<a class="headerlink" href="#async-iterators" title="Permanent link">&para;</a></h3>

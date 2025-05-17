@@ -530,6 +530,15 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
+  <a href="#identifying-a-configured-model" class="md-nav__link">
+    <span class="md-ellipsis">
+      Identifying a configured model
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#using-a-string-model-id" class="md-nav__link">
     <span class="md-ellipsis">
       Using a String Model ID
@@ -2421,6 +2430,15 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
+  <a href="#identifying-a-configured-model" class="md-nav__link">
+    <span class="md-ellipsis">
+      Identifying a configured model
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#using-a-string-model-id" class="md-nav__link">
     <span class="md-ellipsis">
       Using a String Model ID
@@ -2638,6 +2656,15 @@ strands-agents-tools&gt;=0.1.0
 <span class="n">agent</span><span class="p">(</span><span class="s2">&quot;Hello!&quot;</span><span class="p">)</span>
 </code></pre></div>
 <h2 id="model-providers">Model Providers<a class="headerlink" href="#model-providers" title="Permanent link">&para;</a></h2>
+<h3 id="identifying-a-configured-model">Identifying a configured model<a class="headerlink" href="#identifying-a-configured-model" title="Permanent link">&para;</a></h3>
+<p>Strands defaults to the Bedrock model provider using Claude 3.7 Sonnet. The model your agent is using can be retrieved by accessing <a href="/api-reference/types/#strands.types.models.Model.get_config"><code>model.config</code></a>:</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">strands</span><span class="w"> </span><span class="kn">import</span> <span class="n">Agent</span>
+
+<span class="n">agent</span> <span class="o">=</span> <span class="n">Agent</span><span class="p">()</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">agent</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">config</span><span class="p">)</span>
+<span class="c1"># {&#39;model_id&#39;: &#39;us.anthropic.claude-3-7-sonnet-20250219-v1:0&#39;}</span>
+</code></pre></div>
 <p>You can specify a different model in two ways:</p>
 <ol>
 <li>By passing a string model ID directly to the Agent constructor</li>

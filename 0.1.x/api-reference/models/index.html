@@ -3590,7 +3590,8 @@
 <span class="normal">330</span>
 <span class="normal">331</span>
 <span class="normal">332</span>
-<span class="normal">333</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">BedrockModel</span><span class="p">(</span><span class="n">Model</span><span class="p">):</span>
+<span class="normal">333</span>
+<span class="normal">334</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">BedrockModel</span><span class="p">(</span><span class="n">Model</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;AWS Bedrock model provider implementation.</span>
 
 <span class="sd">    The implementation handles Bedrock-specific features such as:</span>
@@ -3672,9 +3673,10 @@
         <span class="n">session</span> <span class="o">=</span> <span class="n">boto_session</span> <span class="ow">or</span> <span class="n">boto3</span><span class="o">.</span><span class="n">Session</span><span class="p">(</span>
             <span class="n">region_name</span><span class="o">=</span><span class="n">region_name</span> <span class="ow">or</span> <span class="s2">&quot;us-west-2&quot;</span><span class="p">,</span>
         <span class="p">)</span>
+        <span class="n">client_config</span> <span class="o">=</span> <span class="n">boto_client_config</span> <span class="ow">or</span> <span class="n">BotocoreConfig</span><span class="p">(</span><span class="n">user_agent_extra</span><span class="o">=</span><span class="s2">&quot;strands-agents&quot;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">client</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">client</span><span class="p">(</span>
             <span class="n">service_name</span><span class="o">=</span><span class="s2">&quot;bedrock-runtime&quot;</span><span class="p">,</span>
-            <span class="n">config</span><span class="o">=</span><span class="n">boto_client_config</span><span class="p">,</span>
+            <span class="n">config</span><span class="o">=</span><span class="n">client_config</span><span class="p">,</span>
         <span class="p">)</span>
 
     <span class="nd">@override</span>
@@ -4377,7 +4379,8 @@
 <span class="normal">113</span>
 <span class="normal">114</span>
 <span class="normal">115</span>
-<span class="normal">116</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
+<span class="normal">116</span>
+<span class="normal">117</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
     <span class="o">*</span><span class="p">,</span>
     <span class="n">boto_session</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">boto3</span><span class="o">.</span><span class="n">Session</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
@@ -4404,9 +4407,10 @@
     <span class="n">session</span> <span class="o">=</span> <span class="n">boto_session</span> <span class="ow">or</span> <span class="n">boto3</span><span class="o">.</span><span class="n">Session</span><span class="p">(</span>
         <span class="n">region_name</span><span class="o">=</span><span class="n">region_name</span> <span class="ow">or</span> <span class="s2">&quot;us-west-2&quot;</span><span class="p">,</span>
     <span class="p">)</span>
+    <span class="n">client_config</span> <span class="o">=</span> <span class="n">boto_client_config</span> <span class="ow">or</span> <span class="n">BotocoreConfig</span><span class="p">(</span><span class="n">user_agent_extra</span><span class="o">=</span><span class="s2">&quot;strands-agents&quot;</span><span class="p">)</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">client</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">client</span><span class="p">(</span>
         <span class="n">service_name</span><span class="o">=</span><span class="s2">&quot;bedrock-runtime&quot;</span><span class="p">,</span>
-        <span class="n">config</span><span class="o">=</span><span class="n">boto_client_config</span><span class="p">,</span>
+        <span class="n">config</span><span class="o">=</span><span class="n">client_config</span><span class="p">,</span>
     <span class="p">)</span>
 </code></pre></div></td></tr></table></div>
             </details>
@@ -4484,8 +4488,7 @@
 
             <details class="quote">
               <summary>Source code in <code>strands/models/bedrock.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">220</span>
-<span class="normal">221</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">221</span>
 <span class="normal">222</span>
 <span class="normal">223</span>
 <span class="normal">224</span>
@@ -4494,7 +4497,8 @@
 <span class="normal">227</span>
 <span class="normal">228</span>
 <span class="normal">229</span>
-<span class="normal">230</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@override</span>
+<span class="normal">230</span>
+<span class="normal">231</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@override</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">format_chunk</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">StreamEvent</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Format the Bedrock response events into standardized message chunks.</span>
 
@@ -4617,8 +4621,7 @@
 
             <details class="quote">
               <summary>Source code in <code>strands/models/bedrock.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">136</span>
-<span class="normal">137</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">137</span>
 <span class="normal">138</span>
 <span class="normal">139</span>
 <span class="normal">140</span>
@@ -4699,7 +4702,8 @@
 <span class="normal">215</span>
 <span class="normal">216</span>
 <span class="normal">217</span>
-<span class="normal">218</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@override</span>
+<span class="normal">218</span>
+<span class="normal">219</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@override</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">format_request</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
     <span class="n">messages</span><span class="p">:</span> <span class="n">Messages</span><span class="p">,</span>
@@ -4827,14 +4831,14 @@
 
             <details class="quote">
               <summary>Source code in <code>strands/models/bedrock.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">127</span>
-<span class="normal">128</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">128</span>
 <span class="normal">129</span>
 <span class="normal">130</span>
 <span class="normal">131</span>
 <span class="normal">132</span>
 <span class="normal">133</span>
-<span class="normal">134</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@override</span>
+<span class="normal">134</span>
+<span class="normal">135</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@override</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">get_config</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">BedrockConfig</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Get the current Bedrock Model configuration.</span>
 
@@ -4952,8 +4956,7 @@
 
             <details class="quote">
               <summary>Source code in <code>strands/models/bedrock.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">232</span>
-<span class="normal">233</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">233</span>
 <span class="normal">234</span>
 <span class="normal">235</span>
 <span class="normal">236</span>
@@ -5022,7 +5025,8 @@
 <span class="normal">299</span>
 <span class="normal">300</span>
 <span class="normal">301</span>
-<span class="normal">302</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@override</span>
+<span class="normal">302</span>
+<span class="normal">303</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@override</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">stream</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Iterable</span><span class="p">[</span><span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Send the request to the Bedrock model and get the streaming response.</span>
 
@@ -5146,14 +5150,14 @@
 
             <details class="quote">
               <summary>Source code in <code>strands/models/bedrock.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">118</span>
-<span class="normal">119</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">119</span>
 <span class="normal">120</span>
 <span class="normal">121</span>
 <span class="normal">122</span>
 <span class="normal">123</span>
 <span class="normal">124</span>
-<span class="normal">125</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@override</span>
+<span class="normal">125</span>
+<span class="normal">126</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@override</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">update_config</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">model_config</span><span class="p">:</span> <span class="n">Unpack</span><span class="p">[</span><span class="n">BedrockConfig</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>  <span class="c1"># type: ignore</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Update the Bedrock Model configuration with the provided arguments.</span>
 

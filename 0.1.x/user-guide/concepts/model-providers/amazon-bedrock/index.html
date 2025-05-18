@@ -919,9 +919,9 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#setting-up-aws-credentials" class="md-nav__link">
+  <a href="#setting-up-aws-credentials-region" class="md-nav__link">
     <span class="md-ellipsis">
-      Setting Up AWS Credentials
+      Setting Up AWS Credentials &amp; Region
     </span>
   </a>
   
@@ -976,7 +976,7 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#setting-up-aws-credentials_1" class="md-nav__link">
+  <a href="#setting-up-aws-credentials" class="md-nav__link">
     <span class="md-ellipsis">
       Setting Up AWS Credentials
     </span>
@@ -2534,9 +2534,9 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#setting-up-aws-credentials" class="md-nav__link">
+  <a href="#setting-up-aws-credentials-region" class="md-nav__link">
     <span class="md-ellipsis">
-      Setting Up AWS Credentials
+      Setting Up AWS Credentials &amp; Region
     </span>
   </a>
   
@@ -2591,7 +2591,7 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#setting-up-aws-credentials_1" class="md-nav__link">
+  <a href="#setting-up-aws-credentials" class="md-nav__link">
     <span class="md-ellipsis">
       Setting Up AWS Credentials
     </span>
@@ -2813,7 +2813,7 @@ For production environments, it's recommended to scope down the <code>Resource</
 </ol>
 <p>The model access request is typically processed immediately. Once approved, the model status will change to "Access granted" in the console.</p>
 <p>For more details, see the <a href="https://docs.aws.amazon.com/bedrock/latest/userguide/model-access-modify.html">Amazon Bedrock documentation on modifying model access</a>.</p>
-<h4 id="setting-up-aws-credentials">Setting Up AWS Credentials<a class="headerlink" href="#setting-up-aws-credentials" title="Permanent link">&para;</a></h4>
+<h4 id="setting-up-aws-credentials-region">Setting Up AWS Credentials &amp; Region<a class="headerlink" href="#setting-up-aws-credentials-region" title="Permanent link">&para;</a></h4>
 <p>Strands uses <a href="https://boto3.amazonaws.com/v1/documentation/api/latest/index.html">boto3</a> (the AWS SDK for Python) to make calls to Amazon Bedrock. Boto3 has its own credential resolution system that determines which credentials to use when making requests to AWS.</p>
 <p>For development environments, configure credentials using one of these methods:</p>
 <p><strong>Option 1: AWS CLI</strong>
@@ -2823,6 +2823,7 @@ For production environments, it's recommended to scope down the <code>Resource</
 <div class="highlight"><pre><span></span><code><span class="nb">export</span><span class="w"> </span><span class="nv">AWS_ACCESS_KEY_ID</span><span class="o">=</span>your_access_key
 <span class="nb">export</span><span class="w"> </span><span class="nv">AWS_SECRET_ACCESS_KEY</span><span class="o">=</span>your_secret_key
 <span class="nb">export</span><span class="w"> </span><span class="nv">AWS_SESSION_TOKEN</span><span class="o">=</span>your_session_token<span class="w">  </span><span class="c1"># If using temporary credentials</span>
+<span class="nb">export</span><span class="w"> </span><span class="nv">AWS_REGION</span><span class="o">=</span><span class="s2">&quot;us-west-2&quot;</span><span class="w">  </span><span class="c1"># Used if a custom Boto3 Session is not provided</span>
 </code></pre></div></p>
 <p><strong>Option 3: Custom Boto3 Session</strong>
 You can configure a custom <a href="https://boto3.amazonaws.com/v1/documentation/api/latest/reference/core/session.html">boto3 Session</a> and pass it to the <a href="../../../../api-reference/models/#strands.models.bedrock"><code>BedrockModel</code></a>:</p>
@@ -2885,7 +2886,7 @@ For production environments, it's recommended to scope down the <code>Resource</
 </ol>
 <p>The model access request is typically processed immediately. Once approved, the model status will change to "Access granted" in the console.</p>
 <p>For more details, see the <a href="https://docs.aws.amazon.com/bedrock/latest/userguide/model-access-modify.html">Amazon Bedrock documentation on modifying model access</a>.</p>
-<h4 id="setting-up-aws-credentials_1">Setting Up AWS Credentials<a class="headerlink" href="#setting-up-aws-credentials_1" title="Permanent link">&para;</a></h4>
+<h4 id="setting-up-aws-credentials">Setting Up AWS Credentials<a class="headerlink" href="#setting-up-aws-credentials" title="Permanent link">&para;</a></h4>
 <p>Strands uses <a href="https://boto3.amazonaws.com/v1/documentation/api/latest/index.html">boto3</a> (the AWS SDK for Python) to make calls to Amazon Bedrock. Boto3 has its own credential resolution system that determines which credentials to use when making requests to AWS.</p>
 <p>For development environments, configure credentials using one of these methods:</p>
 <p><strong>Option 1: AWS CLI</strong>

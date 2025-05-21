@@ -2517,7 +2517,7 @@
 <li><strong>Design for Multiple Consumers</strong>: Implement a fan-out architecture for telemetry data to serve different stakeholders and use cases. Specifically, <a href="https://opentelemetry.io/docs/collector/">OpenTelemetry collectors</a> can serve as this routing layer.</li>
 <li><strong>Optimize for Large Data Volume</strong>: Identify which data attributes are important for downstream tasks and implement filtering to send specific data to those downstream systems. Incorporate sampling and batching wherever possible.</li>
 <li><strong>Shift Observability Left</strong>: Use telemetry data when building agents to improve prompts and tool implementations. </li>
-<li><strong>Raise the Security and Privacy Bar</strong>: Implement proper data access controls and retention policies for all sensitive data. Redact or omit data containing personal identifiable information. Regurlarly audit data collection processes. </li>
+<li><strong>Raise the Security and Privacy Bar</strong>: Implement proper data access controls and retention policies for all sensitive data. Redact or omit data containing personal identifiable information. Regularly audit data collection processes. </li>
 </ol>
 <h2 id="conclusion">Conclusion<a class="headerlink" href="#conclusion" title="Permanent link">&para;</a></h2>
 <p>Effective observability is crucial for developing agents which reliably complete customers’ tasks. The key to success is treating observability not as an afterthought, but as a core component of agent engineering from day one. This investment will pay dividends in improved reliability, faster development cycles, and better customers experiences.</p>

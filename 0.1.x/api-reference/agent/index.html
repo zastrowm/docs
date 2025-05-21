@@ -3014,7 +3014,7 @@ models and tools in the SDK.</p>
 <p>The Agent interface supports two complementary interaction patterns:</p>
 <ol>
 <li>Natural language for conversation: <code>agent("Analyze this data")</code></li>
-<li>Method-style for direct tool access: <code>agent.tool_name(param1="value")</code></li>
+<li>Method-style for direct tool access: <code>agent.tool.tool_name(param1="value")</code></li>
 </ol>
 
 
@@ -4038,7 +4038,7 @@ models and tools in the SDK.</p>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># Create user message describing the tool call</span>
         <span class="n">user_msg_content</span> <span class="o">=</span> <span class="p">[</span>
-            <span class="p">{</span><span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="p">(</span><span class="sa">f</span><span class="s2">&quot;agent.</span><span class="si">{</span><span class="n">tool</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2"> direct tool call</span><span class="se">\n</span><span class="s2">Input parameters: </span><span class="si">{</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">tool</span><span class="p">[</span><span class="s1">&#39;input&#39;</span><span class="p">])</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)}</span>
+            <span class="p">{</span><span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="p">(</span><span class="sa">f</span><span class="s2">&quot;agent.tool.</span><span class="si">{</span><span class="n">tool</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2"> direct tool call.</span><span class="se">\n</span><span class="s2">Input parameters: </span><span class="si">{</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">tool</span><span class="p">[</span><span class="s1">&#39;input&#39;</span><span class="p">])</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)}</span>
         <span class="p">]</span>
 
         <span class="c1"># Add override message if provided</span>

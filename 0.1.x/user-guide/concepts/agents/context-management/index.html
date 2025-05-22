@@ -2356,7 +2356,7 @@
 <p><a href="../../../../api-reference/agent/#strands.agent.conversation_manager.conversation_manager.ConversationManager.reduce_context"><code>reduce_context</code></a>: This method is called when the model's context window is exceeded (typically due to token limits). It implements the specific strategy for reducing the window size when necessary. The agent calls this method when it encounters a context window overflow exception, giving your implementation a chance to trim the conversation history before retrying.</p>
 </li>
 </ol>
-<p>For managing conversations, you can either build your own custom solution or leverage one of Strands's provided managers.</p>
+<p>For managing conversations, you can either build your own custom solution or leverage one of Strands' provided managers.</p>
 <h4 id="nullconversationmanager">NullConversationManager<a class="headerlink" href="#nullconversationmanager" title="Permanent link">&para;</a></h4>
 <p>The <a href="../../../../api-reference/agent/#strands.agent.conversation_manager.null_conversation_manager.NullConversationManager"><code>NullConversationManager</code></a> is a simple implementation that does not modify the conversation history. It's useful for:</p>
 <ul>

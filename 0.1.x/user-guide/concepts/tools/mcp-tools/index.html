@@ -2643,7 +2643,7 @@
 <span class="kn">from</span><span class="w"> </span><span class="nn">strands</span><span class="w"> </span><span class="kn">import</span> <span class="n">Agent</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">strands.tools.mcp.mcp_client</span><span class="w"> </span><span class="kn">import</span> <span class="n">MCPClient</span>
 
-<span class="n">streamable_http_mcp_client</span> <span class="o">=</span> <span class="n">MCPClient</span><span class="p">(</span><span class="k">lambda</span><span class="p">:</span> <span class="n">streamablehttp_client</span><span class="p">(</span><span class="s2">&quot;http://localhost:8000/mcp)&quot;</span><span class="p">)</span>
+<span class="n">streamable_http_mcp_client</span> <span class="o">=</span> <span class="n">MCPClient</span><span class="p">(</span><span class="k">lambda</span><span class="p">:</span> <span class="n">streamablehttp_client</span><span class="p">(</span><span class="s2">&quot;http://localhost:8000/mcp&quot;</span><span class="p">))</span>
 
 <span class="c1"># Create an agent with MCP tools</span>
 <span class="k">with</span> <span class="n">streamable_http_mcp_client</span><span class="p">:</span>

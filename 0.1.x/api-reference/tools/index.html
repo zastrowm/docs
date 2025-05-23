@@ -6042,7 +6042,7 @@ as SDK tools.</p>
 <span class="sd">    Raises:</span>
 <span class="sd">        InvalidToolUseNameException: If the tool name is invalid.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="c1"># We need to fix some typing here, because we dont actually expect a ToolUse, but dict[str, Any]</span>
+    <span class="c1"># We need to fix some typing here, because we don&#39;t actually expect a ToolUse, but dict[str, Any]</span>
     <span class="k">if</span> <span class="s2">&quot;name&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">tool</span><span class="p">:</span>
         <span class="n">message</span> <span class="o">=</span> <span class="s2">&quot;tool name missing&quot;</span>  <span class="c1"># type: ignore[unreachable]</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>

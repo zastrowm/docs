@@ -3238,7 +3238,8 @@ invoking them with the appropriate parameters.</p>
 <span class="normal">109</span>
 <span class="normal">110</span>
 <span class="normal">111</span>
-<span class="normal">112</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">AgentToolHandler</span><span class="p">(</span><span class="n">ToolHandler</span><span class="p">):</span>
+<span class="normal">112</span>
+<span class="normal">113</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">AgentToolHandler</span><span class="p">(</span><span class="n">ToolHandler</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Handler for processing tool invocations in agent.</span>
 
 <span class="sd">    This class implements the ToolHandler interface and provides functionality for looking up tools in a registry and</span>
@@ -3274,6 +3275,7 @@ invoking them with the appropriate parameters.</p>
     <span class="k">def</span><span class="w"> </span><span class="nf">process</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">tool</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span>
+        <span class="o">*</span><span class="p">,</span>
         <span class="n">model</span><span class="p">:</span> <span class="n">Model</span><span class="p">,</span>
         <span class="n">system_prompt</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
         <span class="n">messages</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Any</span><span class="p">],</span>
@@ -3564,7 +3566,7 @@ invoking them with the appropriate parameters.</p>
 
 
 <h4 id="strands.handlers.tool_handler.AgentToolHandler.process" class="doc doc-heading">
-            <code class="highlight language-python"><span class="n">process</span><span class="p">(</span><span class="n">tool</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">system_prompt</span><span class="p">,</span> <span class="n">messages</span><span class="p">,</span> <span class="n">tool_config</span><span class="p">,</span> <span class="n">callback_handler</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></code>
+            <code class="highlight language-python"><span class="n">process</span><span class="p">(</span><span class="n">tool</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">system_prompt</span><span class="p">,</span> <span class="n">messages</span><span class="p">,</span> <span class="n">tool_config</span><span class="p">,</span> <span class="n">callback_handler</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></code>
 
 <a href="#strands.handlers.tool_handler.AgentToolHandler.process" class="headerlink" title="Permanent link">&para;</a></h4>
 
@@ -3793,9 +3795,11 @@ invoking them with the appropriate parameters.</p>
 <span class="normal">109</span>
 <span class="normal">110</span>
 <span class="normal">111</span>
-<span class="normal">112</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">process</span><span class="p">(</span>
+<span class="normal">112</span>
+<span class="normal">113</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">process</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
     <span class="n">tool</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span>
+    <span class="o">*</span><span class="p">,</span>
     <span class="n">model</span><span class="p">:</span> <span class="n">Model</span><span class="p">,</span>
     <span class="n">system_prompt</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
     <span class="n">messages</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Any</span><span class="p">],</span>

@@ -2607,8 +2607,26 @@
 <span class="kn">from</span><span class="w"> </span><span class="nn">strands.tools.mcp</span><span class="w"> </span><span class="kn">import</span> <span class="n">MCPClient</span>
 
 <span class="c1"># Connect to an MCP server using stdio transport</span>
+<span class="c1"># Note: uvx command syntax differs by platform</span>
+
+<span class="c1"># For macOS/Linux:</span>
 <span class="n">stdio_mcp_client</span> <span class="o">=</span> <span class="n">MCPClient</span><span class="p">(</span><span class="k">lambda</span><span class="p">:</span> <span class="n">stdio_client</span><span class="p">(</span>
-    <span class="n">StdioServerParameters</span><span class="p">(</span><span class="n">command</span><span class="o">=</span><span class="s2">&quot;uvx&quot;</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;awslabs.aws-documentation-mcp-server@latest&quot;</span><span class="p">])</span>
+    <span class="n">StdioServerParameters</span><span class="p">(</span>
+        <span class="n">command</span><span class="o">=</span><span class="s2">&quot;uvx&quot;</span><span class="p">,</span> 
+        <span class="n">args</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;awslabs.aws-documentation-mcp-server@latest&quot;</span><span class="p">]</span>
+    <span class="p">)</span>
+<span class="p">))</span>
+
+<span class="c1"># For Windows:</span>
+<span class="n">stdio_mcp_client</span> <span class="o">=</span> <span class="n">MCPClient</span><span class="p">(</span><span class="k">lambda</span><span class="p">:</span> <span class="n">stdio_client</span><span class="p">(</span>
+    <span class="n">StdioServerParameters</span><span class="p">(</span>
+        <span class="n">command</span><span class="o">=</span><span class="s2">&quot;uvx&quot;</span><span class="p">,</span> 
+        <span class="n">args</span><span class="o">=</span><span class="p">[</span>
+            <span class="s2">&quot;--from&quot;</span><span class="p">,</span> 
+            <span class="s2">&quot;awslabs.aws-documentation-mcp-server@latest&quot;</span><span class="p">,</span> 
+            <span class="s2">&quot;awslabs.aws-documentation-mcp-server.exe&quot;</span>
+        <span class="p">]</span>
+    <span class="p">)</span>
 <span class="p">))</span>
 
 <span class="c1"># Create an agent with MCP tools</span>

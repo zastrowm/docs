@@ -2505,7 +2505,7 @@
 </code></pre></div>
 <h3 id="streaming-responses">Streaming responses<a class="headerlink" href="#streaming-responses" title="Permanent link">&para;</a></h3>
 <p>Streaming responses can significantly improve the user experience by providing real-time responses back to the customer. This is especially valuable for longer responses.</p>
-<p>Python web-servers commonly implement streaming through the use of iterators and the Strands Agents SDK facilitates response streaming via the <code>stream_async(prompt)</code> api:</p>
+<p>Python web-servers commonly implement streaming through the use of iterators, and the Strands Agents SDK facilitates response streaming via the <code>stream_async(prompt)</code> function:</p>
 <div class="highlight"><pre><span></span><code><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">run_weather_agent_and_stream_response</span><span class="p">(</span><span class="n">prompt</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
     <span class="n">is_summarizing</span> <span class="o">=</span> <span class="kc">False</span>
 
@@ -2544,7 +2544,7 @@
 </code></pre></div>
 <p>The implementation above employs a <a href="../../concepts/tools/python-tools/#python-tool-decorators">custom tool</a> to mark the boundary between information gathering and summary generation phases. This approach ensures that only the final, user-facing content is streamed to the client, maintaining consistency with the non-streaming endpoint while providing the benefits of incremental response delivery.</p>
 <h2 id="containerization">Containerization<a class="headerlink" href="#containerization" title="Permanent link">&para;</a></h2>
-<p>To deploy your agent to Fargate, you need to containerize it using Podman or Docker. The Dockerfile defines how your application is packaged and run.  Below is an example docker file that installs all needed dependencies, the application, and configures the FastAPI server to run via unicorn (<a href="https://github.com/strands-agents/docs/tree/main/docs/examples/cdk/deploy_to_fargate/docker/Dockerfile">Dockerfile</a>):</p>
+<p>To deploy your agent to Fargate, you need to containerize it using Podman or Docker. The Dockerfile defines how your application is packaged and run.  Below is an example Docker file that installs all needed dependencies, the application, and configures the FastAPI server to run via unicorn (<a href="https://github.com/strands-agents/docs/tree/main/docs/examples/cdk/deploy_to_fargate/docker/Dockerfile">Dockerfile</a>):</p>
 <div class="highlight"><pre><span></span><code><span class="k">FROM</span><span class="w"> </span><span class="s">public.ecr.aws/docker/library/python:3.12-slim</span>
 
 <span class="k">WORKDIR</span><span class="w"> </span><span class="s">/app</span>
@@ -2659,7 +2659,7 @@ follows standard Fargate deployment patterns, but the following code snippet hig
 <li>Outputs the load balancer DNS name for accessing your service</li>
 </ol>
 <h2 id="deploying-your-agent-testing">Deploying Your Agent &amp; Testing<a class="headerlink" href="#deploying-your-agent-testing" title="Permanent link">&para;</a></h2>
-<p>Assuming that Python &amp; Node dependencies are already installed, run the CDK and deploy which will also run the docker file for deployment:</p>
+<p>Assuming that Python &amp; Node dependencies are already installed, run the CDK and deploy which will also run the Docker file for deployment:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Bootstrap your AWS environment (if not already done)</span>
 npx<span class="w"> </span>cdk<span class="w"> </span>bootstrap
 

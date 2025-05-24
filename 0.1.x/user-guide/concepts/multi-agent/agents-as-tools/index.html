@@ -2484,7 +2484,7 @@
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">strands</span><span class="w"> </span><span class="kn">import</span> <span class="n">Agent</span><span class="p">,</span> <span class="n">tool</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">strands_tools</span><span class="w"> </span><span class="kn">import</span> <span class="n">retrieve</span><span class="p">,</span> <span class="n">http_request</span>
 
-<span class="c1"># Define specialized system prompt</span>
+<span class="c1"># Define a specialized system prompt</span>
 <span class="n">RESEARCH_ASSISTANT_PROMPT</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
 <span class="s2">You are a specialized research assistant. Focus only on providing</span>
 <span class="s2">factual, well-sourced information in response to research questions.</span>
@@ -2567,7 +2567,7 @@
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">strands</span><span class="w"> </span><span class="kn">import</span> <span class="n">Agent</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">.specialized_agents</span><span class="w"> </span><span class="kn">import</span> <span class="n">research_assistant</span><span class="p">,</span> <span class="n">product_recommendation_assistant</span><span class="p">,</span> <span class="n">trip_planning_assistant</span>
 
-<span class="c1"># Define orchestrator system prompt with clear tool selection guidance</span>
+<span class="c1"># Define the orchestrator system prompt with clear tool selection guidance</span>
 <span class="n">MAIN_SYSTEM_PROMPT</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
 <span class="s2">You are an assistant that routes queries to specialized agents:</span>
 <span class="s2">- For research questions and factual information → Use the research_assistant tool</span>
@@ -2590,7 +2590,7 @@
 <div class="highlight"><pre><span></span><code><span class="c1"># Example: E-commerce Customer Service System</span>
 <span class="n">customer_query</span> <span class="o">=</span> <span class="s2">&quot;I&#39;m looking for hiking boots for a trip to Patagonia next month&quot;</span>
 
-<span class="c1"># The orchestrator automatically determines this requires multiple specialized agents</span>
+<span class="c1"># The orchestrator automatically determines that this requires multiple specialized agents</span>
 <span class="n">response</span> <span class="o">=</span> <span class="n">orchestrator</span><span class="p">(</span><span class="n">customer_query</span><span class="p">)</span>
 
 <span class="c1"># Behind the scenes, the orchestrator will:</span>

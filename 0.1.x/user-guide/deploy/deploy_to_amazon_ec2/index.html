@@ -2561,7 +2561,7 @@
 <span class="w">   </span><span class="nx">associatePublicIpAddress</span><span class="o">:</span><span class="w"> </span><span class="kt">true</span><span class="p">,</span><span class="w"> </span><span class="c1">// Assign a public IP address</span>
 <span class="w"> </span><span class="p">});</span>
 </code></pre></div>
-<p>For EC2 deployment, the application code and dependencies are packaged separately and uploaded to S3 as assets, During instance initialization, both packages are downloaded and extracted to the appropriate locations and then configured to run as linux service:</p>
+<p>For EC2 deployment, the application code and dependencies are packaged separately and uploaded to S3 as assets. During instance initialization, both packages are downloaded and extracted to the appropriate locations and then configured to run as a Linux service:</p>
 <div class="highlight"><pre><span></span><code><span class="w"> </span><span class="c1">// Create user data script to set up the application</span>
 <span class="w"> </span><span class="kd">const</span><span class="w"> </span><span class="nx">userData</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">ec2</span><span class="p">.</span><span class="nx">UserData</span><span class="p">.</span><span class="nx">forLinux</span><span class="p">();</span>
 <span class="w"> </span><span class="nx">userData</span><span class="p">.</span><span class="nx">addCommands</span><span class="p">(</span>

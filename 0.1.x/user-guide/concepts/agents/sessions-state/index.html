@@ -2466,7 +2466,7 @@
 <p>This document explains how Strands agents maintain conversation context, handle state management, and support persistent sessions across interactions.</p>
 <p>Strands agents maintain state in several forms:</p>
 <ol>
-<li><strong>Conversation History</strong>: The sequence of messages between user and agent</li>
+<li><strong>Conversation History</strong>: The sequence of messages between the user and the agent</li>
 <li><strong>Tool State</strong>: Information about tool executions and results</li>
 <li><strong>Request State</strong>: Contextual information maintained within a single request</li>
 </ol>
@@ -2521,7 +2521,7 @@
 <p>The sliding window conversation manager:</p>
 <ul>
 <li>Keeps the most recent N message pairs</li>
-<li>Removes oldest messages when the window size is exceeded</li>
+<li>Removes the oldest messages when the window size is exceeded</li>
 <li>Handles context window overflow exceptions by reducing context</li>
 <li>Ensures conversations don't exceed model context limits</li>
 </ul>
@@ -2532,7 +2532,7 @@
 
 <span class="n">agent</span> <span class="o">=</span> <span class="n">Agent</span><span class="p">(</span><span class="n">tools</span><span class="o">=</span><span class="p">[</span><span class="n">calculator</span><span class="p">])</span>
 
-<span class="c1"># Tool use is recorded in conversation history</span>
+<span class="c1"># Tool use is recorded in the conversation history</span>
 <span class="n">agent</span><span class="p">(</span><span class="s2">&quot;What is 123 × 456?&quot;</span><span class="p">)</span>  <span class="c1"># Uses calculator tool and records result</span>
 
 <span class="c1"># You can examine the tool interactions in the conversation history</span>
@@ -2562,7 +2562,7 @@
 <p>In this example we can see that the first <code>agent.tool.calculator()</code> call is recorded in the agent's conversation history.</p>
 <p>The second <code>agent.tool.calculator()</code> call is <strong>not</strong> recorded in the history because we specified the <code>record_direct_tool_call=False</code> argument.</p>
 <h2 id="request-state">Request State<a class="headerlink" href="#request-state" title="Permanent link">&para;</a></h2>
-<p>Each agent interaction maintains a request state dictionary that persists throughout the event loop cycles and are <strong>not</strong> included in the agent's context:</p>
+<p>Each agent interaction maintains a request state dictionary that persists throughout the event loop cycles and is <strong>not</strong> included in the agent's context:</p>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">strands</span><span class="w"> </span><span class="kn">import</span> <span class="n">Agent</span>
 
 <span class="k">def</span><span class="w"> </span><span class="nf">custom_callback_handler</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>

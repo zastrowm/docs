@@ -2993,7 +2993,7 @@
 <p>Common visualization options include:</p>
 <ol>
 <li><strong>Jaeger</strong>: Open-source, end-to-end distributed tracing</li>
-<li><strong>Langfuse</strong>: For Traces, evals, prompt management and metrics</li>
+<li><strong>Langfuse</strong>: For Traces, evals, prompt management, and metrics</li>
 <li><strong>AWS X-Ray</strong>: For AWS-based applications</li>
 <li><strong>Zipkin</strong>: Lightweight distributed tracing</li>
 </ol>
@@ -3017,7 +3017,7 @@ docker<span class="w"> </span>run<span class="w"> </span>-d<span class="w"> </sp
 </code></pre></div>
 <p>Then access the Jaeger UI at http://localhost:16686 to view your traces.</p>
 <p>You can also enable console export to inspect the spans:</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># By enabling the enviorment variable</span>
+<div class="highlight"><pre><span></span><code><span class="c1"># By enabling the environment variable</span>
 <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;STRANDS_OTEL_ENABLE_CONSOLE_EXPORT&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;true&quot;</span>
 
 <span class="c1"># or</span>

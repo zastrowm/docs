@@ -2643,7 +2643,7 @@
 <div class="highlight"><pre><span></span><code><span class="c1"># Process user input</span>
 <span class="n">result</span> <span class="o">=</span> <span class="n">agent</span><span class="p">(</span><span class="s2">&quot;Calculate 25 * 48&quot;</span><span class="p">)</span>
 </code></pre></div>
-<p>Calling the agent adds the message to conversation history and applies conversation management strategies before initializing a new event loop cycle.</p>
+<p>Calling the agent adds the message to the conversation history and applies conversation management strategies before initializing a new event loop cycle.</p>
 <h3 id="3-model-processing">3. Model Processing<a class="headerlink" href="#3-model-processing" title="Permanent link">&para;</a></h3>
 <p>The model receives:</p>
 <ul>
@@ -2693,7 +2693,7 @@
 <span class="w">  </span><span class="p">]</span>
 <span class="p">}</span>
 </code></pre></div>
-<p>This result is added to the conversation history and the model invoked again for it to reason about the tool results.</p>
+<p>This result is added to the conversation history, and the model is invoked again for it to reason about the tool results.</p>
 <h3 id="6-recursive-processing">6. Recursive Processing<a class="headerlink" href="#6-recursive-processing" title="Permanent link">&para;</a></h3>
 <p>The agent loop can recursively continue if the model requests more tool executions, further clarification is needed, or multi-step reasoning is required.</p>
 <p>This recursive nature allows for complex workflows like:</p>

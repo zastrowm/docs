@@ -2316,15 +2316,19 @@ pip<span class="w"> </span>install<span class="w"> </span>-r<span class="w"> </s
 pip<span class="w"> </span>install<span class="w"> </span>-r<span class="w"> </span>requirements.txt<span class="w"> </span>--platform<span class="w"> </span>manylinux2014_aarch64<span class="w"> </span>--target<span class="w"> </span>./packaging/_dependencies<span class="w"> </span>--only-binary<span class="o">=</span>:all:
 </code></pre></div>
 <ol>
+<li>Package the lambda:</li>
+</ol>
+<div class="highlight"><pre><span></span><code>python<span class="w"> </span>./bin/package_for_lambda.py
+</code></pre></div>
+<ol>
 <li>Bootstrap your AWS environment (if not already done):</li>
 </ol>
 <div class="highlight"><pre><span></span><code>npx<span class="w"> </span>cdk<span class="w"> </span>bootstrap
 </code></pre></div>
 <ol>
-<li>Package the lambda &amp; deploy the stack:</li>
+<li>Deploy the lambda:</li>
 </ol>
-<div class="highlight"><pre><span></span><code>python<span class="w"> </span>./bin/package_for_lambda.py
-npx<span class="w"> </span>cdk<span class="w"> </span>deploy
+<div class="highlight"><pre><span></span><code>npx cdk deploy
 </code></pre></div>
 <h2 id="usage">Usage<a class="headerlink" href="#usage" title="Permanent link">&para;</a></h2>
 <p>After deployment, you can invoke the Lambda function using the AWS CLI or AWS Console. The function requires proper AWS authentication to be invoked.</p>

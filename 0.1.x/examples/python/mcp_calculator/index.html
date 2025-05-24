@@ -2577,7 +2577,10 @@ At this point, the agent has successfully connected to the MCP server and retrie
 
    <span class="c1"># Create an agent with the MCP tools</span>
    <span class="n">agent</span> <span class="o">=</span> <span class="n">Agent</span><span class="p">(</span><span class="n">tools</span><span class="o">=</span><span class="n">tools</span><span class="p">)</span>
-   <span class="n">agent</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="mi">125</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="mi">375</span><span class="p">)</span>
+   <span class="n">result</span> <span class="o">=</span> <span class="n">agent</span><span class="o">.</span><span class="n">tool</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="mi">125</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="mi">375</span><span class="p">)</span>
+
+   <span class="c1"># Process the result</span>
+   <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Calculation result: </span><span class="si">{</span><span class="n">result</span><span class="p">[</span><span class="s1">&#39;content&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="s1">&#39;text&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 </code></pre></div>
 <h3 id="sample-queries-and-responses">Sample Queries and Responses<a class="headerlink" href="#sample-queries-and-responses" title="Permanent link">&para;</a></h3>
 <p><strong>Query 1</strong>: What is 125 plus 375?</p>

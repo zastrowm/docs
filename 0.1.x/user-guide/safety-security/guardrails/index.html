@@ -2417,7 +2417,8 @@
 
 <span class="c1"># Create agent with the guardrail-protected model</span>
 <span class="n">agent</span> <span class="o">=</span> <span class="n">Agent</span><span class="p">(</span>
-    <span class="n">system_prompt</span><span class="o">=</span><span class="s2">&quot;You are a helpful assistant.&quot;</span>
+    <span class="n">system_prompt</span><span class="o">=</span><span class="s2">&quot;You are a helpful assistant.&quot;</span><span class="p">,</span>
+    <span class="n">model</span><span class="o">=</span><span class="n">bedrock_model</span><span class="p">,</span>
 <span class="p">)</span>
 
 <span class="c1"># Use the protected agent for conversations</span>

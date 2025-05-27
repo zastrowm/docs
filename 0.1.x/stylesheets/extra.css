@@ -1,3 +1,15 @@
+.md-header__button.md-logo {
+    padding: 0 .2rem;
+    margin: 0;
+}
+.md-header__button.md-logo img,
+.md-header__button.md-logo svg,
+.md-nav__title .md-nav__button.md-logo img,
+.md-nav__title .md-nav__button.md-logo svg {
+    height: 1.5rem;
+    width: 1.5rem;
+}
+
 .md-tabs__link {
     opacity: 1;
     font-size: 1.6em;
@@ -39,4 +51,25 @@
     html {
         font-size: 125%;
     }
+}
+
+@media screen and (max-width: 76.2344em) {
+    .md-nav--lifted > .md-nav__list > .md-nav__item > [for],
+    .md-nav__item--section > .md-nav__link[for],
+    .md-nav__title {
+        font-size: 1em;
+    }
+    .md-nav--primary .md-nav__title {
+        height: auto;
+        padding: 2rem .8rem .2rem;
+    }
+    .md-nav--primary .md-nav__title .md-logo {
+        padding: .2rem;
+        margin: 0;
+    }
+}
+
+[data-md-color-scheme=slate] {
+    /* Override the font color in dark mode - text is too light */
+    --md-default-fg-color: rgb(240, 246, 252)
 }

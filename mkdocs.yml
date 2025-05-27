@@ -6,22 +6,24 @@ repo_url: https://github.com/strands-agents/sdk-python
 
 theme:
   name: material
+  logo: assets/logo-light.svg
+  favicon: assets/logo-auto.svg
   palette:
     # Palette toggle for light mode
     - media: "(prefers-color-scheme: light)"
-      primary: orange
+      primary: blue grey
       accent: orange
       scheme: default
       toggle:
-        icon: material/lightbulb-outline
+        icon: material/brightness-7
         name: Switch to dark mode
     # Palette toggle for dark mode
     - media: "(prefers-color-scheme: dark)"
-      primary: orange
+      primary: blue grey
       accent: orange
       scheme: slate
       toggle:
-        icon: material/lightbulb
+        icon: material/brightness-4
         name: Switch to light mode
   features:
     - content.code.copy
@@ -75,8 +77,9 @@ nav:
         - Amazon Bedrock: user-guide/concepts/model-providers/amazon-bedrock.md
         - Anthropic: user-guide/concepts/model-providers/anthropic.md
         - LiteLLM: user-guide/concepts/model-providers/litellm.md
-        - Ollama: user-guide/concepts/model-providers/ollama.md
         - LlamaAPI: user-guide/concepts/model-providers/llamaapi.md
+        - Ollama: user-guide/concepts/model-providers/ollama.md
+        - OpenAI: user-guide/concepts/model-providers/openai.md
         - Custom Providers: user-guide/concepts/model-providers/custom_model_provider.md
       - Streaming:
         - Async Iterators: user-guide/concepts/streaming/async-iterators.md
@@ -105,13 +108,14 @@ nav:
     - Overview: examples/README.md
     - CLI Reference Agent Implementation: examples/python/cli-reference-agent.md
     - Weather Forecaster: examples/python/weather_forecaster.md
+    - Memory Agent: examples/python/memory_agent.md
     - File Operations: examples/python/file_operations.md
     - Agents Workflows: examples/python/agents_workflows.md
     - Knowledge-Base Workflow: examples/python/knowledge_base_agent.md
     - Multi Agents: examples/python/multi_agent_example/multi_agent_example.md
     - Meta Tooling: examples/python/meta_tooling.md
     - MCP: examples/python/mcp_calculator.md
-  - Contribute ❤️: https://github.com/2umtGXt3XZODBPfPgiR53A/agents-sdk-python/blob/main/CONTRIBUTING.md
+  - Contribute ❤️: https://github.com/strands-agents/sdk-python/blob/main/CONTRIBUTING.md
   - API Reference:
     - Agent: api-reference/agent.md
     - Event Loop: api-reference/event-loop.md

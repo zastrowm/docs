@@ -18,8 +18,26 @@ from strands import Agent
 from strands.tools.mcp import MCPClient
 
 # Connect to an MCP server using stdio transport
+# Note: uvx command syntax differs by platform
+
+# For macOS/Linux:
 stdio_mcp_client = MCPClient(lambda: stdio_client(
-    StdioServerParameters(command="uvx", args=["awslabs.aws-documentation-mcp-server@latest"])
+    StdioServerParameters(
+        command="uvx", 
+        args=["awslabs.aws-documentation-mcp-server@latest"]
+    )
+))
+
+# For Windows:
+stdio_mcp_client = MCPClient(lambda: stdio_client(
+    StdioServerParameters(
+        command="uvx", 
+        args=[
+            "--from", 
+            "awslabs.aws-documentation-mcp-server@latest", 
+            "awslabs.aws-documentation-mcp-server.exe"
+        ]
+    )
 ))
 
 # Create an agent with MCP tools
@@ -40,7 +58,7 @@ from mcp.client.streamable_http import streamablehttp_client
 from strands import Agent
 from strands.tools.mcp.mcp_client import MCPClient
 
-streamable_http_mcp_client = MCPClient(lambda: streamablehttp_client("http://localhost:8000/mcp)")
+streamable_http_mcp_client = MCPClient(lambda: streamablehttp_client("http://localhost:8000/mcp"))
 
 # Create an agent with MCP tools
 with streamable_http_mcp_client:

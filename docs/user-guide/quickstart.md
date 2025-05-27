@@ -168,6 +168,19 @@ agent("Hello!")
 
 ## Model Providers
 
+### Identifying a configured model 
+
+Strands defaults to the Bedrock model provider using Claude 3.7 Sonnet. The model your agent is using can be retrieved by accessing [`model.config`](../api-reference/types.md#strands.types.models.Model.get_config):
+
+```python
+from strands import Agent
+
+agent = Agent()
+
+print(agent.model.config)
+# {'model_id': 'us.anthropic.claude-3-7-sonnet-20250219-v1:0'}
+```
+
 You can specify a different model in two ways:
 
 1. By passing a string model ID directly to the Agent constructor
@@ -209,49 +222,16 @@ You will also need to enable model access in Amazon Bedrock for the models that 
 
 More details in the [Amazon Bedrock Model Provider](concepts/model-providers/amazon-bedrock.md) documentation.
 
+### Additional Model Providers
 
-### Ollama (Local Models)
+Strands Agents supports several other model providers beyond Amazon Bedrock:
 
-First install the `ollama` python client:
-
-```bash
-pip install strands-agents[ollama]
-```
-
-Next, import and intialize the `OllamaModel` provider:
-
-```python
-from strands import Agent
-from strands.models.ollama import OllamaModel
-
-ollama_model = OllamaModel(
-    host="http://localhost:11434"  # Ollama server address
-    model_id="llama3",  # Specify which model to use
-    temperature=0.3,
-)
-
-agent = Agent(model=ollama_model)
-```
-
-More details in the [Ollama Model Provider](concepts/model-providers/ollama.md) documentation.
-
-### Custom Model Providers
-
-We can even connect our agents to custom model providers to use any model from anywhere!
-
-```python
-from strands import Agent
-from your_company.models.custom_model import CustomModel
-
-custom_model = CustomModel(
-    model_id="your-model-id
-    temperature=0.3,
-)
-
-agent = Agent(model=custom_model)
-```
-
-See the [Custom Providers](concepts/model-providers/custom_model_provider.md) documentation for more information on creating your own model provider.
+- **[Anthropic](concepts/model-providers/anthropic.md)** - Direct API access to Claude models
+- **[LiteLLM](concepts/model-providers/litellm.md)** - Unified interface for OpenAI, Mistral, and other providers
+- **[Llama API](concepts/model-providers/llamaapi.md)** - Access to Meta's Llama models
+- **[Ollama](concepts/model-providers/ollama.md)** - Run models locally for privacy or offline use
+- **[OpenAI](concepts/model-providers/openai.md)** - Direct API access to OpenAI or OpenAI-compatible models
+- **[Custom Providers](concepts/model-providers/custom_model_provider.md)** - Build your own provider for specialized needs
 
 ## Capturing Streamed Data & Events
 
@@ -348,7 +328,6 @@ Ready to learn more? Check out these resources:
 - [Strands Agent Builder]({{ agent_builder_repo_home }}) - Use the accompanying `strands-agents-builder` agent builder to harness the power of LLMs to generate your own tools and agents
 - [Agent Loop](concepts/agents/agent-loop.md) - Learn how Strands agents work under the hood
 - [Sessions & State](concepts/agents/sessions-state.md) - Understand how agents maintain context and state across a conversation or workflow
-- [Multi-agent](concepts/multi-agent/agents-as-tools.md) - Orchestrate multiple agents together in to one system, with each agent completing specialized tasks
-- [Workflows](concepts/workflows/code-defined-ai-workflows.md) - Integrate agents in to existing workflows and systems
+- [Multi-agent](concepts/multi-agent/agents-as-tools.md) - Orchestrate multiple agents together as one system, with each agent completing specialized tasks
 - [Observability & Evaluation](observability-evaluation/observability.md) - Understand how agents make decisions and improve them with data
 - [Operating Agents in Production](deploy/operating-agents-in-production.md) - Taking agents from development to production, operating them responsibly at scale

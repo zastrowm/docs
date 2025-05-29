@@ -138,6 +138,7 @@ Built-in guides are available for several AWS services:
 
 - **AWS Lambda** - Serverless option for short-lived agent interactions and batch processing with minimal infrastructure management. [Learn more](../deploy_to_aws_lambda/)
 - **AWS Fargate** - Containerized deployment with streaming support, ideal for interactive applications requiring real-time responses or high concurrency. [Learn more](../deploy_to_aws_fargate/)
+- **Amazon EKS** - Containerized deployment with streaming support, ideal for interactive applications requiring real-time responses or high concurrency. [Learn more](../deploy_to_amazon_eks/)
 - **Amazon EC2** - Maximum control and flexibility for high-volume applications or specialized infrastructure requirements. [Learn more](../deploy_to_amazon_ec2/)
 
 ## Monitoring and Observability

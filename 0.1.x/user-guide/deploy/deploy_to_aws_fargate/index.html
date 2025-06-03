@@ -2473,7 +2473,7 @@
 <p>If you're not familiar with the AWS CDK, check out the <a href="https://docs.aws.amazon.com/cdk/v2/guide/home.html">official documentation</a>.</p>
 <p>This guide discusses Fargate integration at a high level - for a complete example project deploying to Fargate, check out the <a href="https://github.com/strands-agents/docs/tree/main/docs/examples/cdk/deploy_to_fargate"><code>deploy_to_fargate</code> sample project on GitHub</a>.</p>
 <h2 id="creating-your-agent-in-python">Creating Your Agent in Python<a class="headerlink" href="#creating-your-agent-in-python" title="Permanent link">&para;</a></h2>
-<p>The core of your Fargate deployment is a containerized Flask application that hosts your Strands Agents SDK agent. This Python application initializes your agent and processes incoming HTTP requests.</p>
+<p>The core of your Fargate deployment is a containerized FastAPI application that hosts your Strands Agents SDK agent. This Python application initializes your agent and processes incoming HTTP requests.</p>
 <p>The FastAPI application follows these steps:</p>
 <ol>
 <li>Define endpoints for agent interactions</li>

@@ -3499,8 +3499,7 @@
 
               <details class="quote">
                 <summary>Source code in <code>strands/models/bedrock.py</code></summary>
-                <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 32</span>
-<span class="normal"> 33</span>
+                <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 33</span>
 <span class="normal"> 34</span>
 <span class="normal"> 35</span>
 <span class="normal"> 36</span>
@@ -3817,7 +3816,136 @@
 <span class="normal">347</span>
 <span class="normal">348</span>
 <span class="normal">349</span>
-<span class="normal">350</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">BedrockModel</span><span class="p">(</span><span class="n">Model</span><span class="p">):</span>
+<span class="normal">350</span>
+<span class="normal">351</span>
+<span class="normal">352</span>
+<span class="normal">353</span>
+<span class="normal">354</span>
+<span class="normal">355</span>
+<span class="normal">356</span>
+<span class="normal">357</span>
+<span class="normal">358</span>
+<span class="normal">359</span>
+<span class="normal">360</span>
+<span class="normal">361</span>
+<span class="normal">362</span>
+<span class="normal">363</span>
+<span class="normal">364</span>
+<span class="normal">365</span>
+<span class="normal">366</span>
+<span class="normal">367</span>
+<span class="normal">368</span>
+<span class="normal">369</span>
+<span class="normal">370</span>
+<span class="normal">371</span>
+<span class="normal">372</span>
+<span class="normal">373</span>
+<span class="normal">374</span>
+<span class="normal">375</span>
+<span class="normal">376</span>
+<span class="normal">377</span>
+<span class="normal">378</span>
+<span class="normal">379</span>
+<span class="normal">380</span>
+<span class="normal">381</span>
+<span class="normal">382</span>
+<span class="normal">383</span>
+<span class="normal">384</span>
+<span class="normal">385</span>
+<span class="normal">386</span>
+<span class="normal">387</span>
+<span class="normal">388</span>
+<span class="normal">389</span>
+<span class="normal">390</span>
+<span class="normal">391</span>
+<span class="normal">392</span>
+<span class="normal">393</span>
+<span class="normal">394</span>
+<span class="normal">395</span>
+<span class="normal">396</span>
+<span class="normal">397</span>
+<span class="normal">398</span>
+<span class="normal">399</span>
+<span class="normal">400</span>
+<span class="normal">401</span>
+<span class="normal">402</span>
+<span class="normal">403</span>
+<span class="normal">404</span>
+<span class="normal">405</span>
+<span class="normal">406</span>
+<span class="normal">407</span>
+<span class="normal">408</span>
+<span class="normal">409</span>
+<span class="normal">410</span>
+<span class="normal">411</span>
+<span class="normal">412</span>
+<span class="normal">413</span>
+<span class="normal">414</span>
+<span class="normal">415</span>
+<span class="normal">416</span>
+<span class="normal">417</span>
+<span class="normal">418</span>
+<span class="normal">419</span>
+<span class="normal">420</span>
+<span class="normal">421</span>
+<span class="normal">422</span>
+<span class="normal">423</span>
+<span class="normal">424</span>
+<span class="normal">425</span>
+<span class="normal">426</span>
+<span class="normal">427</span>
+<span class="normal">428</span>
+<span class="normal">429</span>
+<span class="normal">430</span>
+<span class="normal">431</span>
+<span class="normal">432</span>
+<span class="normal">433</span>
+<span class="normal">434</span>
+<span class="normal">435</span>
+<span class="normal">436</span>
+<span class="normal">437</span>
+<span class="normal">438</span>
+<span class="normal">439</span>
+<span class="normal">440</span>
+<span class="normal">441</span>
+<span class="normal">442</span>
+<span class="normal">443</span>
+<span class="normal">444</span>
+<span class="normal">445</span>
+<span class="normal">446</span>
+<span class="normal">447</span>
+<span class="normal">448</span>
+<span class="normal">449</span>
+<span class="normal">450</span>
+<span class="normal">451</span>
+<span class="normal">452</span>
+<span class="normal">453</span>
+<span class="normal">454</span>
+<span class="normal">455</span>
+<span class="normal">456</span>
+<span class="normal">457</span>
+<span class="normal">458</span>
+<span class="normal">459</span>
+<span class="normal">460</span>
+<span class="normal">461</span>
+<span class="normal">462</span>
+<span class="normal">463</span>
+<span class="normal">464</span>
+<span class="normal">465</span>
+<span class="normal">466</span>
+<span class="normal">467</span>
+<span class="normal">468</span>
+<span class="normal">469</span>
+<span class="normal">470</span>
+<span class="normal">471</span>
+<span class="normal">472</span>
+<span class="normal">473</span>
+<span class="normal">474</span>
+<span class="normal">475</span>
+<span class="normal">476</span>
+<span class="normal">477</span>
+<span class="normal">478</span>
+<span class="normal">479</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">BedrockModel</span><span class="p">(</span><span class="n">Model</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;AWS Bedrock model provider implementation.</span>
 
 <span class="sd">    The implementation handles Bedrock-specific features such as:</span>
@@ -3849,6 +3977,7 @@
 <span class="sd">            max_tokens: Maximum number of tokens to generate in the response</span>
 <span class="sd">            model_id: The Bedrock model ID (e.g., &quot;us.anthropic.claude-3-7-sonnet-20250219-v1:0&quot;)</span>
 <span class="sd">            stop_sequences: List of sequences that will stop generation when encountered</span>
+<span class="sd">            streaming: Flag to enable/disable streaming. Defaults to True.</span>
 <span class="sd">            temperature: Controls randomness in generation (higher = more random)</span>
 <span class="sd">            top_p: Controls diversity via nucleus sampling (alternative to temperature)</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -3869,6 +3998,7 @@
         <span class="n">max_tokens</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span>
         <span class="n">model_id</span><span class="p">:</span> <span class="nb">str</span>
         <span class="n">stop_sequences</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span>
+        <span class="n">streaming</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span>
         <span class="n">temperature</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span>
         <span class="n">top_p</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span>
 
@@ -4034,11 +4164,68 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">cast</span><span class="p">(</span><span class="n">StreamEvent</span><span class="p">,</span> <span class="n">event</span><span class="p">)</span>
 
-    <span class="nd">@override</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">stream</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Iterable</span><span class="p">[</span><span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Send the request to the Bedrock model and get the streaming response.</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_has_blocked_guardrail</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">guardrail_data</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Check if guardrail data contains any blocked policies.</span>
 
-<span class="sd">        This method calls the Bedrock converse_stream API and returns the stream of response events.</span>
+<span class="sd">        Args:</span>
+<span class="sd">            guardrail_data: Guardrail data from trace information.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            True if any blocked guardrail is detected, False otherwise.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">input_assessment</span> <span class="o">=</span> <span class="n">guardrail_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;inputAssessment&quot;</span><span class="p">,</span> <span class="p">{})</span>
+        <span class="n">output_assessments</span> <span class="o">=</span> <span class="n">guardrail_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;outputAssessments&quot;</span><span class="p">,</span> <span class="p">{})</span>
+
+        <span class="c1"># Check input assessments</span>
+        <span class="k">if</span> <span class="nb">any</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_find_detected_and_blocked_policy</span><span class="p">(</span><span class="n">assessment</span><span class="p">)</span> <span class="k">for</span> <span class="n">assessment</span> <span class="ow">in</span> <span class="n">input_assessment</span><span class="o">.</span><span class="n">values</span><span class="p">()):</span>
+            <span class="k">return</span> <span class="kc">True</span>
+
+        <span class="c1"># Check output assessments</span>
+        <span class="k">if</span> <span class="nb">any</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_find_detected_and_blocked_policy</span><span class="p">(</span><span class="n">assessment</span><span class="p">)</span> <span class="k">for</span> <span class="n">assessment</span> <span class="ow">in</span> <span class="n">output_assessments</span><span class="o">.</span><span class="n">values</span><span class="p">()):</span>
+            <span class="k">return</span> <span class="kc">True</span>
+
+        <span class="k">return</span> <span class="kc">False</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_generate_redaction_events</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">StreamEvent</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Generate redaction events based on configuration.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            List of redaction events to yield.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">events</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">StreamEvent</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;guardrail_redact_input&quot;</span><span class="p">,</span> <span class="kc">True</span><span class="p">):</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Redacting user input due to guardrail.&quot;</span><span class="p">)</span>
+            <span class="n">events</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                <span class="p">{</span>
+                    <span class="s2">&quot;redactContent&quot;</span><span class="p">:</span> <span class="p">{</span>
+                        <span class="s2">&quot;redactUserContentMessage&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
+                            <span class="s2">&quot;guardrail_redact_input_message&quot;</span><span class="p">,</span> <span class="s2">&quot;[User input redacted.]&quot;</span>
+                        <span class="p">)</span>
+                    <span class="p">}</span>
+                <span class="p">}</span>
+            <span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;guardrail_redact_output&quot;</span><span class="p">,</span> <span class="kc">False</span><span class="p">):</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Redacting assistant output due to guardrail.&quot;</span><span class="p">)</span>
+            <span class="n">events</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                <span class="p">{</span>
+                    <span class="s2">&quot;redactContent&quot;</span><span class="p">:</span> <span class="p">{</span>
+                        <span class="s2">&quot;redactAssistantContentMessage&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
+                            <span class="s2">&quot;guardrail_redact_output_message&quot;</span><span class="p">,</span> <span class="s2">&quot;[Assistant output redacted.]&quot;</span>
+                        <span class="p">)</span>
+                    <span class="p">}</span>
+                <span class="p">}</span>
+            <span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">events</span>
+
+    <span class="nd">@override</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">stream</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">StreamEvent</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Send the request to the Bedrock model and get the response.</span>
+
+<span class="sd">        This method calls either the Bedrock converse_stream API or the converse API</span>
+<span class="sd">        based on the streaming parameter in the configuration.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            request: The formatted request to send to the Bedrock model</span>
@@ -4048,63 +4235,132 @@
 
 <span class="sd">        Raises:</span>
 <span class="sd">            ContextWindowOverflowException: If the input exceeds the model&#39;s context window.</span>
-<span class="sd">            EventStreamError: For all other Bedrock API errors.</span>
+<span class="sd">            ModelThrottledException: If the model service is throttling requests.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">streaming</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;streaming&quot;</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+
         <span class="k">try</span><span class="p">:</span>
-            <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">converse_stream</span><span class="p">(</span><span class="o">**</span><span class="n">request</span><span class="p">)</span>
-            <span class="k">for</span> <span class="n">chunk</span> <span class="ow">in</span> <span class="n">response</span><span class="p">[</span><span class="s2">&quot;stream&quot;</span><span class="p">]:</span>
-                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;guardrail_redact_input&quot;</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;guardrail_redact_output&quot;</span><span class="p">,</span> <span class="kc">False</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">streaming</span><span class="p">:</span>
+                <span class="c1"># Streaming implementation</span>
+                <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">converse_stream</span><span class="p">(</span><span class="o">**</span><span class="n">request</span><span class="p">)</span>
+                <span class="k">for</span> <span class="n">chunk</span> <span class="ow">in</span> <span class="n">response</span><span class="p">[</span><span class="s2">&quot;stream&quot;</span><span class="p">]:</span>
                     <span class="k">if</span> <span class="p">(</span>
                         <span class="s2">&quot;metadata&quot;</span> <span class="ow">in</span> <span class="n">chunk</span>
                         <span class="ow">and</span> <span class="s2">&quot;trace&quot;</span> <span class="ow">in</span> <span class="n">chunk</span><span class="p">[</span><span class="s2">&quot;metadata&quot;</span><span class="p">]</span>
                         <span class="ow">and</span> <span class="s2">&quot;guardrail&quot;</span> <span class="ow">in</span> <span class="n">chunk</span><span class="p">[</span><span class="s2">&quot;metadata&quot;</span><span class="p">][</span><span class="s2">&quot;trace&quot;</span><span class="p">]</span>
                     <span class="p">):</span>
-                        <span class="n">inputAssessment</span> <span class="o">=</span> <span class="n">chunk</span><span class="p">[</span><span class="s2">&quot;metadata&quot;</span><span class="p">][</span><span class="s2">&quot;trace&quot;</span><span class="p">][</span><span class="s2">&quot;guardrail&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;inputAssessment&quot;</span><span class="p">,</span> <span class="p">{})</span>
-                        <span class="n">outputAssessments</span> <span class="o">=</span> <span class="n">chunk</span><span class="p">[</span><span class="s2">&quot;metadata&quot;</span><span class="p">][</span><span class="s2">&quot;trace&quot;</span><span class="p">][</span><span class="s2">&quot;guardrail&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;outputAssessments&quot;</span><span class="p">,</span> <span class="p">{})</span>
+                        <span class="n">guardrail_data</span> <span class="o">=</span> <span class="n">chunk</span><span class="p">[</span><span class="s2">&quot;metadata&quot;</span><span class="p">][</span><span class="s2">&quot;trace&quot;</span><span class="p">][</span><span class="s2">&quot;guardrail&quot;</span><span class="p">]</span>
+                        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_has_blocked_guardrail</span><span class="p">(</span><span class="n">guardrail_data</span><span class="p">):</span>
+                            <span class="k">yield from</span> <span class="bp">self</span><span class="o">.</span><span class="n">_generate_redaction_events</span><span class="p">()</span>
+                    <span class="k">yield</span> <span class="n">chunk</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="c1"># Non-streaming implementation</span>
+                <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">converse</span><span class="p">(</span><span class="o">**</span><span class="n">request</span><span class="p">)</span>
 
-                        <span class="c1"># Check if an input or output guardrail was triggered</span>
-                        <span class="k">if</span> <span class="nb">any</span><span class="p">(</span>
-                            <span class="bp">self</span><span class="o">.</span><span class="n">_find_detected_and_blocked_policy</span><span class="p">(</span><span class="n">assessment</span><span class="p">)</span>
-                            <span class="k">for</span> <span class="n">assessment</span> <span class="ow">in</span> <span class="n">inputAssessment</span><span class="o">.</span><span class="n">values</span><span class="p">()</span>
-                        <span class="p">)</span> <span class="ow">or</span> <span class="nb">any</span><span class="p">(</span>
-                            <span class="bp">self</span><span class="o">.</span><span class="n">_find_detected_and_blocked_policy</span><span class="p">(</span><span class="n">assessment</span><span class="p">)</span>
-                            <span class="k">for</span> <span class="n">assessment</span> <span class="ow">in</span> <span class="n">outputAssessments</span><span class="o">.</span><span class="n">values</span><span class="p">()</span>
-                        <span class="p">):</span>
-                            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;guardrail_redact_input&quot;</span><span class="p">,</span> <span class="kc">True</span><span class="p">):</span>
-                                <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Found blocked input guardrail. Redacting input.&quot;</span><span class="p">)</span>
-                                <span class="k">yield</span> <span class="p">{</span>
-                                    <span class="s2">&quot;redactContent&quot;</span><span class="p">:</span> <span class="p">{</span>
-                                        <span class="s2">&quot;redactUserContentMessage&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
-                                            <span class="s2">&quot;guardrail_redact_input_message&quot;</span><span class="p">,</span> <span class="s2">&quot;[User input redacted.]&quot;</span>
-                                        <span class="p">)</span>
-                                    <span class="p">}</span>
-                                <span class="p">}</span>
-                            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;guardrail_redact_output&quot;</span><span class="p">,</span> <span class="kc">False</span><span class="p">):</span>
-                                <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Found blocked output guardrail. Redacting output.&quot;</span><span class="p">)</span>
-                                <span class="k">yield</span> <span class="p">{</span>
-                                    <span class="s2">&quot;redactContent&quot;</span><span class="p">:</span> <span class="p">{</span>
-                                        <span class="s2">&quot;redactAssistantContentMessage&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
-                                            <span class="s2">&quot;guardrail_redact_output_message&quot;</span><span class="p">,</span> <span class="s2">&quot;[Assistant output redacted.]&quot;</span>
-                                        <span class="p">)</span>
-                                    <span class="p">}</span>
-                                <span class="p">}</span>
+                <span class="c1"># Convert and yield from the response</span>
+                <span class="k">yield from</span> <span class="bp">self</span><span class="o">.</span><span class="n">_convert_non_streaming_to_streaming</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
 
-                <span class="k">yield</span> <span class="n">chunk</span>
-        <span class="k">except</span> <span class="n">EventStreamError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-            <span class="c1"># Handle throttling that occurs mid-stream?</span>
-            <span class="k">if</span> <span class="s2">&quot;ThrottlingException&quot;</span> <span class="ow">in</span> <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span> <span class="ow">and</span> <span class="s2">&quot;ConverseStream&quot;</span> <span class="ow">in</span> <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">):</span>
-                <span class="k">raise</span> <span class="n">ModelThrottledException</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">))</span> <span class="kn">from</span><span class="w"> </span><span class="nn">e</span>
+                <span class="c1"># Check for guardrail triggers after yielding any events (same as streaming path)</span>
+                <span class="k">if</span> <span class="p">(</span>
+                    <span class="s2">&quot;trace&quot;</span> <span class="ow">in</span> <span class="n">response</span>
+                    <span class="ow">and</span> <span class="s2">&quot;guardrail&quot;</span> <span class="ow">in</span> <span class="n">response</span><span class="p">[</span><span class="s2">&quot;trace&quot;</span><span class="p">]</span>
+                    <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">_has_blocked_guardrail</span><span class="p">(</span><span class="n">response</span><span class="p">[</span><span class="s2">&quot;trace&quot;</span><span class="p">][</span><span class="s2">&quot;guardrail&quot;</span><span class="p">])</span>
+                <span class="p">):</span>
+                    <span class="k">yield from</span> <span class="bp">self</span><span class="o">.</span><span class="n">_generate_redaction_events</span><span class="p">()</span>
 
-            <span class="k">if</span> <span class="nb">any</span><span class="p">(</span><span class="n">overflow_message</span> <span class="ow">in</span> <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span> <span class="k">for</span> <span class="n">overflow_message</span> <span class="ow">in</span> <span class="n">BEDROCK_CONTEXT_WINDOW_OVERFLOW_MESSAGES</span><span class="p">):</span>
+        <span class="k">except</span> <span class="n">ClientError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="n">error_message</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
+
+            <span class="c1"># Handle throttling error</span>
+            <span class="k">if</span> <span class="n">e</span><span class="o">.</span><span class="n">response</span><span class="p">[</span><span class="s2">&quot;Error&quot;</span><span class="p">][</span><span class="s2">&quot;Code&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;ThrottlingException&quot;</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="n">ModelThrottledException</span><span class="p">(</span><span class="n">error_message</span><span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">e</span>
+
+            <span class="c1"># Handle context window overflow</span>
+            <span class="k">if</span> <span class="nb">any</span><span class="p">(</span><span class="n">overflow_message</span> <span class="ow">in</span> <span class="n">error_message</span> <span class="k">for</span> <span class="n">overflow_message</span> <span class="ow">in</span> <span class="n">BEDROCK_CONTEXT_WINDOW_OVERFLOW_MESSAGES</span><span class="p">):</span>
                 <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;bedrock threw context window overflow error&quot;</span><span class="p">)</span>
                 <span class="k">raise</span> <span class="n">ContextWindowOverflowException</span><span class="p">(</span><span class="n">e</span><span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">e</span>
-            <span class="k">raise</span> <span class="n">e</span>
-        <span class="k">except</span> <span class="n">ClientError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-            <span class="c1"># Handle throttling that occurs at the beginning of the call</span>
-            <span class="k">if</span> <span class="n">e</span><span class="o">.</span><span class="n">response</span><span class="p">[</span><span class="s2">&quot;Error&quot;</span><span class="p">][</span><span class="s2">&quot;Code&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;ThrottlingException&quot;</span><span class="p">:</span>
-                <span class="k">raise</span> <span class="n">ModelThrottledException</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">))</span> <span class="kn">from</span><span class="w"> </span><span class="nn">e</span>
 
-            <span class="k">raise</span>
+            <span class="c1"># Otherwise raise the error</span>
+            <span class="k">raise</span> <span class="n">e</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_convert_non_streaming_to_streaming</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">response</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">StreamEvent</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Convert a non-streaming response to the streaming format.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            response: The non-streaming response from the Bedrock model.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            An iterable of response events in the streaming format.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Yield messageStart event</span>
+        <span class="k">yield</span> <span class="p">{</span><span class="s2">&quot;messageStart&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="n">response</span><span class="p">[</span><span class="s2">&quot;output&quot;</span><span class="p">][</span><span class="s2">&quot;message&quot;</span><span class="p">][</span><span class="s2">&quot;role&quot;</span><span class="p">]}}</span>
+
+        <span class="c1"># Process content blocks</span>
+        <span class="k">for</span> <span class="n">content</span> <span class="ow">in</span> <span class="n">response</span><span class="p">[</span><span class="s2">&quot;output&quot;</span><span class="p">][</span><span class="s2">&quot;message&quot;</span><span class="p">][</span><span class="s2">&quot;content&quot;</span><span class="p">]:</span>
+            <span class="c1"># Yield contentBlockStart event if needed</span>
+            <span class="k">if</span> <span class="s2">&quot;toolUse&quot;</span> <span class="ow">in</span> <span class="n">content</span><span class="p">:</span>
+                <span class="k">yield</span> <span class="p">{</span>
+                    <span class="s2">&quot;contentBlockStart&quot;</span><span class="p">:</span> <span class="p">{</span>
+                        <span class="s2">&quot;start&quot;</span><span class="p">:</span> <span class="p">{</span>
+                            <span class="s2">&quot;toolUse&quot;</span><span class="p">:</span> <span class="p">{</span>
+                                <span class="s2">&quot;toolUseId&quot;</span><span class="p">:</span> <span class="n">content</span><span class="p">[</span><span class="s2">&quot;toolUse&quot;</span><span class="p">][</span><span class="s2">&quot;toolUseId&quot;</span><span class="p">],</span>
+                                <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="n">content</span><span class="p">[</span><span class="s2">&quot;toolUse&quot;</span><span class="p">][</span><span class="s2">&quot;name&quot;</span><span class="p">],</span>
+                            <span class="p">}</span>
+                        <span class="p">},</span>
+                    <span class="p">}</span>
+                <span class="p">}</span>
+
+                <span class="c1"># For tool use, we need to yield the input as a delta</span>
+                <span class="n">input_value</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">content</span><span class="p">[</span><span class="s2">&quot;toolUse&quot;</span><span class="p">][</span><span class="s2">&quot;input&quot;</span><span class="p">])</span>
+
+                <span class="k">yield</span> <span class="p">{</span><span class="s2">&quot;contentBlockDelta&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;delta&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;toolUse&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;input&quot;</span><span class="p">:</span> <span class="n">input_value</span><span class="p">}}}}</span>
+            <span class="k">elif</span> <span class="s2">&quot;text&quot;</span> <span class="ow">in</span> <span class="n">content</span><span class="p">:</span>
+                <span class="c1"># Then yield the text as a delta</span>
+                <span class="k">yield</span> <span class="p">{</span>
+                    <span class="s2">&quot;contentBlockDelta&quot;</span><span class="p">:</span> <span class="p">{</span>
+                        <span class="s2">&quot;delta&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="n">content</span><span class="p">[</span><span class="s2">&quot;text&quot;</span><span class="p">]},</span>
+                    <span class="p">}</span>
+                <span class="p">}</span>
+            <span class="k">elif</span> <span class="s2">&quot;reasoningContent&quot;</span> <span class="ow">in</span> <span class="n">content</span><span class="p">:</span>
+                <span class="c1"># Then yield the reasoning content as a delta</span>
+                <span class="k">yield</span> <span class="p">{</span>
+                    <span class="s2">&quot;contentBlockDelta&quot;</span><span class="p">:</span> <span class="p">{</span>
+                        <span class="s2">&quot;delta&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;reasoningContent&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="n">content</span><span class="p">[</span><span class="s2">&quot;reasoningContent&quot;</span><span class="p">][</span><span class="s2">&quot;reasoningText&quot;</span><span class="p">][</span><span class="s2">&quot;text&quot;</span><span class="p">]}}</span>
+                    <span class="p">}</span>
+                <span class="p">}</span>
+
+                <span class="k">if</span> <span class="s2">&quot;signature&quot;</span> <span class="ow">in</span> <span class="n">content</span><span class="p">[</span><span class="s2">&quot;reasoningContent&quot;</span><span class="p">][</span><span class="s2">&quot;reasoningText&quot;</span><span class="p">]:</span>
+                    <span class="k">yield</span> <span class="p">{</span>
+                        <span class="s2">&quot;contentBlockDelta&quot;</span><span class="p">:</span> <span class="p">{</span>
+                            <span class="s2">&quot;delta&quot;</span><span class="p">:</span> <span class="p">{</span>
+                                <span class="s2">&quot;reasoningContent&quot;</span><span class="p">:</span> <span class="p">{</span>
+                                    <span class="s2">&quot;signature&quot;</span><span class="p">:</span> <span class="n">content</span><span class="p">[</span><span class="s2">&quot;reasoningContent&quot;</span><span class="p">][</span><span class="s2">&quot;reasoningText&quot;</span><span class="p">][</span><span class="s2">&quot;signature&quot;</span><span class="p">]</span>
+                                <span class="p">}</span>
+                            <span class="p">}</span>
+                        <span class="p">}</span>
+                    <span class="p">}</span>
+
+            <span class="c1"># Yield contentBlockStop event</span>
+            <span class="k">yield</span> <span class="p">{</span><span class="s2">&quot;contentBlockStop&quot;</span><span class="p">:</span> <span class="p">{}}</span>
+
+        <span class="c1"># Yield messageStop event</span>
+        <span class="k">yield</span> <span class="p">{</span>
+            <span class="s2">&quot;messageStop&quot;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s2">&quot;stopReason&quot;</span><span class="p">:</span> <span class="n">response</span><span class="p">[</span><span class="s2">&quot;stopReason&quot;</span><span class="p">],</span>
+                <span class="s2">&quot;additionalModelResponseFields&quot;</span><span class="p">:</span> <span class="n">response</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;additionalModelResponseFields&quot;</span><span class="p">),</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+
+        <span class="c1"># Yield metadata event</span>
+        <span class="k">if</span> <span class="s2">&quot;usage&quot;</span> <span class="ow">in</span> <span class="n">response</span> <span class="ow">or</span> <span class="s2">&quot;metrics&quot;</span> <span class="ow">in</span> <span class="n">response</span> <span class="ow">or</span> <span class="s2">&quot;trace&quot;</span> <span class="ow">in</span> <span class="n">response</span><span class="p">:</span>
+            <span class="n">metadata</span><span class="p">:</span> <span class="n">StreamEvent</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;metadata&quot;</span><span class="p">:</span> <span class="p">{}}</span>
+            <span class="k">if</span> <span class="s2">&quot;usage&quot;</span> <span class="ow">in</span> <span class="n">response</span><span class="p">:</span>
+                <span class="n">metadata</span><span class="p">[</span><span class="s2">&quot;metadata&quot;</span><span class="p">][</span><span class="s2">&quot;usage&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">response</span><span class="p">[</span><span class="s2">&quot;usage&quot;</span><span class="p">]</span>
+            <span class="k">if</span> <span class="s2">&quot;metrics&quot;</span> <span class="ow">in</span> <span class="n">response</span><span class="p">:</span>
+                <span class="n">metadata</span><span class="p">[</span><span class="s2">&quot;metadata&quot;</span><span class="p">][</span><span class="s2">&quot;metrics&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">response</span><span class="p">[</span><span class="s2">&quot;metrics&quot;</span><span class="p">]</span>
+            <span class="k">if</span> <span class="s2">&quot;trace&quot;</span> <span class="ow">in</span> <span class="n">response</span><span class="p">:</span>
+                <span class="n">metadata</span><span class="p">[</span><span class="s2">&quot;metadata&quot;</span><span class="p">][</span><span class="s2">&quot;trace&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">response</span><span class="p">[</span><span class="s2">&quot;trace&quot;</span><span class="p">]</span>
+            <span class="k">yield</span> <span class="n">metadata</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_find_detected_and_blocked_policy</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">input</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Recursively checks if the assessment contains a detected and blocked guardrail.</span>
@@ -4356,6 +4612,17 @@
             </td>
           </tr>
           <tr class="doc-section-item">
+            <td><code><span title="strands.models.bedrock.BedrockModel.BedrockConfig.streaming">streaming</span></code></td>
+            <td>
+                  <code><span title="typing.Optional">Optional</span>[<span title="bool">bool</span>]</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Flag to enable/disable streaming. Defaults to True.</p>
+              </div>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
             <td><code><span title="strands.models.bedrock.BedrockModel.BedrockConfig.temperature">temperature</span></code></td>
             <td>
                   <code><span title="typing.Optional">Optional</span>[<span title="float">float</span>]</code>
@@ -4388,8 +4655,7 @@
 
               <details class="quote">
                 <summary>Source code in <code>strands/models/bedrock.py</code></summary>
-                <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">44</span>
-<span class="normal">45</span>
+                <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">45</span>
 <span class="normal">46</span>
 <span class="normal">47</span>
 <span class="normal">48</span>
@@ -4429,7 +4695,10 @@
 <span class="normal">82</span>
 <span class="normal">83</span>
 <span class="normal">84</span>
-<span class="normal">85</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">BedrockConfig</span><span class="p">(</span><span class="n">TypedDict</span><span class="p">,</span> <span class="n">total</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<span class="normal">85</span>
+<span class="normal">86</span>
+<span class="normal">87</span>
+<span class="normal">88</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">BedrockConfig</span><span class="p">(</span><span class="n">TypedDict</span><span class="p">,</span> <span class="n">total</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Configuration options for Bedrock models.</span>
 
 <span class="sd">    Attributes:</span>
@@ -4449,6 +4718,7 @@
 <span class="sd">        max_tokens: Maximum number of tokens to generate in the response</span>
 <span class="sd">        model_id: The Bedrock model ID (e.g., &quot;us.anthropic.claude-3-7-sonnet-20250219-v1:0&quot;)</span>
 <span class="sd">        stop_sequences: List of sequences that will stop generation when encountered</span>
+<span class="sd">        streaming: Flag to enable/disable streaming. Defaults to True.</span>
 <span class="sd">        temperature: Controls randomness in generation (higher = more random)</span>
 <span class="sd">        top_p: Controls diversity via nucleus sampling (alternative to temperature)</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -4469,6 +4739,7 @@
     <span class="n">max_tokens</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span>
     <span class="n">model_id</span><span class="p">:</span> <span class="nb">str</span>
     <span class="n">stop_sequences</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span>
+    <span class="n">streaming</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span>
     <span class="n">temperature</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span>
     <span class="n">top_p</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span>
 </code></pre></div></td></tr></table></div>
@@ -4591,10 +4862,7 @@ Defaults to the AWS_REGION environment variable if set, or "us-west-2" if not se
 
             <details class="quote">
               <summary>Source code in <code>strands/models/bedrock.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 87</span>
-<span class="normal"> 88</span>
-<span class="normal"> 89</span>
-<span class="normal"> 90</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 90</span>
 <span class="normal"> 91</span>
 <span class="normal"> 92</span>
 <span class="normal"> 93</span>
@@ -4637,7 +4905,10 @@ Defaults to the AWS_REGION environment variable if set, or "us-west-2" if not se
 <span class="normal">130</span>
 <span class="normal">131</span>
 <span class="normal">132</span>
-<span class="normal">133</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
+<span class="normal">133</span>
+<span class="normal">134</span>
+<span class="normal">135</span>
+<span class="normal">136</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
     <span class="o">*</span><span class="p">,</span>
     <span class="n">boto_session</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">boto3</span><span class="o">.</span><span class="n">Session</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
@@ -4760,17 +5031,17 @@ Defaults to the AWS_REGION environment variable if set, or "us-west-2" if not se
 
             <details class="quote">
               <summary>Source code in <code>strands/models/bedrock.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">237</span>
-<span class="normal">238</span>
-<span class="normal">239</span>
-<span class="normal">240</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">240</span>
 <span class="normal">241</span>
 <span class="normal">242</span>
 <span class="normal">243</span>
 <span class="normal">244</span>
 <span class="normal">245</span>
 <span class="normal">246</span>
-<span class="normal">247</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@override</span>
+<span class="normal">247</span>
+<span class="normal">248</span>
+<span class="normal">249</span>
+<span class="normal">250</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@override</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">format_chunk</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">StreamEvent</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Format the Bedrock response events into standardized message chunks.</span>
 
@@ -4893,10 +5164,7 @@ Defaults to the AWS_REGION environment variable if set, or "us-west-2" if not se
 
             <details class="quote">
               <summary>Source code in <code>strands/models/bedrock.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">153</span>
-<span class="normal">154</span>
-<span class="normal">155</span>
-<span class="normal">156</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">156</span>
 <span class="normal">157</span>
 <span class="normal">158</span>
 <span class="normal">159</span>
@@ -4975,7 +5243,10 @@ Defaults to the AWS_REGION environment variable if set, or "us-west-2" if not se
 <span class="normal">232</span>
 <span class="normal">233</span>
 <span class="normal">234</span>
-<span class="normal">235</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@override</span>
+<span class="normal">235</span>
+<span class="normal">236</span>
+<span class="normal">237</span>
+<span class="normal">238</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@override</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">format_request</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
     <span class="n">messages</span><span class="p">:</span> <span class="n">Messages</span><span class="p">,</span>
@@ -5103,14 +5374,14 @@ Defaults to the AWS_REGION environment variable if set, or "us-west-2" if not se
 
             <details class="quote">
               <summary>Source code in <code>strands/models/bedrock.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">144</span>
-<span class="normal">145</span>
-<span class="normal">146</span>
-<span class="normal">147</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">147</span>
 <span class="normal">148</span>
 <span class="normal">149</span>
 <span class="normal">150</span>
-<span class="normal">151</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@override</span>
+<span class="normal">151</span>
+<span class="normal">152</span>
+<span class="normal">153</span>
+<span class="normal">154</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@override</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">get_config</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">BedrockConfig</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Get the current Bedrock Model configuration.</span>
 
@@ -5135,8 +5406,9 @@ Defaults to the AWS_REGION environment variable if set, or "us-west-2" if not se
 
     <div class="doc doc-contents ">
 
-        <p>Send the request to the Bedrock model and get the streaming response.</p>
-<p>This method calls the Bedrock converse_stream API and returns the stream of response events.</p>
+        <p>Send the request to the Bedrock model and get the response.</p>
+<p>This method calls either the Bedrock converse_stream API or the converse API
+based on the streaming parameter in the configuration.</p>
 
 
 <p><span class="doc-section-title">Parameters:</span></p>
@@ -5181,7 +5453,7 @@ Defaults to the AWS_REGION environment variable if set, or "us-west-2" if not se
       <tbody>
           <tr class="doc-section-item">
             <td>
-                  <code><span title="typing.Iterable">Iterable</span>[<span title="dict">dict</span>[<span title="str">str</span>, <span title="typing.Any">Any</span>]]</code>
+                  <code><span title="typing.Iterable">Iterable</span>[<a class="autorefs autorefs-internal" title="StreamEvent (strands.types.streaming.StreamEvent)" href="../types/#strands.types.streaming.StreamEvent">StreamEvent</a>]</code>
             </td>
             <td>
               <div class="doc-md-description">
@@ -5214,11 +5486,11 @@ Defaults to the AWS_REGION environment variable if set, or "us-west-2" if not se
           </tr>
           <tr class="doc-section-item">
             <td>
-                  <code><span title="botocore.exceptions.EventStreamError">EventStreamError</span></code>
+                  <code><a class="autorefs autorefs-internal" title="ModelThrottledException (strands.types.exceptions.ModelThrottledException)" href="../types/#strands.types.exceptions.ModelThrottledException">ModelThrottledException</a></code>
             </td>
             <td>
               <div class="doc-md-description">
-                <p>For all other Bedrock API errors.</p>
+                <p>If the model service is throttling requests.</p>
               </div>
             </td>
           </tr>
@@ -5228,66 +5500,7 @@ Defaults to the AWS_REGION environment variable if set, or "us-west-2" if not se
 
             <details class="quote">
               <summary>Source code in <code>strands/models/bedrock.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">249</span>
-<span class="normal">250</span>
-<span class="normal">251</span>
-<span class="normal">252</span>
-<span class="normal">253</span>
-<span class="normal">254</span>
-<span class="normal">255</span>
-<span class="normal">256</span>
-<span class="normal">257</span>
-<span class="normal">258</span>
-<span class="normal">259</span>
-<span class="normal">260</span>
-<span class="normal">261</span>
-<span class="normal">262</span>
-<span class="normal">263</span>
-<span class="normal">264</span>
-<span class="normal">265</span>
-<span class="normal">266</span>
-<span class="normal">267</span>
-<span class="normal">268</span>
-<span class="normal">269</span>
-<span class="normal">270</span>
-<span class="normal">271</span>
-<span class="normal">272</span>
-<span class="normal">273</span>
-<span class="normal">274</span>
-<span class="normal">275</span>
-<span class="normal">276</span>
-<span class="normal">277</span>
-<span class="normal">278</span>
-<span class="normal">279</span>
-<span class="normal">280</span>
-<span class="normal">281</span>
-<span class="normal">282</span>
-<span class="normal">283</span>
-<span class="normal">284</span>
-<span class="normal">285</span>
-<span class="normal">286</span>
-<span class="normal">287</span>
-<span class="normal">288</span>
-<span class="normal">289</span>
-<span class="normal">290</span>
-<span class="normal">291</span>
-<span class="normal">292</span>
-<span class="normal">293</span>
-<span class="normal">294</span>
-<span class="normal">295</span>
-<span class="normal">296</span>
-<span class="normal">297</span>
-<span class="normal">298</span>
-<span class="normal">299</span>
-<span class="normal">300</span>
-<span class="normal">301</span>
-<span class="normal">302</span>
-<span class="normal">303</span>
-<span class="normal">304</span>
-<span class="normal">305</span>
-<span class="normal">306</span>
-<span class="normal">307</span>
-<span class="normal">308</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">308</span>
 <span class="normal">309</span>
 <span class="normal">310</span>
 <span class="normal">311</span>
@@ -5298,11 +5511,62 @@ Defaults to the AWS_REGION environment variable if set, or "us-west-2" if not se
 <span class="normal">316</span>
 <span class="normal">317</span>
 <span class="normal">318</span>
-<span class="normal">319</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@override</span>
-<span class="k">def</span><span class="w"> </span><span class="nf">stream</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Iterable</span><span class="p">[</span><span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Send the request to the Bedrock model and get the streaming response.</span>
+<span class="normal">319</span>
+<span class="normal">320</span>
+<span class="normal">321</span>
+<span class="normal">322</span>
+<span class="normal">323</span>
+<span class="normal">324</span>
+<span class="normal">325</span>
+<span class="normal">326</span>
+<span class="normal">327</span>
+<span class="normal">328</span>
+<span class="normal">329</span>
+<span class="normal">330</span>
+<span class="normal">331</span>
+<span class="normal">332</span>
+<span class="normal">333</span>
+<span class="normal">334</span>
+<span class="normal">335</span>
+<span class="normal">336</span>
+<span class="normal">337</span>
+<span class="normal">338</span>
+<span class="normal">339</span>
+<span class="normal">340</span>
+<span class="normal">341</span>
+<span class="normal">342</span>
+<span class="normal">343</span>
+<span class="normal">344</span>
+<span class="normal">345</span>
+<span class="normal">346</span>
+<span class="normal">347</span>
+<span class="normal">348</span>
+<span class="normal">349</span>
+<span class="normal">350</span>
+<span class="normal">351</span>
+<span class="normal">352</span>
+<span class="normal">353</span>
+<span class="normal">354</span>
+<span class="normal">355</span>
+<span class="normal">356</span>
+<span class="normal">357</span>
+<span class="normal">358</span>
+<span class="normal">359</span>
+<span class="normal">360</span>
+<span class="normal">361</span>
+<span class="normal">362</span>
+<span class="normal">363</span>
+<span class="normal">364</span>
+<span class="normal">365</span>
+<span class="normal">366</span>
+<span class="normal">367</span>
+<span class="normal">368</span>
+<span class="normal">369</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@override</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">stream</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">StreamEvent</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Send the request to the Bedrock model and get the response.</span>
 
-<span class="sd">    This method calls the Bedrock converse_stream API and returns the stream of response events.</span>
+<span class="sd">    This method calls either the Bedrock converse_stream API or the converse API</span>
+<span class="sd">    based on the streaming parameter in the configuration.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        request: The formatted request to send to the Bedrock model</span>
@@ -5312,63 +5576,53 @@ Defaults to the AWS_REGION environment variable if set, or "us-west-2" if not se
 
 <span class="sd">    Raises:</span>
 <span class="sd">        ContextWindowOverflowException: If the input exceeds the model&#39;s context window.</span>
-<span class="sd">        EventStreamError: For all other Bedrock API errors.</span>
+<span class="sd">        ModelThrottledException: If the model service is throttling requests.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">streaming</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;streaming&quot;</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+
     <span class="k">try</span><span class="p">:</span>
-        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">converse_stream</span><span class="p">(</span><span class="o">**</span><span class="n">request</span><span class="p">)</span>
-        <span class="k">for</span> <span class="n">chunk</span> <span class="ow">in</span> <span class="n">response</span><span class="p">[</span><span class="s2">&quot;stream&quot;</span><span class="p">]:</span>
-            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;guardrail_redact_input&quot;</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;guardrail_redact_output&quot;</span><span class="p">,</span> <span class="kc">False</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">streaming</span><span class="p">:</span>
+            <span class="c1"># Streaming implementation</span>
+            <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">converse_stream</span><span class="p">(</span><span class="o">**</span><span class="n">request</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">chunk</span> <span class="ow">in</span> <span class="n">response</span><span class="p">[</span><span class="s2">&quot;stream&quot;</span><span class="p">]:</span>
                 <span class="k">if</span> <span class="p">(</span>
                     <span class="s2">&quot;metadata&quot;</span> <span class="ow">in</span> <span class="n">chunk</span>
                     <span class="ow">and</span> <span class="s2">&quot;trace&quot;</span> <span class="ow">in</span> <span class="n">chunk</span><span class="p">[</span><span class="s2">&quot;metadata&quot;</span><span class="p">]</span>
                     <span class="ow">and</span> <span class="s2">&quot;guardrail&quot;</span> <span class="ow">in</span> <span class="n">chunk</span><span class="p">[</span><span class="s2">&quot;metadata&quot;</span><span class="p">][</span><span class="s2">&quot;trace&quot;</span><span class="p">]</span>
                 <span class="p">):</span>
-                    <span class="n">inputAssessment</span> <span class="o">=</span> <span class="n">chunk</span><span class="p">[</span><span class="s2">&quot;metadata&quot;</span><span class="p">][</span><span class="s2">&quot;trace&quot;</span><span class="p">][</span><span class="s2">&quot;guardrail&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;inputAssessment&quot;</span><span class="p">,</span> <span class="p">{})</span>
-                    <span class="n">outputAssessments</span> <span class="o">=</span> <span class="n">chunk</span><span class="p">[</span><span class="s2">&quot;metadata&quot;</span><span class="p">][</span><span class="s2">&quot;trace&quot;</span><span class="p">][</span><span class="s2">&quot;guardrail&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;outputAssessments&quot;</span><span class="p">,</span> <span class="p">{})</span>
+                    <span class="n">guardrail_data</span> <span class="o">=</span> <span class="n">chunk</span><span class="p">[</span><span class="s2">&quot;metadata&quot;</span><span class="p">][</span><span class="s2">&quot;trace&quot;</span><span class="p">][</span><span class="s2">&quot;guardrail&quot;</span><span class="p">]</span>
+                    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_has_blocked_guardrail</span><span class="p">(</span><span class="n">guardrail_data</span><span class="p">):</span>
+                        <span class="k">yield from</span> <span class="bp">self</span><span class="o">.</span><span class="n">_generate_redaction_events</span><span class="p">()</span>
+                <span class="k">yield</span> <span class="n">chunk</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># Non-streaming implementation</span>
+            <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">converse</span><span class="p">(</span><span class="o">**</span><span class="n">request</span><span class="p">)</span>
 
-                    <span class="c1"># Check if an input or output guardrail was triggered</span>
-                    <span class="k">if</span> <span class="nb">any</span><span class="p">(</span>
-                        <span class="bp">self</span><span class="o">.</span><span class="n">_find_detected_and_blocked_policy</span><span class="p">(</span><span class="n">assessment</span><span class="p">)</span>
-                        <span class="k">for</span> <span class="n">assessment</span> <span class="ow">in</span> <span class="n">inputAssessment</span><span class="o">.</span><span class="n">values</span><span class="p">()</span>
-                    <span class="p">)</span> <span class="ow">or</span> <span class="nb">any</span><span class="p">(</span>
-                        <span class="bp">self</span><span class="o">.</span><span class="n">_find_detected_and_blocked_policy</span><span class="p">(</span><span class="n">assessment</span><span class="p">)</span>
-                        <span class="k">for</span> <span class="n">assessment</span> <span class="ow">in</span> <span class="n">outputAssessments</span><span class="o">.</span><span class="n">values</span><span class="p">()</span>
-                    <span class="p">):</span>
-                        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;guardrail_redact_input&quot;</span><span class="p">,</span> <span class="kc">True</span><span class="p">):</span>
-                            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Found blocked input guardrail. Redacting input.&quot;</span><span class="p">)</span>
-                            <span class="k">yield</span> <span class="p">{</span>
-                                <span class="s2">&quot;redactContent&quot;</span><span class="p">:</span> <span class="p">{</span>
-                                    <span class="s2">&quot;redactUserContentMessage&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
-                                        <span class="s2">&quot;guardrail_redact_input_message&quot;</span><span class="p">,</span> <span class="s2">&quot;[User input redacted.]&quot;</span>
-                                    <span class="p">)</span>
-                                <span class="p">}</span>
-                            <span class="p">}</span>
-                        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;guardrail_redact_output&quot;</span><span class="p">,</span> <span class="kc">False</span><span class="p">):</span>
-                            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Found blocked output guardrail. Redacting output.&quot;</span><span class="p">)</span>
-                            <span class="k">yield</span> <span class="p">{</span>
-                                <span class="s2">&quot;redactContent&quot;</span><span class="p">:</span> <span class="p">{</span>
-                                    <span class="s2">&quot;redactAssistantContentMessage&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
-                                        <span class="s2">&quot;guardrail_redact_output_message&quot;</span><span class="p">,</span> <span class="s2">&quot;[Assistant output redacted.]&quot;</span>
-                                    <span class="p">)</span>
-                                <span class="p">}</span>
-                            <span class="p">}</span>
+            <span class="c1"># Convert and yield from the response</span>
+            <span class="k">yield from</span> <span class="bp">self</span><span class="o">.</span><span class="n">_convert_non_streaming_to_streaming</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
 
-            <span class="k">yield</span> <span class="n">chunk</span>
-    <span class="k">except</span> <span class="n">EventStreamError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-        <span class="c1"># Handle throttling that occurs mid-stream?</span>
-        <span class="k">if</span> <span class="s2">&quot;ThrottlingException&quot;</span> <span class="ow">in</span> <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span> <span class="ow">and</span> <span class="s2">&quot;ConverseStream&quot;</span> <span class="ow">in</span> <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">):</span>
-            <span class="k">raise</span> <span class="n">ModelThrottledException</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">))</span> <span class="kn">from</span><span class="w"> </span><span class="nn">e</span>
+            <span class="c1"># Check for guardrail triggers after yielding any events (same as streaming path)</span>
+            <span class="k">if</span> <span class="p">(</span>
+                <span class="s2">&quot;trace&quot;</span> <span class="ow">in</span> <span class="n">response</span>
+                <span class="ow">and</span> <span class="s2">&quot;guardrail&quot;</span> <span class="ow">in</span> <span class="n">response</span><span class="p">[</span><span class="s2">&quot;trace&quot;</span><span class="p">]</span>
+                <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">_has_blocked_guardrail</span><span class="p">(</span><span class="n">response</span><span class="p">[</span><span class="s2">&quot;trace&quot;</span><span class="p">][</span><span class="s2">&quot;guardrail&quot;</span><span class="p">])</span>
+            <span class="p">):</span>
+                <span class="k">yield from</span> <span class="bp">self</span><span class="o">.</span><span class="n">_generate_redaction_events</span><span class="p">()</span>
 
-        <span class="k">if</span> <span class="nb">any</span><span class="p">(</span><span class="n">overflow_message</span> <span class="ow">in</span> <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span> <span class="k">for</span> <span class="n">overflow_message</span> <span class="ow">in</span> <span class="n">BEDROCK_CONTEXT_WINDOW_OVERFLOW_MESSAGES</span><span class="p">):</span>
+    <span class="k">except</span> <span class="n">ClientError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="n">error_message</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
+
+        <span class="c1"># Handle throttling error</span>
+        <span class="k">if</span> <span class="n">e</span><span class="o">.</span><span class="n">response</span><span class="p">[</span><span class="s2">&quot;Error&quot;</span><span class="p">][</span><span class="s2">&quot;Code&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;ThrottlingException&quot;</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">ModelThrottledException</span><span class="p">(</span><span class="n">error_message</span><span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">e</span>
+
+        <span class="c1"># Handle context window overflow</span>
+        <span class="k">if</span> <span class="nb">any</span><span class="p">(</span><span class="n">overflow_message</span> <span class="ow">in</span> <span class="n">error_message</span> <span class="k">for</span> <span class="n">overflow_message</span> <span class="ow">in</span> <span class="n">BEDROCK_CONTEXT_WINDOW_OVERFLOW_MESSAGES</span><span class="p">):</span>
             <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;bedrock threw context window overflow error&quot;</span><span class="p">)</span>
             <span class="k">raise</span> <span class="n">ContextWindowOverflowException</span><span class="p">(</span><span class="n">e</span><span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">e</span>
-        <span class="k">raise</span> <span class="n">e</span>
-    <span class="k">except</span> <span class="n">ClientError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-        <span class="c1"># Handle throttling that occurs at the beginning of the call</span>
-        <span class="k">if</span> <span class="n">e</span><span class="o">.</span><span class="n">response</span><span class="p">[</span><span class="s2">&quot;Error&quot;</span><span class="p">][</span><span class="s2">&quot;Code&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;ThrottlingException&quot;</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="n">ModelThrottledException</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">))</span> <span class="kn">from</span><span class="w"> </span><span class="nn">e</span>
 
-        <span class="k">raise</span>
+        <span class="c1"># Otherwise raise the error</span>
+        <span class="k">raise</span> <span class="n">e</span>
 </code></pre></div></td></tr></table></div>
             </details>
     </div>
@@ -5422,14 +5676,14 @@ Defaults to the AWS_REGION environment variable if set, or "us-west-2" if not se
 
             <details class="quote">
               <summary>Source code in <code>strands/models/bedrock.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">135</span>
-<span class="normal">136</span>
-<span class="normal">137</span>
-<span class="normal">138</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">138</span>
 <span class="normal">139</span>
 <span class="normal">140</span>
 <span class="normal">141</span>
-<span class="normal">142</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@override</span>
+<span class="normal">142</span>
+<span class="normal">143</span>
+<span class="normal">144</span>
+<span class="normal">145</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@override</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">update_config</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">model_config</span><span class="p">:</span> <span class="n">Unpack</span><span class="p">[</span><span class="n">BedrockConfig</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>  <span class="c1"># type: ignore</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Update the Bedrock Model configuration with the provided arguments.</span>
 
@@ -5853,7 +6107,10 @@ Defaults to the AWS_REGION environment variable if set, or "us-west-2" if not se
 <span class="normal">354</span>
 <span class="normal">355</span>
 <span class="normal">356</span>
-<span class="normal">357</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">AnthropicModel</span><span class="p">(</span><span class="n">Model</span><span class="p">):</span>
+<span class="normal">357</span>
+<span class="normal">358</span>
+<span class="normal">359</span>
+<span class="normal">360</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">AnthropicModel</span><span class="p">(</span><span class="n">Model</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Anthropic model provider implementation.&quot;&quot;&quot;</span>
 
     <span class="n">EVENT_TYPES</span> <span class="o">=</span> <span class="p">{</span>
@@ -5929,13 +6186,16 @@ Defaults to the AWS_REGION environment variable if set, or "us-west-2" if not se
 <span class="sd">            Anthropic formatted content block.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="s2">&quot;document&quot;</span> <span class="ow">in</span> <span class="n">content</span><span class="p">:</span>
+            <span class="n">mime_type</span> <span class="o">=</span> <span class="n">mimetypes</span><span class="o">.</span><span class="n">types_map</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;.</span><span class="si">{</span><span class="n">content</span><span class="p">[</span><span class="s1">&#39;document&#39;</span><span class="p">][</span><span class="s1">&#39;format&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;application/octet-stream&quot;</span><span class="p">)</span>
             <span class="k">return</span> <span class="p">{</span>
                 <span class="s2">&quot;source&quot;</span><span class="p">:</span> <span class="p">{</span>
-                    <span class="s2">&quot;data&quot;</span><span class="p">:</span> <span class="n">base64</span><span class="o">.</span><span class="n">b64encode</span><span class="p">(</span><span class="n">content</span><span class="p">[</span><span class="s2">&quot;document&quot;</span><span class="p">][</span><span class="s2">&quot;source&quot;</span><span class="p">][</span><span class="s2">&quot;bytes&quot;</span><span class="p">])</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s2">&quot;utf-8&quot;</span><span class="p">),</span>
-                    <span class="s2">&quot;media_type&quot;</span><span class="p">:</span> <span class="n">mimetypes</span><span class="o">.</span><span class="n">types_map</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
-                        <span class="sa">f</span><span class="s2">&quot;.</span><span class="si">{</span><span class="n">content</span><span class="p">[</span><span class="s1">&#39;document&#39;</span><span class="p">][</span><span class="s1">&#39;format&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;application/octet-stream&quot;</span>
+                    <span class="s2">&quot;data&quot;</span><span class="p">:</span> <span class="p">(</span>
+                        <span class="n">content</span><span class="p">[</span><span class="s2">&quot;document&quot;</span><span class="p">][</span><span class="s2">&quot;source&quot;</span><span class="p">][</span><span class="s2">&quot;bytes&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span>
+                        <span class="k">if</span> <span class="n">mime_type</span> <span class="o">==</span> <span class="s2">&quot;text/plain&quot;</span>
+                        <span class="k">else</span> <span class="n">base64</span><span class="o">.</span><span class="n">b64encode</span><span class="p">(</span><span class="n">content</span><span class="p">[</span><span class="s2">&quot;document&quot;</span><span class="p">][</span><span class="s2">&quot;source&quot;</span><span class="p">][</span><span class="s2">&quot;bytes&quot;</span><span class="p">])</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span>
                     <span class="p">),</span>
-                    <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;base64&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;media_type&quot;</span><span class="p">:</span> <span class="n">mime_type</span><span class="p">,</span>
+                    <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;text&quot;</span> <span class="k">if</span> <span class="n">mime_type</span> <span class="o">==</span> <span class="s2">&quot;text/plain&quot;</span> <span class="k">else</span> <span class="s2">&quot;base64&quot;</span><span class="p">,</span>
                 <span class="p">},</span>
                 <span class="s2">&quot;title&quot;</span><span class="p">:</span> <span class="n">content</span><span class="p">[</span><span class="s2">&quot;document&quot;</span><span class="p">][</span><span class="s2">&quot;name&quot;</span><span class="p">],</span>
                 <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;document&quot;</span><span class="p">,</span>
@@ -6521,10 +6781,7 @@ This error should never be encountered as we control chunk_type in the stream me
 
             <details class="quote">
               <summary>Source code in <code>strands/models/anthropic.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">209</span>
-<span class="normal">210</span>
-<span class="normal">211</span>
-<span class="normal">212</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">212</span>
 <span class="normal">213</span>
 <span class="normal">214</span>
 <span class="normal">215</span>
@@ -6637,7 +6894,10 @@ This error should never be encountered as we control chunk_type in the stream me
 <span class="normal">322</span>
 <span class="normal">323</span>
 <span class="normal">324</span>
-<span class="normal">325</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@override</span>
+<span class="normal">325</span>
+<span class="normal">326</span>
+<span class="normal">327</span>
+<span class="normal">328</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@override</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">format_chunk</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">StreamEvent</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Format the Anthropic response events into standardized message chunks.</span>
 
@@ -6866,10 +7126,7 @@ This error should never be encountered as we control chunk_type in the stream me
 
             <details class="quote">
               <summary>Source code in <code>strands/models/anthropic.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">179</span>
-<span class="normal">180</span>
-<span class="normal">181</span>
-<span class="normal">182</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">182</span>
 <span class="normal">183</span>
 <span class="normal">184</span>
 <span class="normal">185</span>
@@ -6894,7 +7151,10 @@ This error should never be encountered as we control chunk_type in the stream me
 <span class="normal">204</span>
 <span class="normal">205</span>
 <span class="normal">206</span>
-<span class="normal">207</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@override</span>
+<span class="normal">207</span>
+<span class="normal">208</span>
+<span class="normal">209</span>
+<span class="normal">210</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@override</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">format_request</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span> <span class="n">messages</span><span class="p">:</span> <span class="n">Messages</span><span class="p">,</span> <span class="n">tool_specs</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="n">ToolSpec</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">system_prompt</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
@@ -7092,10 +7352,7 @@ This error should never be encountered as we control chunk_type in the stream me
 
             <details class="quote">
               <summary>Source code in <code>strands/models/anthropic.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">327</span>
-<span class="normal">328</span>
-<span class="normal">329</span>
-<span class="normal">330</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">330</span>
 <span class="normal">331</span>
 <span class="normal">332</span>
 <span class="normal">333</span>
@@ -7122,7 +7379,10 @@ This error should never be encountered as we control chunk_type in the stream me
 <span class="normal">354</span>
 <span class="normal">355</span>
 <span class="normal">356</span>
-<span class="normal">357</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@override</span>
+<span class="normal">357</span>
+<span class="normal">358</span>
+<span class="normal">359</span>
+<span class="normal">360</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@override</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">stream</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Iterable</span><span class="p">[</span><span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Send the request to the Anthropic model and get the streaming response.</span>
 

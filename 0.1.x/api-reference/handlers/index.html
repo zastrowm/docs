@@ -2876,10 +2876,10 @@ enabling different processing or output formats for the same stream data.</p>
 
 <span class="sd">        Args:</span>
 <span class="sd">            **kwargs: Callback event data including:</span>
-<span class="sd">            - reasoningText (Optional[str]): Reasoning text to print if provided.</span>
-<span class="sd">            - data (str): Text content to stream.</span>
-<span class="sd">            - complete (bool): Whether this is the final chunk of a response.</span>
-<span class="sd">            - current_tool_use (dict): Information about the current tool being used.</span>
+<span class="sd">                - reasoningText (Optional[str]): Reasoning text to print if provided.</span>
+<span class="sd">                - data (str): Text content to stream.</span>
+<span class="sd">                - complete (bool): Whether this is the final chunk of a response.</span>
+<span class="sd">                - current_tool_use (dict): Information about the current tool being used.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">reasoningText</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;reasoningText&quot;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
         <span class="n">data</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;data&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
@@ -2950,75 +2950,15 @@ enabling different processing or output formats for the same stream data.</p>
             </td>
             <td>
               <div class="doc-md-description">
-                <p>Callback event data including:</p>
+                <p>Callback event data including:
+- reasoningText (Optional[str]): Reasoning text to print if provided.
+- data (str): Text content to stream.
+- complete (bool): Whether this is the final chunk of a response.
+- current_tool_use (dict): Information about the current tool being used.</p>
               </div>
             </td>
             <td>
                   <code>{}</code>
-            </td>
-          </tr>
-          <tr class="doc-section-item">
-            <td>
-                <code>-</code>
-            </td>
-            <td>
-                  <code>reasoningText (Optional[str]</code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>Reasoning text to print if provided.</p>
-              </div>
-            </td>
-            <td>
-                <em>required</em>
-            </td>
-          </tr>
-          <tr class="doc-section-item">
-            <td>
-                <code>-</code>
-            </td>
-            <td>
-                  <code>data (str</code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>Text content to stream.</p>
-              </div>
-            </td>
-            <td>
-                <em>required</em>
-            </td>
-          </tr>
-          <tr class="doc-section-item">
-            <td>
-                <code>-</code>
-            </td>
-            <td>
-                  <code>complete (bool</code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>Whether this is the final chunk of a response.</p>
-              </div>
-            </td>
-            <td>
-                <em>required</em>
-            </td>
-          </tr>
-          <tr class="doc-section-item">
-            <td>
-                <code>-</code>
-            </td>
-            <td>
-                  <code>current_tool_use (dict</code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>Information about the current tool being used.</p>
-              </div>
-            </td>
-            <td>
-                <em>required</em>
             </td>
           </tr>
       </tbody>
@@ -3061,10 +3001,10 @@ enabling different processing or output formats for the same stream data.</p>
 
 <span class="sd">    Args:</span>
 <span class="sd">        **kwargs: Callback event data including:</span>
-<span class="sd">        - reasoningText (Optional[str]): Reasoning text to print if provided.</span>
-<span class="sd">        - data (str): Text content to stream.</span>
-<span class="sd">        - complete (bool): Whether this is the final chunk of a response.</span>
-<span class="sd">        - current_tool_use (dict): Information about the current tool being used.</span>
+<span class="sd">            - reasoningText (Optional[str]): Reasoning text to print if provided.</span>
+<span class="sd">            - data (str): Text content to stream.</span>
+<span class="sd">            - complete (bool): Whether this is the final chunk of a response.</span>
+<span class="sd">            - current_tool_use (dict): Information about the current tool being used.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">reasoningText</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;reasoningText&quot;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
     <span class="n">data</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;data&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>

@@ -6098,7 +6098,7 @@ as SDK tools.</p>
         <span class="k">raise</span> <span class="n">InvalidToolUseNameException</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
 
     <span class="n">tool_name</span> <span class="o">=</span> <span class="n">tool</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">]</span>
-    <span class="n">tool_name_pattern</span> <span class="o">=</span> <span class="sa">r</span><span class="s2">&quot;^[a-zA-Z][a-zA-Z0-9_]*$&quot;</span>
+    <span class="n">tool_name_pattern</span> <span class="o">=</span> <span class="sa">r</span><span class="s2">&quot;^[a-zA-Z][a-zA-Z0-9_\-]*$&quot;</span>
     <span class="n">tool_name_max_length</span> <span class="o">=</span> <span class="mi">64</span>
     <span class="n">valid_name_pattern</span> <span class="o">=</span> <span class="nb">bool</span><span class="p">(</span><span class="n">re</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">tool_name_pattern</span><span class="p">,</span> <span class="n">tool_name</span><span class="p">))</span>
     <span class="n">tool_name_len</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">tool_name</span><span class="p">)</span>

@@ -922,9 +922,9 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#setting-up-aws-credentials-region" class="md-nav__link">
+  <a href="#setting-up-aws-credentials" class="md-nav__link">
     <span class="md-ellipsis">
-      Setting Up AWS Credentials &amp; Region
+      Setting Up AWS Credentials
     </span>
   </a>
   
@@ -982,6 +982,15 @@
   
     <nav class="md-nav" aria-label="Advanced Features">
       <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#streaming-vs-non-streaming-mode" class="md-nav__link">
+    <span class="md-ellipsis">
+      Streaming vs Non-Streaming Mode
+    </span>
+  </a>
+  
+</li>
         
           <li class="md-nav__item">
   <a href="#multimodal-support" class="md-nav__link">
@@ -2526,9 +2535,9 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#setting-up-aws-credentials-region" class="md-nav__link">
+  <a href="#setting-up-aws-credentials" class="md-nav__link">
     <span class="md-ellipsis">
-      Setting Up AWS Credentials &amp; Region
+      Setting Up AWS Credentials
     </span>
   </a>
   
@@ -2586,6 +2595,15 @@
   
     <nav class="md-nav" aria-label="Advanced Features">
       <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#streaming-vs-non-streaming-mode" class="md-nav__link">
+    <span class="md-ellipsis">
+      Streaming vs Non-Streaming Mode
+    </span>
+  </a>
+  
+</li>
         
           <li class="md-nav__item">
   <a href="#multimodal-support" class="md-nav__link">
@@ -2713,23 +2731,27 @@
 <ol>
 <li><strong>AWS Account</strong>: You need an AWS account with access to Amazon Bedrock</li>
 <li><strong>Model Access</strong>: Request access to your desired models in the Amazon Bedrock console</li>
-<li><strong>AWS Credentials</strong>: Configure AWS credentials with appropriate permissions, including <code>bedrock:InvokeModelWithResponseStream</code></li>
+<li><strong>AWS Credentials</strong>: Configure AWS credentials with appropriate permissions</li>
 </ol>
 <h4 id="required-iam-permissions">Required IAM Permissions<a class="headerlink" href="#required-iam-permissions" title="Permanent link">&para;</a></h4>
 <p>To use Amazon Bedrock with Strands, your IAM user or role needs the following permissions:</p>
 <ul>
-<li><code>bedrock:InvokeModelWithResponseStream</code></li>
+<li><code>bedrock-runtime:InvokeModelWithResponseStream</code> (for streaming mode)</li>
+<li><code>bedrock-runtime:InvokeModel</code> (for non-streaming mode)</li>
 </ul>
 <p>Here's a sample IAM policy that grants the necessary permissions:</p>
 <div class="highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w">  </span><span class="nt">&quot;Version&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2012-10-17&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;Statement&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
-<span class="w">    </span><span class="p">{</span>
-<span class="w">      </span><span class="nt">&quot;Effect&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Allow&quot;</span><span class="p">,</span>
-<span class="w">      </span><span class="nt">&quot;Action&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;bedrock:InvokeModelWithResponseStream&quot;</span><span class="p">],</span>
-<span class="w">      </span><span class="nt">&quot;Resource&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;*&quot;</span>
-<span class="w">    </span><span class="p">}</span>
-<span class="w">  </span><span class="p">]</span>
+<span class="w">    </span><span class="nt">&quot;Version&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2012-10-17&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;Statement&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">        </span><span class="p">{</span>
+<span class="w">            </span><span class="nt">&quot;Effect&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Allow&quot;</span><span class="p">,</span>
+<span class="w">            </span><span class="nt">&quot;Action&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">                </span><span class="s2">&quot;bedrock-runtime:InvokeModelWithResponseStream&quot;</span><span class="p">,</span>
+<span class="w">                </span><span class="s2">&quot;bedrock-runtime:InvokeModel&quot;</span>
+<span class="w">            </span><span class="p">],</span>
+<span class="w">            </span><span class="nt">&quot;Resource&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;*&quot;</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">    </span><span class="p">]</span>
 <span class="p">}</span>
 </code></pre></div>
 <p>For production environments, it's recommended to scope down the <code>Resource</code> to specific model ARNs.</p>
@@ -2746,7 +2768,7 @@
 </ol>
 <p>The model access request is typically processed immediately. Once approved, the model status will change to "Access granted" in the console.</p>
 <p>For more details, see the <a href="https://docs.aws.amazon.com/bedrock/latest/userguide/model-access-modify.html">Amazon Bedrock documentation on modifying model access</a>.</p>
-<h4 id="setting-up-aws-credentials-region">Setting Up AWS Credentials &amp; Region<a class="headerlink" href="#setting-up-aws-credentials-region" title="Permanent link">&para;</a></h4>
+<h4 id="setting-up-aws-credentials">Setting Up AWS Credentials<a class="headerlink" href="#setting-up-aws-credentials" title="Permanent link">&para;</a></h4>
 <p>Strands uses <a href="https://boto3.amazonaws.com/v1/documentation/api/latest/index.html">boto3</a> (the AWS SDK for Python) to make calls to Amazon Bedrock. Boto3 has its own credential resolution system that determines which credentials to use when making requests to AWS.</p>
 <p>For development environments, configure credentials using one of these methods:</p>
 <p><strong>Option 1: AWS CLI</strong></p>
@@ -2842,6 +2864,11 @@ You can configure a custom <a href="https://boto3.amazonaws.com/v1/documentation
 <td><a href="https://docs.aws.amazon.com/general/latest/gr/bedrock.html"><code>region_name</code></a></td>
 <td>AWS region to use for the Bedrock service</td>
 <td>"us-west-2"</td>
+</tr>
+<tr>
+<td><a href="https://docs.aws.amazon.com/bedrock/latest/userguide/api-methods.html"><code>streaming</code></a></td>
+<td>Flag to enable/disable streaming mode</td>
+<td>True</td>
 </tr>
 <tr>
 <td><a href="https://docs.aws.amazon.com/bedrock/latest/APIReference/API_runtime_InferenceConfiguration.html#API_runtime_InferenceConfiguration_Contents"><code>temperature</code></a></td>
@@ -2959,6 +2986,22 @@ You can configure a custom <a href="https://boto3.amazonaws.com/v1/documentation
 <span class="n">response</span> <span class="o">=</span> <span class="n">agent</span><span class="p">(</span><span class="s2">&quot;Write a short story about an AI assistant.&quot;</span><span class="p">)</span>
 </code></pre></div>
 <h2 id="advanced-features">Advanced Features<a class="headerlink" href="#advanced-features" title="Permanent link">&para;</a></h2>
+<h3 id="streaming-vs-non-streaming-mode">Streaming vs Non-Streaming Mode<a class="headerlink" href="#streaming-vs-non-streaming-mode" title="Permanent link">&para;</a></h3>
+<p>Certain Amazon Bedrock models only support non-streaming tool use, so you can set the <code>streaming</code> configuration to false
+in order to use these models. Both modes provide the same event structure and functionality in your agent, as the non-streaming responses are converted to the streaming format internally.</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Streaming model (default)</span>
+<span class="n">streaming_model</span> <span class="o">=</span> <span class="n">BedrockModel</span><span class="p">(</span>
+    <span class="n">model_id</span><span class="o">=</span><span class="s2">&quot;us.anthropic.claude-3-7-sonnet-20250219-v1:0&quot;</span><span class="p">,</span>
+    <span class="n">streaming</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>  <span class="c1"># This is the default</span>
+<span class="p">)</span>
+
+<span class="c1"># Non-streaming model</span>
+<span class="n">non_streaming_model</span> <span class="o">=</span> <span class="n">BedrockModel</span><span class="p">(</span>
+    <span class="n">model_id</span><span class="o">=</span><span class="s2">&quot;us.meta.llama3-2-90b-instruct-v1:0&quot;</span><span class="p">,</span>
+    <span class="n">streaming</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>  <span class="c1"># Disable streaming</span>
+<span class="p">)</span>
+</code></pre></div>
+<p>See the Amazon Bedrock documentation for <a href="https://docs.aws.amazon.com/bedrock/latest/userguide/conversation-inference-supported-models-features.html">Supported models and model features</a> to learn about the streaming support for different models.</p>
 <h3 id="multimodal-support">Multimodal Support<a class="headerlink" href="#multimodal-support" title="Permanent link">&para;</a></h3>
 <p>Some Bedrock models support multimodal inputs (Documents, Images, etc.). Here's how to use them:</p>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">strands</span><span class="w"> </span><span class="kn">import</span> <span class="n">Agent</span>

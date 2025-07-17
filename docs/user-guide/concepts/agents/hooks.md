@@ -163,12 +163,12 @@ class ConstantToolArguments(HookProvider):
             tool_input.update(parameters_to_fix)
 ```
 
-For example, to always force the `calculator` tool to use scientific notation:
+For example, to always force the `calculator` tool to use use precision of 1 digit:
 
 ```python
 fix_parameters = ConstantToolArguments({
     "calculator": {
-        "scientific": True,
+        "precision": 1,
     }
 })
 

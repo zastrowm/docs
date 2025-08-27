@@ -75,6 +75,16 @@ with streamable_http_mcp_client:
     agent = Agent(tools=tools)
 ```
 
+You can configure additional properties - like authentication and headers - when creating the `streamablehttp_client`. All configuration options from the [MCP Python SDK](https://github.com/modelcontextprotocol/python-sdk) are supported:
+
+```python
+streamable_http_mcp_client = MCPClient(lambda: streamablehttp_client(
+    "http://localhost:8000/mcp",
+    auth=oauth_auth,      # instance of httpx.Auth
+    headers={"X-Agent-Framework": "Strands"},
+))
+```
+
 ### 3. Server-Sent Events (SSE)
 
 For HTTP-based MCP servers that use Server-Sent Events transport:

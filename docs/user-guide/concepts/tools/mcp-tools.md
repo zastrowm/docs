@@ -78,11 +78,17 @@ with streamable_http_mcp_client:
 You can configure additional properties - like authentication and headers - when creating the `streamablehttp_client`. All configuration options from the [MCP Python SDK](https://github.com/modelcontextprotocol/python-sdk) are supported:
 
 ```python
-streamable_http_mcp_client = MCPClient(lambda: streamablehttp_client(
-    "http://localhost:8000/mcp",
-    auth=oauth_auth,      # instance of httpx.Auth
-    headers={"X-Agent-Framework": "Strands"},
-))
+import os
+from strands.tools.mcp.mcp_client import MCPClient
+from mcp.client.streamable_http import streamablehttp_client
+
+github_http_mcp_client = MCPClient(
+    lambda: streamablehttp_client(
+        url="https://api.githubcopilot.com/mcp/", 
+        # Get pat token from here: https://github.com/settings/personal-access-tokens
+        headers={"Authorization": f"Bearer {os.getenv('MCP_PAT')}"}
+    )
+)
 ```
 
 ### 3. Server-Sent Events (SSE)

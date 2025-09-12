@@ -71,7 +71,7 @@ async def stream_response(request: PromptRequest):
 
 ### Example - Event Loop Lifecycle Tracking
 
-This async stream processorillustrates the event loop lifecycle events and how they relate to each other. It's useful for understanding the flow of execution in the Strands agent:
+This async stream processor illustrates the event loop lifecycle events and how they relate to each other. It's useful for understanding the flow of execution in the Strands agent:
 
 ```python
 from strands import Agent

@@ -1,5 +1,7 @@
 # Cohere
 
+{{ community_contribution_banner }}
+
 [Cohere](https://cohere.com) provides cutting-edge language models. These are accessible through OpenAI's SDK via the Compatibility API. This allows easy and portable integration with the Strands Agents SDK using the familiar OpenAI interface.
 
 ## Installation
@@ -74,4 +76,3 @@ Ensure you're using a model ID compatible with Cohere’s Compatibility API (e.g
 * [Cohere Docs: Using the OpenAI SDK](https://docs.cohere.com/docs/compatibility-api)
 * [Cohere API Reference](https://docs.cohere.com/reference)
 * [OpenAI Python SDK](https://github.com/openai/openai-python)
-* [Strands Agents API](../../../api-reference/models.md)

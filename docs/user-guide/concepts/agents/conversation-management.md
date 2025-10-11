@@ -1,3 +1,8 @@
+---
+title: Example Reference
+description: A reference page in my new Starlight docs site.
+---
+
 # Conversation Management
 
 In the Strands Agents SDK, context refers to the information provided to the agent for understanding and reasoning. This includes:

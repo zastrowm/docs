@@ -1,3 +1,8 @@
+---
+title: Example Reference
+description: A reference page in my new Starlight docs site.
+---
+
 # Structured Output
 
 Structured output enables you to get type-safe, validated responses from language models using Pydantic models. Instead of receiving raw text that you need to parse, you can define the exact structure you want and receive a validated Python object that matches your schema. This transforms unstructured LLM outputs into reliable, program-friendly data structures that integrate seamlessly with your application's type system and validation rules.

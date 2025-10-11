@@ -1,3 +1,8 @@
+---
+title: Example Reference
+description: A reference page in my new Starlight docs site.
+---
+
 # Strands Agents SDK
 
 [Strands Agents]({{ sdk_repo_home }}) is a simple-to-use, code-first framework for building agents.

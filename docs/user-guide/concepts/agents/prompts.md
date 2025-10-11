@@ -1,3 +1,8 @@
+---
+title: Example Reference
+description: A reference page in my new Starlight docs site.
+---
+
 # Prompts
 
 In the Strands Agents SDK, system prompts and user messages are the primary way to communicate with AI models. The SDK provides a flexible system for managing prompts, including both system prompts and user messages.

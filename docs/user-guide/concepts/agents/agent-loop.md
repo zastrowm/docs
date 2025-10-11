@@ -1,3 +1,8 @@
+---
+title: Example Reference
+description: A reference page in my new Starlight docs site.
+---
+
 # Agent Loop
 
 The agent loop is a core concept in the Strands Agents SDK that enables intelligent, autonomous behavior through a cycle of reasoning, tool use, and response generation. This document explains how the agent loop works, its components, and how to effectively use it in your applications.

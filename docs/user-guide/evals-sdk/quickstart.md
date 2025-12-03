@@ -429,5 +429,4 @@ Ready to dive deeper? Explore these resources:
 - [Helpfulness Evaluator](evaluators/helpfulness_evaluator.md) - Seven-level helpfulness assessment
 - [Custom Evaluators](evaluators/custom_evaluator.md) - Build domain-specific evaluation logic
 - [Experiment Generator](experiment_generator.md) - Automatically generate comprehensive test suites
-- [Examples](examples/) - Real-world evaluation scenarios and patterns
 - [Serialization](how-to/serialization.md) - Save, load, and version your evaluation experiments

@@ -25,7 +25,7 @@ jobs:
         uses: actions/setup-node@v6
 
       - name: Clone typescript_sdk
-        run:  git clone https://${{ secrets.PAT_GITHUB_TOKEN_STRANDS || secrets.PAT_GITHUB_TOKEN }}:@github.com/strands-agents/sdk-typescript.git/ ./sdk-typescript
+        run:  git clone https://github.com/strands-agents/sdk-typescript.git/ ./sdk-typescript
 
       - run: echo "cache_id=$(date --utc '+%V')" >> $GITHUB_ENV
       - uses: actions/cache@v4

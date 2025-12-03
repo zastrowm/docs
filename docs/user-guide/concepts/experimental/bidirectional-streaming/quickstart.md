@@ -198,8 +198,8 @@ async def main():
             inputs=[audio_io.input()],
             outputs=[audio_io.output()]
         )
-    except KeyboardInterrupt:
-        print("\nConversation interrupted by user")
+    except asyncio.CancelledError:
+        print("\nConversation cancelled by user")
     finally:
         # stop() should only be called after run() exits
         await agent.stop()

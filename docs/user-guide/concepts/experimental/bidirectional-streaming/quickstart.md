@@ -153,7 +153,8 @@ Combine audio with text input/output for debugging or multi-modal interactions:
 
 ```python
 import asyncio
-from strands.experimental.bidi import BidiAgent, BidiAudioIO, BidiTextIO
+from strands.experimental.bidi import BidiAgent, BidiAudioIO
+from strands.experimental.bidi.io import BidiTextIO
 from strands.experimental.bidi.models import BidiNovaSonicModel
 
 model = BidiNovaSonicModel()

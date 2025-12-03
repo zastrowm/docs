@@ -2,7 +2,7 @@
 
 ## Overview
 
-The `TrajectoryEvaluator` is an LLM-based evaluator that assesses the sequence of actions or tool calls made by an agent during task execution. It evaluates whether the agent followed an appropriate path to reach its goal, making it ideal for evaluating multi-step reasoning and tool usage patterns.
+The `TrajectoryEvaluator` is an LLM-based evaluator that assesses the sequence of actions or tool calls made by an agent during task execution. It evaluates whether the agent followed an appropriate path to reach its goal, making it ideal for evaluating multi-step reasoning and tool usage patterns. A complete example can be found [here](https://github.com/strands-agents/docs/blob/main/docs/examples/evals-sdk/trajectory_evaluator.py).
 
 ## Key Features
 

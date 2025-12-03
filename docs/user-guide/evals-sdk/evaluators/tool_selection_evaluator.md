@@ -2,7 +2,7 @@
 
 ## Overview
 
-The `ToolSelectionAccuracyEvaluator` evaluates whether tool calls are justified at specific points in the conversation. It assesses if the agent selected the right tool at the right time based on the conversation context and available tools.
+The `ToolSelectionAccuracyEvaluator` evaluates whether tool calls are justified at specific points in the conversation. It assesses if the agent selected the right tool at the right time based on the conversation context and available tools. A complete example can be found [here](https://github.com/strands-agents/docs/blob/main/docs/examples/evals-sdk/tool_selection_accuracy_evaluator.py).
 
 ## Key Features
 

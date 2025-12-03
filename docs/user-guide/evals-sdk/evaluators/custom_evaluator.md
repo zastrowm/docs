@@ -2,7 +2,7 @@
 
 ## Overview
 
-The Strands Evals SDK allows you to create custom evaluators by extending the base `Evaluator` class. This enables you to implement domain-specific evaluation logic tailored to your unique requirements.
+The Strands Evals SDK allows you to create custom evaluators by extending the base `Evaluator` class. This enables you to implement domain-specific evaluation logic tailored to your unique requirements. A complete example can be found [here](https://github.com/strands-agents/docs/blob/main/docs/examples/evals-sdk/custom_evaluator.py).
 
 ## When to Create a Custom Evaluator
 

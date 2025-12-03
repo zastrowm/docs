@@ -2,7 +2,7 @@
 
 ## Overview
 
-The `HelpfulnessEvaluator` evaluates the helpfulness of agent responses from the user's perspective. It assesses whether responses effectively address user needs, provide useful information, and contribute positively to achieving the user's goals.
+The `HelpfulnessEvaluator` evaluates the helpfulness of agent responses from the user's perspective. It assesses whether responses effectively address user needs, provide useful information, and contribute positively to achieving the user's goals. A complete example can be found [here](https://github.com/strands-agents/docs/blob/main/docs/examples/evals-sdk/helpfulness_evaluator.py).
 
 ## Key Features
 

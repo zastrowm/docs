@@ -2,7 +2,7 @@
 
 ## Overview
 
-The `GoalSuccessRateEvaluator` evaluates whether all user goals were successfully achieved in a conversation. It provides a holistic assessment of whether the agent accomplished what the user set out to do, considering the entire conversation session.
+The `GoalSuccessRateEvaluator` evaluates whether all user goals were successfully achieved in a conversation. It provides a holistic assessment of whether the agent accomplished what the user set out to do, considering the entire conversation session. A complete example can be found [here](https://github.com/strands-agents/docs/blob/main/docs/examples/evals-sdk/goal_success_rate_evaluator.py).
 
 ## Key Features
 

@@ -2,7 +2,7 @@
 
 ## Overview
 
-The `FaithfulnessEvaluator` evaluates whether agent responses are grounded in the conversation history. It assesses if the agent's statements are faithful to the information available in the preceding context, helping detect hallucinations and unsupported claims.
+The `FaithfulnessEvaluator` evaluates whether agent responses are grounded in the conversation history. It assesses if the agent's statements are faithful to the information available in the preceding context, helping detect hallucinations and unsupported claims. A complete example can be found [here](https://github.com/strands-agents/docs/blob/main/docs/examples/evals-sdk/faithfulness_evaluator.py).
 
 ## Key Features
 

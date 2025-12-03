@@ -278,8 +278,10 @@ Each provider has different features, timeout limits, and audio quality. See the
 Customize audio configuration for both the model and I/O:
 
 ```python
+import asyncio
+
 from strands.experimental.bidi import BidiAgent, BidiAudioIO
-from strands.experimental.bidi.models import BidiGeminiLiveModel
+from strands.experimental.bidi.models.gemini_live import BidiGeminiLiveModel
 
 # Configure model audio settings
 model = BidiGeminiLiveModel(

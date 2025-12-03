@@ -51,7 +51,7 @@ flowchart LR
 
 ### Natural Language Steering
 
-The [LLMSteeringHandler](../../../api-reference/experimental.md) enables developers to express guidance in natural language rather than formal policy languages. This approach is powerful because it can operate on any amount of context you provide and make contextual decisions based on the full steering context.
+The LLMSteeringHandler enables developers to express guidance in natural language rather than formal policy languages. This approach is powerful because it can operate on any amount of context you provide and make contextual decisions based on the full steering context.
 
 For best practices for defining the prompts, use the [Agent Standard Operating Procedures (SOP)](https://github.com/strands-agents/agent-sop) framework which provides structured templates and guidelines for creating effective agent prompts.
 

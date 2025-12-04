@@ -14,7 +14,7 @@ service:
 
 [strands-telegram-listener](https://github.com/eraykeskinmac/strands-telegram-listener) is a real-time Telegram message processing tool with AI-powered auto-replies and comprehensive event handling.
 
-> **Alternative Installation**: Also available as part of the [strands-tools-community](https://github.com/eraykeskinmac/strands-tools-community) meta-package for convenient multi-tool installation.
+
 
 ## Installation
 

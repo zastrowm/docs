@@ -14,7 +14,7 @@ service:
 
 [strands-deepgram](https://github.com/eraykeskinmac/strands-deepgram) is a production-ready speech and audio processing tool powered by [Deepgram's AI platform](https://deepgram.com/) with 30+ language support.
 
-> **Alternative Installation**: Also available as part of the [strands-tools-community](https://github.com/eraykeskinmac/strands-tools-community) meta-package for convenient multi-tool installation.
+
 
 ## Installation
 

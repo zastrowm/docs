@@ -14,7 +14,7 @@ service:
 
 [strands-telegram](https://github.com/eraykeskinmac/strands-telegram) is a comprehensive Telegram Bot API integration tool with 60+ methods for complete bot development capabilities.
 
-> **Alternative Installation**: Also available as part of the [strands-tools-community](https://github.com/eraykeskinmac/strands-tools-community) meta-package for convenient multi-tool installation.
+
 
 ## Installation
 

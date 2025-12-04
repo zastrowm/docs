@@ -14,7 +14,7 @@ service:
 
 [strands-teams](https://github.com/eraykeskinmac/strands-teams) is a production-ready Microsoft Teams notification tool with rich Adaptive Cards support and custom messaging capabilities.
 
-> **Alternative Installation**: Also available as part of the [strands-tools-community](https://github.com/eraykeskinmac/strands-tools-community) meta-package for convenient multi-tool installation.
+
 
 ## Installation
 

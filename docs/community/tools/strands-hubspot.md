@@ -16,7 +16,7 @@ service:
 
 This community tool provides comprehensive HubSpot integration for AI agents, offering safe CRM data access for sales intelligence, customer research, and data analytics workflows.
 
-> **Alternative Installation**: Also available as part of the [strands-tools-community](https://github.com/eraykeskinmac/strands-tools-community) meta-package for convenient multi-tool installation.
+
 
 ## Installation
 

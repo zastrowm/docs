@@ -16,8 +16,6 @@ service:
 
 This community tool provides comprehensive HubSpot integration for AI agents, offering safe CRM data access for sales intelligence, customer research, and data analytics workflows.
 
-
-
 ## Installation
 
 ```bash
@@ -71,7 +69,7 @@ Get your API key at: [HubSpot Private Apps](https://developers.hubspot.com/docs/
 
 ## Resources
 
-- **PyPI Package**: https://pypi.org/project/strands-hubspot/
-- **GitHub Repository**: https://github.com/eraykeskinmac/strands-hubspot
-- **Examples & Demos**: https://github.com/eraykeskinmac/strands-tools-examples
-- **HubSpot API Docs**: https://developers.hubspot.com/
+- [PyPI Package](https://pypi.org/project/strands-hubspot/)
+- [GitHub Repository](https://github.com/eraykeskinmac/strands-hubspot)
+- [Examples & Demos](https://github.com/eraykeskinmac/strands-tools-examples)
+- [HubSpot API Docs](https://developers.hubspot.com/)

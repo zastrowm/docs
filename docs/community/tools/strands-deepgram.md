@@ -14,8 +14,6 @@ service:
 
 [strands-deepgram](https://github.com/eraykeskinmac/strands-deepgram) is a production-ready speech and audio processing tool powered by [Deepgram's AI platform](https://deepgram.com/) with 30+ language support.
 
-
-
 ## Installation
 
 ```bash
@@ -61,7 +59,7 @@ Get your API key at: [console.deepgram.com](https://console.deepgram.com/)
 
 ## Resources
 
-- **PyPI Package**: https://pypi.org/project/strands-deepgram/
-- **GitHub Repository**: https://github.com/eraykeskinmac/strands-deepgram
-- **Examples & Demos**: https://github.com/eraykeskinmac/strands-tools-examples
-- **Deepgram API**: https://console.deepgram.com/
+- [PyPI Package](https://pypi.org/project/strands-deepgram/)
+- [GitHub Repository](https://github.com/eraykeskinmac/strands-deepgram)
+- [Examples & Demos](https://github.com/eraykeskinmac/strands-tools-examples)
+- [Deepgram API](https://console.deepgram.com/)

@@ -14,8 +14,6 @@ service:
 
 [strands-telegram](https://github.com/eraykeskinmac/strands-telegram) is a comprehensive Telegram Bot API integration tool with 60+ methods for complete bot development capabilities.
 
-
-
 ## Installation
 
 ```bash
@@ -60,8 +58,8 @@ Get your bot token at: [BotFather](https://core.telegram.org/bots#botfather)
 
 ## Resources
 
-- **PyPI Package**: https://pypi.org/project/strands-telegram/
-- **GitHub Repository**: https://github.com/eraykeskinmac/strands-telegram
-- **Examples & Demos**: https://github.com/eraykeskinmac/strands-tools-examples
-- **Bot Creation Guide**: https://core.telegram.org/bots
-- **Telegram Bot API**: https://core.telegram.org/bots/api
+- [PyPI Package](https://pypi.org/project/strands-telegram/)
+- [GitHub Repository](https://github.com/eraykeskinmac/strands-telegram)
+- [Examples & Demos](https://github.com/eraykeskinmac/strands-tools-examples)
+- [Bot Creation Guide](https://core.telegram.org/bots)
+- [Telegram Bot API](https://core.telegram.org/bots/api)

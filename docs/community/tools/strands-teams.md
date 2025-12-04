@@ -14,8 +14,6 @@ service:
 
 [strands-teams](https://github.com/eraykeskinmac/strands-teams) is a production-ready Microsoft Teams notification tool with rich Adaptive Cards support and custom messaging capabilities.
 
-
-
 ## Installation
 
 ```bash
@@ -59,8 +57,8 @@ Setup webhook: Teams Channel → Connectors → Incoming Webhook
 
 ## Resources
 
-- **PyPI Package**: https://pypi.org/project/strands-teams/
-- **GitHub Repository**: https://github.com/eraykeskinmac/strands-teams
-- **Examples & Demos**: https://github.com/eraykeskinmac/strands-tools-examples
-- **Adaptive Cards**: https://adaptivecards.io/
-- **Teams Webhooks**: https://docs.microsoft.com/en-us/microsoftteams/platform/webhooks-and-connectors/
+- [PyPI Package](https://pypi.org/project/strands-teams/)
+- [GitHub Repository](https://github.com/eraykeskinmac/strands-teams)
+- [Examples & Demos](https://github.com/eraykeskinmac/strands-tools-examples)
+- [Adaptive Cards](https://adaptivecards.io/)
+- [Teams Webhooks](https://docs.microsoft.com/en-us/microsoftteams/platform/webhooks-and-connectors/)

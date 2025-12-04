@@ -1,10 +1,22 @@
+---
+project:
+  pypi: https://pypi.org/project/strands-hubspot/
+  github: https://github.com/eraykeskinmac/strands-hubspot
+  maintainer: eraykeskinmac
+service:
+  name: hubspot
+  link: https://developers.hubspot.com/
+---
+
 # strands-hubspot
 
 {{ community_contribution_banner }}
 
-[strands-hubspot](https://pypi.org/project/strands-hubspot/) is a production-ready HubSpot CRM tool for [Strands Agents SDK](https://github.com/strands-agents/sdk-python), designed for **READ-ONLY** operations with zero risk of data modification. It enables agents to safely access and analyze CRM data without any possibility of corrupting customer information.
+[strands-hubspot](https://github.com/eraykeskinmac/strands-hubspot) is a production-ready HubSpot CRM tool designed for **READ-ONLY** operations with zero risk of data modification. It enables agents to safely access and analyze CRM data without any possibility of corrupting customer information.
 
 This community tool provides comprehensive HubSpot integration for AI agents, offering safe CRM data access for sales intelligence, customer research, and data analytics workflows.
+
+> **Alternative Installation**: Also available as part of the [strands-tools-community](https://github.com/eraykeskinmac/strands-tools-community) meta-package for convenient multi-tool installation.
 
 ## Installation
 
@@ -51,23 +63,14 @@ agent("search for deals with amount greater than 10000")
 Set your HubSpot API key as an environment variable:
 
 ```bash
-HUBSPOT_API_KEY=your_hubspot_api_key  # Required
-HUBSPOT_DEFAULT_LIMIT=100              # Optional
+HUBSPOT_API_KEY=your_hubspot_api_key      # Required
+HUBSPOT_DEFAULT_LIMIT=100                 # Optional
 ```
 
-Get your API key at: [app.hubspot.com/private-apps](https://app.hubspot.com/private-apps)
-
-## Use Cases
-
-- **Analytics & Reporting**: Generate insights from CRM data
-- **Customer Research**: Search and analyze customer information
-- **Data Discovery**: Explore available properties and data structure
-- **AI-Powered Insights**: Let agents analyze CRM data safely
-- **Sales Intelligence**: Extract trends and patterns from deals/contacts
-- **Lead Analysis**: Research prospects and opportunities
+Get your API key at: [HubSpot Private Apps](https://developers.hubspot.com/docs/api/private-apps)
 
 ## Resources
 
-- **PyPI**: [pypi.org/project/strands-hubspot](https://pypi.org/project/strands-hubspot/)
-- **GitHub**: [github.com/eraykeskinmac/strands-hubspot](https://github.com/eraykeskinmac/strands-hubspot)
-- **Examples**: [github.com/eraykeskinmac/strands-tools-examples](https://github.com/eraykeskinmac/strands-tools-examples)
+- **PyPI Package**: https://pypi.org/project/strands-hubspot/
+- **GitHub Repository**: https://github.com/eraykeskinmac/strands-hubspot
+- **HubSpot API Docs**: https://developers.hubspot.com/

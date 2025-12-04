@@ -1,8 +1,20 @@
+---
+project:
+  pypi: https://pypi.org/project/strands-teams/
+  github: https://github.com/eraykeskinmac/strands-teams
+  maintainer: eraykeskinmac
+service:
+  name: microsoft-teams
+  link: https://teams.microsoft.com/
+---
+
 # strands-teams
 
 {{ community_contribution_banner }}
 
-[strands-teams](https://pypi.org/project/strands-teams/) is a production-ready Microsoft Teams notifications tool for [Strands Agents SDK](https://github.com/strands-agents/sdk-python), powered by Adaptive Cards and rich messaging capabilities.
+[strands-teams](https://github.com/eraykeskinmac/strands-teams) is a production-ready Microsoft Teams notification tool with rich Adaptive Cards support and custom messaging capabilities.
+
+> **Alternative Installation**: Also available as part of the [strands-tools-community](https://github.com/eraykeskinmac/strands-tools-community) meta-package for convenient multi-tool installation.
 
 ## Installation
 
@@ -18,31 +30,36 @@ from strands_teams import teams
 
 agent = Agent(tools=[teams])
 
-# Simple notification  
+# Simple notification
 agent("send a Teams message: New lead from Acme Corp")
 
-# Pre-built templates
-agent("send an approval request to Teams for the Q4 budget")
+# Status update with formatting
+agent("send a status update: Website redesign is 75% complete")
 
-# Status updates
-agent("send status update: website redesign is 75% complete")
+# Custom adaptive card
+agent("create approval request for Q4 budget with amount $50000")
 ```
 
 ## Key Features
 
 - **Adaptive Cards**: Rich, interactive message cards with modern UI
-- **Pre-built Templates**: Notifications, approvals, status updates, and more
-- **Action Buttons**: Interactive elements like approve/reject buttons
-- **Rich Formatting**: Markdown support, images, and color coding
-- **Type Safe**: Full type hints and validation
+- **Pre-built Templates**: Notifications, approvals, status updates, and alerts
+- **Custom Cards**: Full adaptive card schema support for complex layouts
+- **Action Buttons**: Add interactive elements and quick actions
+- **Rich Formatting**: Markdown support, images, tables, and media
+- **Webhook Integration**: Seamless Teams channel integration
 
 ## Configuration
 
 ```bash
-TEAMS_WEBHOOK_URL=your_webhook_url  # Optional
+TEAMS_WEBHOOK_URL=your_teams_webhook_url  # Optional (can be provided per call)
 ```
+
+Setup webhook: Teams Channel → Connectors → Incoming Webhook
 
 ## Resources
 
-- **PyPI**: [pypi.org/project/strands-teams](https://pypi.org/project/strands-teams/)
-- **GitHub**: [github.com/eraykeskinmac/strands-teams](https://github.com/eraykeskinmac/strands-teams)
+- **PyPI Package**: https://pypi.org/project/strands-teams/
+- **GitHub Repository**: https://github.com/eraykeskinmac/strands-teams
+- **Adaptive Cards**: https://adaptivecards.io/
+- **Teams Webhooks**: https://docs.microsoft.com/en-us/microsoftteams/platform/webhooks-and-connectors/

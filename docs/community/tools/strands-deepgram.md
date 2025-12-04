@@ -1,8 +1,20 @@
+---
+project:
+  pypi: https://pypi.org/project/strands-deepgram/
+  github: https://github.com/eraykeskinmac/strands-deepgram
+  maintainer: eraykeskinmac
+service:
+  name: deepgram
+  link: https://console.deepgram.com/
+---
+
 # strands-deepgram
 
 {{ community_contribution_banner }}
 
-[strands-deepgram](https://pypi.org/project/strands-deepgram/) is a production-ready speech and audio processing tool for [Strands Agents SDK](https://github.com/strands-agents/sdk-python), powered by Deepgram's AI platform with 30+ language support.
+[strands-deepgram](https://github.com/eraykeskinmac/strands-deepgram) is a production-ready speech and audio processing tool powered by [Deepgram's AI platform](https://deepgram.com/) with 30+ language support.
+
+> **Alternative Installation**: Also available as part of the [strands-tools-community](https://github.com/eraykeskinmac/strands-tools-community) meta-package for convenient multi-tool installation.
 
 ## Installation
 
@@ -40,14 +52,15 @@ agent("analyze sentiment in call.wav")
 ## Configuration
 
 ```bash
-DEEPGRAM_API_KEY=your_deepgram_api_key  # Required
-DEEPGRAM_DEFAULT_MODEL=nova-3            # Optional
-DEEPGRAM_DEFAULT_LANGUAGE=en             # Optional
+DEEPGRAM_API_KEY=your_deepgram_api_key    # Required
+DEEPGRAM_DEFAULT_MODEL=nova-3             # Optional
+DEEPGRAM_DEFAULT_LANGUAGE=en              # Optional
 ```
 
 Get your API key at: [console.deepgram.com](https://console.deepgram.com/)
 
 ## Resources
 
-- **PyPI**: [pypi.org/project/strands-deepgram](https://pypi.org/project/strands-deepgram/)
-- **GitHub**: [github.com/eraykeskinmac/strands-deepgram](https://github.com/eraykeskinmac/strands-deepgram)
+- **PyPI Package**: https://pypi.org/project/strands-deepgram/
+- **GitHub Repository**: https://github.com/eraykeskinmac/strands-deepgram
+- **Deepgram API**: https://console.deepgram.com/

@@ -1,14 +1,25 @@
+---
+project:
+  pypi: https://pypi.org/project/strands-telegram-listener/
+  github: https://github.com/eraykeskinmac/strands-telegram-listener
+  maintainer: eraykeskinmac
+service:
+  name: telegram
+  link: https://core.telegram.org/bots
+---
+
 # strands-telegram-listener
 
 {{ community_contribution_banner }}
 
-[strands-telegram-listener](https://pypi.org/project/strands-telegram-listener/) is a production-ready real-time Telegram message processing tool for [Strands Agents SDK](https://github.com/strands-agents/sdk-python) with AI-powered auto-responses and background monitoring.
+[strands-telegram-listener](https://github.com/eraykeskinmac/strands-telegram-listener) is a real-time Telegram message processing tool with AI-powered auto-replies and comprehensive event handling.
+
+> **Alternative Installation**: Also available as part of the [strands-tools-community](https://github.com/eraykeskinmac/strands-tools-community) meta-package for convenient multi-tool installation.
 
 ## Installation
 
 ```bash
 pip install strands-telegram-listener
-pip install strands-telegram  # Companion package
 ```
 
 ## Usage
@@ -20,33 +31,38 @@ from strands_telegram_listener import telegram_listener
 agent = Agent(tools=[telegram_listener])
 
 # Start listening for messages
-agent("start listening to Telegram messages and respond with AI")
+agent("start Telegram listener")
 
-# Get recent message history
-agent("show me the last 10 Telegram messages received")
+# Get recent messages
+agent("get last 10 Telegram messages")
 
 # Check listener status
-agent("what's the status of the Telegram listener?")
+agent("check Telegram listener status")
 ```
 
 ## Key Features
 
-- **Real-time Processing**: Long polling for instant message processing
-- **AI Auto-Replies**: Intelligent responses powered by Strands agents
-- **Event Storage**: Comprehensive message logging and history (JSONL format)
-- **Smart Filtering**: Message deduplication and own message filtering
-- **Configurable**: Environment variable control for auto-reply behavior
-- **Background Processing**: Non-blocking operation with thread safety
+- **Real-time Processing**: Long polling for instant message handling
+- **AI Auto-replies**: Intelligent responses using Strands agents
+- **Event Storage**: Comprehensive message history in JSONL format
+- **Smart Filtering**: Message deduplication and selective processing
+- **Background Threading**: Non-blocking operation
+- **Status Monitoring**: Real-time listener status and metrics
+- **Flexible Configuration**: Environment-based settings
 
 ## Configuration
 
 ```bash
-TELEGRAM_BOT_TOKEN=your_bot_token                # Required
-STRANDS_TELEGRAM_AUTO_REPLY=true                 # Optional
-STRANDS_TELEGRAM_LISTEN_ONLY_TAG="#support"      # Optional
+TELEGRAM_BOT_TOKEN=your_bot_token         # Required
+STRANDS_TELEGRAM_AUTO_REPLY=true          # Optional
+STRANDS_TELEGRAM_LISTEN_ONLY_TAG=#support # Optional
 ```
+
+Get your bot token at: [BotFather](https://core.telegram.org/bots#botfather)
 
 ## Resources
 
-- **PyPI**: [pypi.org/project/strands-telegram-listener](https://pypi.org/project/strands-telegram-listener/)
-- **GitHub**: [github.com/eraykeskinmac/strands-telegram-listener](https://github.com/eraykeskinmac/strands-telegram-listener)
+- **PyPI Package**: https://pypi.org/project/strands-telegram-listener/
+- **GitHub Repository**: https://github.com/eraykeskinmac/strands-telegram-listener
+- **Bot Creation Guide**: https://core.telegram.org/bots
+- **Telegram Bot API**: https://core.telegram.org/bots/api

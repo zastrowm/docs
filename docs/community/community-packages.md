@@ -12,15 +12,6 @@ The first step to sharing your Strands component with the community is creating 
 
 [strands-clova](https://github.com/aidendef/strands-clova) is a community package that can serve as a good example.
 
-## Publishing to PyPI
-
-Once you have a package, you can then publish to PyPI to make it consumable to others. Publishing to PyPI allows users to install your package with pip.
-
-Best practices for publishing include:
-
-- **Configure GitHub workflows** - set up CI/CD to automatically publish releases to PyPI when you create new releases.
-- **Follow semantic versioning** - use semver.org conventions for version numbering to help users understand the impact of updates.
-
 ## Getting Featured in Documentation
 
 Once your package is published to PyPI, you can request to have it featured in the Strands Agents documentation. Featured packages should provide clear utility to the community and meet high quality standards including comprehensive documentation, thorough testing, and reliable functionality.

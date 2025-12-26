@@ -256,7 +256,7 @@ Key features of the `SummarizingConversationManager`:
 
     2. [`reduce_context`](../../../api-reference/python/agent/conversation_manager/conversation_manager.md#strands.agent.conversation_manager.conversation_manager.ConversationManager.reduce_context): This method is called when the model's context window is exceeded (typically due to token limits). It implements the specific strategy for reducing the window size when necessary. The agent calls this method when it encounters a context window overflow exception, giving your implementation a chance to trim the conversation history before retrying.
 
-    3. `removed_messages_count`: This attribute is tracked by conversation managers, and utilized by [Session Management](./session-management.md) to efficiently load messages from the session storage. The count represents messages provided by the user or LLM that have been removed from the agent's messages, but not messages included by the conversation manager through something like summarization.
+    3. `removed_message_count`: This attribute is tracked by conversation managers, and utilized by [Session Management](./session-management.md) to efficiently load messages from the session storage. The count represents messages provided by the user or LLM that have been removed from the agent's messages, but not messages included by the conversation manager through something like summarization.
 
     4. `register_hooks` (optional): Override this method to integrate with [hooks](./hooks.md). This enables proactive context management patterns, such as trimming context before model calls. Always call `super().register_hooks` when overriding.
    

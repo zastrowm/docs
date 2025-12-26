@@ -122,8 +122,6 @@ The `per_turn` parameter accepts:
 - `True`: Apply management before every model call
 - An integer `N` (must be > 0): Apply management every N model calls
 
-This feature leverages the conversation manager's ability to act as a [HookProvider](#conversation-managers-as-hookproviders), registering for the `BeforeModelCallEvent` to proactively trim context during execution.
-
 ### SummarizingConversationManager
 
 <!-- https://github.com/strands-agents/sdk-typescript/issues/279 -->

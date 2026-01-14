@@ -1,6 +1,17 @@
 # Get Featured in the Docs
 
-Want to share your Strands integration with the community? Here's how to get it featured in our docs.
+Built something useful for Strands Agents? Getting featured in our docs helps other developers discover your work and gives your package visibility across the community.
+
+## What We're Looking For
+
+We feature **reusable packages** that extend Strands Agents capabilities:
+
+- **Model Providers** — integrations with LLM services (OpenAI-compatible endpoints, custom APIs, etc.)
+- **Tools** — packaged tools that solve common problems (API integrations, utilities, etc.)
+- **Session Managers** — custom session/memory implementations
+- **Integrations** — protocol implementations, framework bridges, etc.
+
+We're not looking for example agents or one-off projects — the focus is on packages published to PyPI that others can `pip install` or `npm install` and use in their own agents. See [Community Packages](./community-packages.md) for guidance on creating and publishing your package.
 
 ## Quick Steps
 

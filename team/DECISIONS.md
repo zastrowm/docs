@@ -57,7 +57,6 @@ Fewer imports are simpler to use and more discoverable when using IDE autocomple
 
 We don't want users continually importing additional modules for common functionality. The goal is to optimize for the 80% case where users need standard features, while still allowing advanced users to import from specific submodules when needed.
 
-
 For example, we prefer exporting all hook events from a single module:
 
 ```python
@@ -72,4 +71,4 @@ from strands.hooks.multiagent import MultiAgentInitializedEvent
 
 this is even more important when the event names already indicate their grouping (**MultiAgent**InitializeEvent). 
 
-Internal module organization can remain nested for code maintainability — the key is re-exporting public symbols at the package root.
+Internal module organization can remain nested for code maintainability — the key is re-exporting public symbols at common locations.

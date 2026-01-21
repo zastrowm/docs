@@ -1,3 +1,7 @@
+---
+title: "Session Management Experimental"
+---
+
 # Session Management [Experimental]
 
 {{ experimental_feature_warning() }}

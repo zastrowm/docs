@@ -1,3 +1,7 @@
+---
+title: "Amazon Nova"
+---
+
 # Amazon Nova
 
 !!! info "Language Support"

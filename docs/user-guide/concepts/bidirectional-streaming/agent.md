@@ -1,3 +1,7 @@
+---
+title: "BidiAgent Experimental"
+---
+
 # BidiAgent [Experimental]
 
 {{ experimental_feature_warning() }}

@@ -1,3 +1,7 @@
+---
+title: "Gemini Live Experimental"
+---
+
 # Gemini Live [Experimental]
 
 {{ experimental_feature_warning() }}

@@ -1,3 +1,7 @@
+---
+title: "Creating a Custom Model Provider"
+---
+
 # Creating a Custom Model Provider
 
 Strands Agents SDK provides an extensible interface for implementing custom model providers, allowing organizations to integrate their own LLM services while keeping implementation details private to their codebase.

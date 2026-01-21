@@ -1,3 +1,7 @@
+---
+title: "NVIDIA NIM"
+---
+
 # NVIDIA NIM
 
 {{ community_contribution_banner }}

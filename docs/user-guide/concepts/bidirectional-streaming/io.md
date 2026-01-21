@@ -1,3 +1,7 @@
+---
+title: "I/O Channels Experimental"
+---
+
 # I/O Channels [Experimental]
 
 {{ experimental_feature_warning() }}

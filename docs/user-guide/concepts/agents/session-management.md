@@ -1,3 +1,7 @@
+---
+title: "Session Management"
+---
+
 # Session Management
 
 {{ ts_not_supported("Session Management is not currently supported in the TypeScript SDK, but will be coming soon!") }}

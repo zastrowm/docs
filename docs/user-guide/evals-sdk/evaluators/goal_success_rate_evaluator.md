@@ -1,3 +1,7 @@
+---
+title: "Goal Success Rate Evaluator"
+---
+
 # Goal Success Rate Evaluator
 
 ## Overview

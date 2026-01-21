@@ -1,3 +1,7 @@
+---
+title: "OpenAI Realtime Experimental"
+---
+
 # OpenAI Realtime [Experimental]
 
 {{ experimental_feature_warning() }}

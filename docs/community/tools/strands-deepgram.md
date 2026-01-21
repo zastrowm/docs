@@ -1,4 +1,6 @@
 ---
+title: "strands-deepgram"
+
 project:
   pypi: https://pypi.org/project/strands-deepgram/
   github: https://github.com/eraykeskinmac/strands-deepgram

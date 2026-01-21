@@ -1,3 +1,7 @@
+---
+title: "Cohere"
+---
+
 # Cohere
 
 {{ community_contribution_banner }}

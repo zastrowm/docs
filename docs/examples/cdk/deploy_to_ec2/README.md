@@ -1,3 +1,7 @@
+---
+title: "AWS CDK EC2 Deployment Example"
+---
+
 # AWS CDK EC2 Deployment Example
 
 ## Introduction

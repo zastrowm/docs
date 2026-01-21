@@ -1,3 +1,7 @@
+---
+title: "Logging"
+---
+
 # Logging
 
 The Strands SDK provides logging infrastructure to give visibility into its operations.

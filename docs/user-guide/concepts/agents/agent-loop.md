@@ -1,3 +1,7 @@
+---
+title: "Agent Loop"
+---
+
 # Agent Loop
 
 A language model can answer questions. An agent can *do things*. The agent loop is what makes that difference possible.

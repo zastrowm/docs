@@ -1,3 +1,7 @@
+---
+title: "AgentCore Memory Session Manager"
+---
+
 # AgentCore Memory Session Manager
 
 {{ community_contribution_banner }}

@@ -1,3 +1,7 @@
+---
+title: "Strands Agents SDK"
+---
+
 # Strands Agents SDK
 
 === "Python"

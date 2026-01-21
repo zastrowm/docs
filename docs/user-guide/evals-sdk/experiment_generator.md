@@ -1,3 +1,7 @@
+---
+title: "Experiment Generator"
+---
+
 # Experiment Generator
 
 ## Overview

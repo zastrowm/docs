@@ -1,3 +1,7 @@
+---
+title: "Community Built Tools"
+---
+
 # Community Built Tools
 
 !!! info "Python-Only Package"

@@ -1,3 +1,7 @@
+---
+title: "Events Experimental"
+---
+
 # Events [Experimental]
 
 {{ experimental_feature_warning() }}

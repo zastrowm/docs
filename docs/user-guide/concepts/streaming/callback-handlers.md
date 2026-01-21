@@ -1,3 +1,7 @@
+---
+title: "Callback Handlers"
+---
+
 # Callback Handlers
 
 {{ ts_not_supported("TypeScript does not support callback handlers. For real-time event handling in TypeScript, use the [async iterator pattern](./async-iterators.md) with `agent.stream()` or see [Hooks](../agents/hooks.md) for lifecycle event handling.") }}

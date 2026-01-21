@@ -1,3 +1,7 @@
+---
+title: "Gemini"
+---
+
 # Gemini
 
 !!! info "Language Support"

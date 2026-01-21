@@ -1,4 +1,6 @@
 ---
+title: "strands-telegram-listener"
+
 project:
   pypi: https://pypi.org/project/strands-telegram-listener/
   github: https://github.com/eraykeskinmac/strands-telegram-listener

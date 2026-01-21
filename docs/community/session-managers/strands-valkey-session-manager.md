@@ -1,3 +1,7 @@
+---
+title: "Strands Valkey Session Manager"
+---
+
 # Strands Valkey Session Manager
 
 {{ community_contribution_banner }}

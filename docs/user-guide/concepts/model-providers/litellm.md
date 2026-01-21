@@ -1,3 +1,7 @@
+---
+title: "LiteLLM"
+---
+
 # LiteLLM
 
 !!! info "Language Support"

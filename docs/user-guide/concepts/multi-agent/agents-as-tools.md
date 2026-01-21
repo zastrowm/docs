@@ -1,3 +1,7 @@
+---
+title: "Agents as Tools with Strands Agents SDK"
+---
+
 # Agents as Tools with Strands Agents SDK
 
 ## The Concept: Agents as Tools

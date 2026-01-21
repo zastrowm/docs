@@ -1,3 +1,7 @@
+---
+title: "Nebius Token Factory"
+---
+
 # Nebius Token Factory
 
 {{ community_contribution_banner }}

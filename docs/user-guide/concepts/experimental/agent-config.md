@@ -1,3 +1,7 @@
+---
+title: "Agent Configuration Experimental"
+---
+
 # Agent Configuration [Experimental]
 
 {{ experimental_feature_warning() }}

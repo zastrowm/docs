@@ -1,0 +1,14 @@
+/* Custom styles for Strands Agents documentation */
+
+:root {
+  --sl-color-accent-low: #1a365d;
+  --sl-color-accent: #3182ce;
+  --sl-color-accent-high: #63b3ed;
+}
+
+/* Dark mode accent colors */
+:root[data-theme='dark'] {
+  --sl-color-accent-low: #2c5282;
+  --sl-color-accent: #63b3ed;
+  --sl-color-accent-high: #90cdf4;
+}

@@ -53,7 +53,7 @@ Public APIs should expose commonly-used functionality through flat, top-level na
 
 ### Rationale
 
-Fewer imports are simpler to use and more discoverable when using IDE autocompletion & documentation. It also aligns with the Python ethos "Flat is better than nested" (PEP 20 - The Zen of Python).
+Fewer imports are simpler to use and more discoverable when using IDE autocompletion & documentation. While inspired by Python's "Flat is better than nested" (PEP 20 - The Zen of Python), this principle applies across SDK languages.
 
 We don't want users continually importing additional modules for common functionality. The goal is to optimize for the 80% case where users need standard features, while still allowing advanced users to import from specific submodules when needed.
 

@@ -1,3 +1,7 @@
+---
+title: "Get Featured in the Docs"
+---
+
 # Get Featured in the Docs
 
 Built something useful for Strands Agents? Getting featured in our docs helps other developers discover your work and gives your package visibility across the community.

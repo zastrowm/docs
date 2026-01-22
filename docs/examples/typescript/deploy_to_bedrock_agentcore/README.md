@@ -1,3 +1,7 @@
+---
+title: "TypeScript Agent Deployment to Amazon Bedrock AgentCore Runtime"
+---
+
 # TypeScript Agent Deployment to Amazon Bedrock AgentCore Runtime
 
 This example demonstrates deploying a TypeScript-based Strands agent to Amazon Bedrock AgentCore Runtime using Express and Docker.

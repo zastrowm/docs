@@ -1,3 +1,7 @@
+---
+title: "Nova Sonic Experimental"
+---
+
 # Nova Sonic [Experimental]
 
 {{ experimental_feature_warning() }}

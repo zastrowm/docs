@@ -1,3 +1,7 @@
+---
+title: "TypeScript Quickstart"
+---
+
 # TypeScript Quickstart
 
 !!! warning "Experimental SDK"

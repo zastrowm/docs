@@ -1,3 +1,7 @@
+---
+title: "Quickstart Experimental"
+---
+
 # Quickstart [Experimental]
 
 {{ experimental_feature_warning() }}

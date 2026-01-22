@@ -1,3 +1,7 @@
+---
+title: "Amazon SageMaker"
+---
+
 # Amazon SageMaker
 
 !!! info "Language Support"

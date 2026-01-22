@@ -1,3 +1,7 @@
+---
+title: "Structured Output"
+---
+
 # Structured Output
 
 

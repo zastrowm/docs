@@ -1,3 +1,7 @@
+---
+title: "Model Context Protocol (MCP) Tools"
+---
+
 # Model Context Protocol (MCP) Tools
 
 The [Model Context Protocol (MCP)](https://modelcontextprotocol.io) is an open protocol that standardizes how applications provide context to Large Language Models. Strands Agents integrates with MCP to extend agent capabilities through external tools and services.

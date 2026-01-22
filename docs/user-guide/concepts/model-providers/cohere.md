@@ -1,3 +1,6 @@
+---
+title: "Cohere"
+---
 
 <auto-redirect />
 

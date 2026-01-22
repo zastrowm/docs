@@ -1,3 +1,7 @@
+---
+title: "Build chat experiences with AG-UI and CopilotKit"
+---
+
 # Build chat experiences with AG-UI and CopilotKit
 
 {{ community_contribution_banner }}

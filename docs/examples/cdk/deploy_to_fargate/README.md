@@ -1,3 +1,7 @@
+---
+title: "AWS CDK Fargate Deployment Example"
+---
+
 # AWS CDK Fargate Deployment Example
 
 ## Introduction

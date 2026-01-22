@@ -1,3 +1,7 @@
+---
+title: "OpenTelemetry Integration Experimental"
+---
+
 # OpenTelemetry Integration [Experimental]
 
 {{ experimental_feature_warning() }}

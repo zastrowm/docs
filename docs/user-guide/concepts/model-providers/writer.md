@@ -1,3 +1,7 @@
+---
+title: "Writer"
+---
+
 # Writer
 
 !!! info "Language Support"

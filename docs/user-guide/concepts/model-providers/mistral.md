@@ -1,3 +1,7 @@
+---
+title: "Mistral AI"
+---
+
 # Mistral AI
 
 !!! info "Language Support"

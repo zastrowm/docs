@@ -1,3 +1,7 @@
+---
+title: "MLX"
+---
+
 # MLX
 
 {{ community_contribution_banner }}

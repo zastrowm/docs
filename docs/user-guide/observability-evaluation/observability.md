@@ -1,3 +1,7 @@
+---
+title: "Observability"
+---
+
 # Observability
 
 {{ ts_not_supported("The 0.1.0 release of the TypeScript SDK does not include OpenTelemetry observability features. Support is planned for a future version. See issue [#69](https://github.com/strands-agents/sdk-typescript/issues/69) to track progress or contribute to the implementation.") }}

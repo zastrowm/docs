@@ -1,3 +1,7 @@
+---
+title: "Swarm Multi-Agent Pattern"
+---
+
 # Swarm Multi-Agent Pattern
 
 A Swarm is a collaborative agent orchestration system where multiple agents work together as a team to solve complex tasks. Unlike traditional sequential or hierarchical multi-agent systems, a Swarm enables autonomous coordination between agents with shared context and working memory.

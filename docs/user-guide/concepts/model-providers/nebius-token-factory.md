@@ -1,3 +1,6 @@
+---
+title: "Nebius Token Factory"
+---
 
 <auto-redirect />
 

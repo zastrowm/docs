@@ -1,3 +1,7 @@
+---
+title: "Amazon EKS Deployment Example"
+---
+
 # Amazon EKS Deployment Example
 
 ## Introduction

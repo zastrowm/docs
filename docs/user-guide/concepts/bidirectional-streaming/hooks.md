@@ -1,3 +1,7 @@
+---
+title: "Hooks Experimental"
+---
+
 # Hooks [Experimental]
 
 {{ experimental_feature_warning() }}

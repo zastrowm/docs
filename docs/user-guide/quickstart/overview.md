@@ -1,3 +1,7 @@
+---
+title: "Get started"
+---
+
 # Get started
 
 The Strands Agents SDK empowers developers to quickly build, manage, evaluate and deploy AI-powered agents. These quick start guides get you set up and running a simple agent in less than 20 minutes.

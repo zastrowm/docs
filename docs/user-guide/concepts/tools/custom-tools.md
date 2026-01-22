@@ -1,3 +1,7 @@
+---
+title: "Creating Custom Tools"
+---
+
 # Creating Custom Tools
 
 There are multiple approaches to defining custom tools in Strands, with differences between Python and TypeScript implementations.

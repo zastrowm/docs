@@ -1,3 +1,7 @@
+---
+title: "Universal Tool Calling Protocol (UTCP)"
+---
+
 # Universal Tool Calling Protocol (UTCP)
 
 {{ community_contribution_banner }}

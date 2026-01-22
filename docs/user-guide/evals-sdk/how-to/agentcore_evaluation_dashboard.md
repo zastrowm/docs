@@ -1,3 +1,7 @@
+---
+title: "AgentCore Evaluation Dashboard Configuration"
+---
+
 # AgentCore Evaluation Dashboard Configuration
 
 This guide explains how to configure AWS Distro for OpenTelemetry (ADOT) to send Strands evaluation results to Amazon CloudWatch, enabling visualization in the **GenAI Observability: Bedrock AgentCore Observability** dashboard.

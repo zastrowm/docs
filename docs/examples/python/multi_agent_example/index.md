@@ -1,3 +1,7 @@
+---
+title: "Multi-Agent Example"
+---
+
 # Multi-Agent Example
 
 This directory contains the implementation files for the Multi-Agent Example architecture, where specialized agents work together under the coordination of a central orchestrator.

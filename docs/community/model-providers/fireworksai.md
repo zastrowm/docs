@@ -1,3 +1,7 @@
+---
+title: "FireworksAI"
+---
+
 # FireworksAI
 
 {{ community_contribution_banner }}

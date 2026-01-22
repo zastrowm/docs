@@ -1,4 +1,6 @@
 ---
+title: "strands-hubspot"
+
 project:
   pypi: https://pypi.org/project/strands-hubspot/
   github: https://github.com/eraykeskinmac/strands-hubspot

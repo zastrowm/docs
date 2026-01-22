@@ -1,4 +1,6 @@
 ---
+title: "strands-telegram"
+
 project:
   pypi: https://pypi.org/project/strands-telegram/
   github: https://github.com/eraykeskinmac/strands-telegram

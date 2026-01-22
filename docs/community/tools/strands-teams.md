@@ -1,4 +1,6 @@
 ---
+title: "strands-teams"
+
 project:
   pypi: https://pypi.org/project/strands-teams/
   github: https://github.com/eraykeskinmac/strands-teams

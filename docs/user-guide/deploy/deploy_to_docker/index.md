@@ -1,3 +1,7 @@
+---
+title: "Deploying Strands Agents to Docker"
+---
+
 # Deploying Strands Agents to Docker
 
 Docker is a containerization platform that packages your Strands agents and their dependencies into lightweight, portable containers. It enables consistent deployment across different environments, from local development to production servers, ensuring your agent runs the same way everywhere. Across cloud deployment options, contianerizing your agent with Docker is often the foundational first step.

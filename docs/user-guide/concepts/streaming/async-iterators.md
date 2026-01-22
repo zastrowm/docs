@@ -1,3 +1,7 @@
+---
+title: "Async Iterators for Streaming"
+---
+
 # Async Iterators for Streaming
 
 Async iterators provide asynchronous streaming of agent events, allowing you to process events as they occur in real-time. This approach is ideal for asynchronous frameworks where you need fine-grained control over async execution flow.

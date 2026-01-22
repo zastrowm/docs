@@ -1,3 +1,6 @@
+---
+title: "Fireworksai"
+---
 
 <auto-redirect />
 

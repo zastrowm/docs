@@ -1,3 +1,7 @@
+---
+title: "A CLI reference implementation of a Strands agent"
+---
+
 # A CLI reference implementation of a Strands agent
 
 The Strands CLI is a reference implementation built on top of the Strands SDK. It provides a terminal-based interface for interacting with Strands agents, demonstrating how to make a fully interactive streaming application with the Strands SDK. 

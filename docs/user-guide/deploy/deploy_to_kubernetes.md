@@ -1,3 +1,7 @@
+---
+title: "Deploy to Kubernetes"
+---
+
 # Deploy to Kubernetes
 
 This guide covers deploying containerized Strands agents to Kubernetes using Kind (Kubernetes in Docker) for local and cloud development.

@@ -65,6 +65,50 @@ export function mdPathToSlug(mdPath: string): string {
 }
 
 /**
+ * Check if a group has an index file and return its slug
+ */
+function getGroupIndexSlug(items: SidebarItemInternal[]): string | null {
+  if (!contentDir) return null
+  
+  // Try to detect the common path prefix from items
+  for (const item of items) {
+    if (item.slug) {
+      // Get the directory path from the first item's slug
+      const slugParts = item.slug.split('/')
+      if (slugParts.length > 1) {
+        const dirPath = slugParts.slice(0, -1).join('/')
+        // Check if index.md exists in that directory
+        const indexPaths = [
+          path.join(contentDir, dirPath, 'index.md'),
+          path.join(contentDir, dirPath, 'index.mdx'),
+        ]
+        if (indexPaths.some(p => fs.existsSync(p))) {
+          return dirPath
+        }
+      }
+    }
+    // Recursively check nested items
+    if (item.items) {
+      const nestedSlug = getGroupIndexSlug(item.items)
+      if (nestedSlug) {
+        const parentDir = nestedSlug.split('/').slice(0, -1).join('/')
+        if (parentDir) {
+          const indexPaths = [
+            path.join(contentDir, parentDir, 'index.md'),
+            path.join(contentDir, parentDir, 'index.mdx'),
+          ]
+          if (indexPaths.some(p => fs.existsSync(p))) {
+            return parentDir
+          }
+        }
+        return nestedSlug
+      }
+    }
+  }
+  return null
+}
+
+/**
  * Convert internal item to Starlight-compatible format
  * @param item - The internal sidebar item
  * @param depth - Current nesting depth (0 = top level)
@@ -74,11 +118,23 @@ function toStarlightItem(item: SidebarItemInternal, depth: number = 0): Starligh
     return { label: item.label, link: item.link, ...(item.attrs && { attrs: item.attrs }) }
   }
   if (item.items) {
+    // Check if this group has an index file
+    const indexSlug = getGroupIndexSlug(item.items)
+    
+    // Build the items array, prepending index link if it exists
+    let groupItems = item.items.map(child => toStarlightItem(child, depth + 1))
+    
+    if (indexSlug) {
+      // Add "Overview" link as first item pointing to the index
+      const overviewItem: StarlightSidebarItem = { label: 'Overview', slug: indexSlug }
+      groupItems = [overviewItem, ...groupItems]
+    }
+    
     // Collapse 2nd level items (depth >= 1) by default
     const collapsed = depth >= 1
     return { 
       label: item.label, 
-      items: item.items.map(child => toStarlightItem(child, depth + 1)),
+      items: groupItems,
       ...(collapsed && { collapsed })
     }
   }

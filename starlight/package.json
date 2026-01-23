@@ -7,7 +7,9 @@
     "start": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
-    "astro": "astro"
+    "astro": "astro",
+    "docs:update": "tsx scripts/update-docs.ts",
+    "docs:revert": "git -C .. checkout HEAD -- docs/"
   },
   "dependencies": {
     "@astrojs/starlight": "^0.37.3",

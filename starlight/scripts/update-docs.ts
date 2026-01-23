@@ -7,6 +7,28 @@ const INFO_BLOCK_CONTENT = "    This provider is only supported in Python.";
 const COMMUNITY_BANNER = "{{ community_contribution_banner }}";
 const SKIP_FILES = ["get-featured.md"];
 
+// MkDocs extra variables from mkdocs.yml
+const MKDOCS_VARIABLES: Record<string, string> = {
+  docs_repo: "https://github.com/strands-agents/docs/tree/main",
+  sdk_pypi: "https://pypi.org/project/strands-agents/",
+  sdk_repo: "https://github.com/strands-agents/sdk-python/blob/main",
+  py_sdk_repo_home: "https://github.com/strands-agents/sdk-python/blob/main",
+  ts_sdk_repo_home: "https://github.com/strands-agents/sdk-typescript/blob/main",
+  tools_pypi: "https://pypi.org/project/strands-agents-tools/",
+  tools_repo: "https://github.com/strands-agents/tools/blob/main",
+  tools_repo_home: "https://github.com/strands-agents/tools",
+  agent_builder_pypi: "https://pypi.org/project/strands-agents-builder/",
+  agent_builder_repo_home: "https://github.com/strands-agents/agent-builder",
+  link_strands_tools: "[`strands-agents-tools`](https://github.com/strands-agents/tools)",
+  link_strands_builder: "[`strands-agents-builder`](https://github.com/strands-agents/agent-builder)",
+};
+
+// Default messages for macros
+const DEFAULT_TS_NOT_SUPPORTED = "This feature is not supported in TypeScript.";
+const DEFAULT_TS_NOT_SUPPORTED_CODE = "Not supported in TypeScript";
+const DEFAULT_EXPERIMENTAL_WARNING =
+  "This feature is experimental and may change in future versions. Use with caution in production environments.";
+
 async function getAllMarkdownFiles(dir: string): Promise<string[]> {
   const files: string[] = [];
 
@@ -26,23 +48,229 @@ async function getAllMarkdownFiles(dir: string): Promise<string[]> {
   return files;
 }
 
+/**
+ * Replace MkDocs variable references like {{ variable_name }}
+ */
+function replaceMkdocsVariables(content: string): string {
+  let result = content;
+
+  for (const [varName, value] of Object.entries(MKDOCS_VARIABLES)) {
+    // Match {{ variable_name }} with optional whitespace
+    const pattern = new RegExp(`\\{\\{\\s*${varName}\\s*\\}\\}`, "g");
+    result = result.replace(pattern, value);
+  }
+
+  return result;
+}
+
+/**
+ * Replace ts_not_supported() macro calls
+ * Generates: !!! info "Not supported in TypeScript"\n    {message}
+ */
+function replaceTsNotSupported(content: string): string {
+  // Match {{ ts_not_supported() }} or {{ ts_not_supported("message") }}
+  const pattern = /\{\{\s*ts_not_supported\(\s*(?:"([^"]*)"|'([^']*)')?\s*\)\s*\}\}/g;
+
+  return content.replace(pattern, (_match, doubleQuoted, singleQuoted) => {
+    const message = doubleQuoted ?? singleQuoted ?? DEFAULT_TS_NOT_SUPPORTED;
+    return `:::note[Not supported in TypeScript]\n${message}\n:::`;
+  });
+}
+
+/**
+ * Replace ts_not_supported_code() macro calls
+ * Generates TypeScript code tab with comment
+ */
+function replaceTsNotSupportedCode(content: string): string {
+  // Match {{ ts_not_supported_code() }} or {{ ts_not_supported_code("message") }}
+  const pattern = /\{\{\s*ts_not_supported_code\(\s*(?:"([^"]*)"|'([^']*)')?\s*\)\s*\}\}/g;
+
+  return content.replace(pattern, (_match, doubleQuoted, singleQuoted) => {
+    const message = doubleQuoted ?? singleQuoted ?? DEFAULT_TS_NOT_SUPPORTED_CODE;
+    return `=== "TypeScript"\n    \`\`\`ts\n    // ${message}\n    \`\`\``;
+  });
+}
+
+/**
+ * Replace experimental_feature_warning() macro calls
+ * Generates: !!! warning "Experimental Feature"\n    {message}
+ */
+function replaceExperimentalWarning(content: string): string {
+  // Match {{ experimental_feature_warning() }} or {{ experimental_feature_warning("message") }}
+  const pattern = /\{\{\s*experimental_feature_warning\(\s*(?:"([^"]*)"|'([^']*)')?\s*\)\s*\}\}/g;
+
+  return content.replace(pattern, (_match, doubleQuoted, singleQuoted) => {
+    const message = doubleQuoted ?? singleQuoted ?? DEFAULT_EXPERIMENTAL_WARNING;
+    return `:::caution[Experimental Feature]\n${message}\n:::`;
+  });
+}
+
+/**
+ * Map MkDocs admonition types to Astro aside types
+ * MkDocs types: note, abstract, info, tip, success, question, warning, failure, danger, bug, example, quote
+ * Astro types: note, tip, caution, danger
+ */
+function mapAdmonitionType(mkdocsType: string): string {
+  const typeMap: Record<string, string> = {
+    note: "note",
+    abstract: "note",
+    summary: "note",
+    tldr: "note",
+    info: "note",
+    todo: "note",
+    tip: "tip",
+    hint: "tip",
+    important: "tip",
+    success: "tip",
+    check: "tip",
+    done: "tip",
+    question: "note",
+    help: "note",
+    faq: "note",
+    warning: "caution",
+    caution: "caution",
+    attention: "caution",
+    failure: "danger",
+    fail: "danger",
+    missing: "danger",
+    danger: "danger",
+    error: "danger",
+    bug: "danger",
+    example: "note",
+    snippet: "note",
+    quote: "note",
+    cite: "note",
+  };
+
+  return typeMap[mkdocsType.toLowerCase()] ?? "note";
+}
+
+/**
+ * Convert MkDocs admonitions to Astro asides
+ * MkDocs format: !!! type "Title"\n    content (indented)
+ * Astro format: :::type[Title]\ncontent\n:::
+ */
+function convertAdmonitions(content: string): string {
+  const lines = content.split("\n");
+  const result: string[] = [];
+  let i = 0;
+
+  while (i < lines.length) {
+    const line = lines[i];
+
+    // Match admonition start: !!! type "Title" or !!! type 'Title' or !!! type
+    const admonitionMatch = line.match(/^(\s*)!!!\s+(\w+)(?:\s+["']([^"']+)["'])?\s*$/);
+
+    if (admonitionMatch) {
+      const [, leadingWhitespace, type, title] = admonitionMatch;
+      const astroType = mapAdmonitionType(type);
+      const titlePart = title ? `[${title}]` : "";
+
+      // Collect indented content lines (4 spaces more than the !!! line)
+      const contentLines: string[] = [];
+      const baseIndent = leadingWhitespace.length;
+      const contentIndent = baseIndent + 4;
+
+      i++;
+      while (i < lines.length) {
+        const contentLine = lines[i];
+
+        // Check if line is indented content (at least 4 spaces more than base)
+        // or is an empty line (which could be part of the admonition)
+        if (contentLine.trim() === "") {
+          // Empty line - could be part of admonition or separator
+          // Look ahead to see if next non-empty line is still indented
+          let nextNonEmpty = i + 1;
+          while (nextNonEmpty < lines.length && lines[nextNonEmpty].trim() === "") {
+            nextNonEmpty++;
+          }
+
+          if (nextNonEmpty < lines.length) {
+            const nextLine = lines[nextNonEmpty];
+            const nextIndent = nextLine.match(/^(\s*)/)?.[1].length ?? 0;
+            if (nextIndent >= contentIndent) {
+              // Next content is still indented, include empty line
+              contentLines.push("");
+              i++;
+              continue;
+            }
+          }
+          // End of admonition
+          break;
+        }
+
+        const lineIndent = contentLine.match(/^(\s*)/)?.[1].length ?? 0;
+        if (lineIndent >= contentIndent) {
+          // Remove the content indentation (4 spaces relative to base)
+          contentLines.push(contentLine.slice(contentIndent));
+          i++;
+        } else {
+          // Line is not indented enough, end of admonition
+          break;
+        }
+      }
+
+      // Build the Astro aside
+      result.push(`${leadingWhitespace}:::${astroType}${titlePart}`);
+      for (const contentLine of contentLines) {
+        result.push(`${leadingWhitespace}${contentLine}`);
+      }
+      result.push(`${leadingWhitespace}:::`);
+    } else {
+      result.push(line);
+      i++;
+    }
+  }
+
+  return result.join("\n");
+}
+
+/**
+ * Replace community_contribution_banner macro
+ * Generates the community contribution info box
+ */
+function replaceCommunityBanner(content: string): string {
+  const pattern = /\{\{\s*community_contribution_banner\s*\}\}/g;
+
+  const banner = `:::note[Community Contribution]
+This is a community-maintained package that is not owned or supported by the Strands team. Validate and review
+the package before using it in your project.
+
+Have your own integration? [We'd love to add it here too!](https://github.com/strands-agents/docs/issues/new?assignees=&labels=enhancement&projects=&template=content_addition.yml&title=%5BContent+Addition%5D%3A+)
+:::`;
+
+  return content.replace(pattern, banner);
+}
+
 function processFile(content: string): { modified: boolean; newContent: string } {
   const hasLanguageBlock = content.includes(INFO_BLOCK_PATTERN);
   const hasCommunityBanner = content.includes(COMMUNITY_BANNER);
   const alreadyHasLanguages = content.includes("languages:");
   const alreadyHasCommunity = content.includes("community:");
 
-  // Check if there's anything to do
+  // First, apply all macro replacements and conversions
+  let newContent = content;
+  newContent = replaceMkdocsVariables(newContent);
+  newContent = replaceTsNotSupported(newContent);
+  newContent = replaceTsNotSupportedCode(newContent);
+  newContent = replaceExperimentalWarning(newContent);
+  newContent = replaceCommunityBanner(newContent);
+  newContent = convertAdmonitions(newContent);
+
+  // Check if macros were replaced
+  const macrosReplaced = newContent !== content;
+
+  // Now handle the legacy language block and community banner frontmatter logic
   const needsLanguages = hasLanguageBlock && !alreadyHasLanguages;
   const needsCommunity = hasCommunityBanner && !alreadyHasCommunity;
-  const needsToStripLanguageBlock = hasLanguageBlock;
-  const needsToStripCommunityBanner = hasCommunityBanner;
+  const needsToStripLanguageBlock = newContent.includes(INFO_BLOCK_PATTERN);
+  const needsToStripCommunityBanner = newContent.includes(COMMUNITY_BANNER);
 
-  if (!needsLanguages && !needsCommunity && !needsToStripLanguageBlock && !needsToStripCommunityBanner) {
+  if (!macrosReplaced && !needsLanguages && !needsCommunity && !needsToStripLanguageBlock && !needsToStripCommunityBanner) {
     return { modified: false, newContent: content };
   }
 
-  const lines = content.split("\n");
+  const lines = newContent.split("\n");
   const newLines: string[] = [];
   const hasFrontMatter = lines[0] === "---";
   let inFrontMatter = false;
@@ -69,15 +297,6 @@ function processFile(content: string): { modified: boolean; newContent: string }
     }
 
     skipNextLine = false;
-
-    // Skip community banner line
-    if (line === COMMUNITY_BANNER) {
-      // Skip blank line after the banner if present
-      if (i + 1 < lines.length && lines[i + 1].trim() === "") {
-        i++;
-      }
-      continue;
-    }
 
     // Handle front-matter
     if (i === 0 && line === "---") {
@@ -109,10 +328,13 @@ function processFile(content: string): { modified: boolean; newContent: string }
     const frontMatterFields: string[] = [];
     if (hasLanguageBlock) frontMatterFields.push("languages: Python");
     if (hasCommunityBanner) frontMatterFields.push("community: true");
-    newLines.unshift("---", ...frontMatterFields, "---", "");
+    if (frontMatterFields.length > 0) {
+      newLines.unshift("---", ...frontMatterFields, "---", "");
+    }
   }
 
-  return { modified: true, newContent: newLines.join("\n") };
+  const finalContent = newLines.join("\n");
+  return { modified: finalContent !== content, newContent: finalContent };
 }
 
 async function main() {

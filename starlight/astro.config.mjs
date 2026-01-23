@@ -41,24 +41,33 @@ export default defineConfig({
         },
         content: `
           import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs';
-          mermaid.initialize({ startOnLoad: true, theme: 'neutral' });
           
-          // Handle theme changes
-          const observer = new MutationObserver(() => {
-            const isDark = document.documentElement.dataset.theme === 'dark';
+          const isDark = () => document.documentElement.dataset.theme === 'dark';
+          
+          function initMermaid() {
+            // Find all mermaid code blocks and convert them
+            document.querySelectorAll('pre[data-language="mermaid"]').forEach(pre => {
+              const code = pre.querySelector('code');
+              const diagram = [...pre.querySelectorAll('code > .ec-line')]
+                     .map(it => it.textContent)
+                     .join('\\n')
+              const div = document.createElement('pre');
+              div.className = 'mermaid';
+              div.setAttribute('data-original', diagram);
+              div.textContent = diagram;
+              pre.replaceWith(div);
+              console.log("done")
+            });
+            
             mermaid.initialize({ 
               startOnLoad: false, 
-              theme: isDark ? 'dark' : 'neutral' 
-            });
-            document.querySelectorAll('.mermaid').forEach(el => {
-              const svg = el.querySelector('svg');
-              if (svg) {
-                el.innerHTML = el.getAttribute('data-original') || el.innerHTML;
-              }
+              theme: isDark() ? 'dark' : 'neutral' 
             });
             mermaid.run();
-          });
-          observer.observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+          }
+          
+          // Run on page load
+          initMermaid();
         `,
       },
     ],

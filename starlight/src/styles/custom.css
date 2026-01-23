@@ -12,3 +12,18 @@
   --sl-color-accent: #63b3ed;
   --sl-color-accent-high: #90cdf4;
 }
+
+/* Mermaid diagram styles */
+.mermaid {
+  display: flex;
+  justify-content: center;
+  margin: 1.5rem 0;
+  background: var(--sl-color-gray-6);
+  border-radius: 0.5rem;
+  padding: 1rem;
+}
+
+.mermaid svg {
+  max-width: 100%;
+  height: auto;
+}

@@ -9,6 +9,8 @@ const slimSchema = z.object({
       hidden: z.boolean().default(false),
     })
     .default({}),
+  languages: z.string().optional(),
+  community: z.boolean().default(false),
 })
 
 export const collections = {

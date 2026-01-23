@@ -6,7 +6,7 @@ import yaml from 'js-yaml'
 export type StarlightSidebarItem = 
   | { label: string; slug: string; attrs?: Record<string, string> }  // Internal link
   | { label: string; link: string; attrs?: Record<string, string> }  // External link
-  | { label: string; items: StarlightSidebarItem[] }                 // Group
+  | { label: string; items: StarlightSidebarItem[]; collapsed?: boolean }  // Group
 
 // Internal type for conversion (before we know if it's a link or group)
 interface SidebarItemInternal {
@@ -66,13 +66,21 @@ export function mdPathToSlug(mdPath: string): string {
 
 /**
  * Convert internal item to Starlight-compatible format
+ * @param item - The internal sidebar item
+ * @param depth - Current nesting depth (0 = top level)
  */
-function toStarlightItem(item: SidebarItemInternal): StarlightSidebarItem {
+function toStarlightItem(item: SidebarItemInternal, depth: number = 0): StarlightSidebarItem {
   if (item.link) {
     return { label: item.label, link: item.link, ...(item.attrs && { attrs: item.attrs }) }
   }
   if (item.items) {
-    return { label: item.label, items: item.items.map(toStarlightItem) }
+    // Collapse 2nd level items (depth >= 1) by default
+    const collapsed = depth >= 1
+    return { 
+      label: item.label, 
+      items: item.items.map(child => toStarlightItem(child, depth + 1)),
+      ...(collapsed && { collapsed })
+    }
   }
   // Must have slug
   return { label: item.label, slug: item.slug!, ...(item.attrs && { attrs: item.attrs }) }
@@ -182,7 +190,7 @@ export function loadSidebarFromMkdocs(mkdocsPath: string, docsContentDir?: strin
     .map(convertNavItem)
     .filter((i): i is SidebarItemInternal => i !== null)
     .filter(item => !item.link?.endsWith('.html'))
-    .map(toStarlightItem)
+    .map(item => toStarlightItem(item, 0))
 }
 
 /**
@@ -216,7 +224,7 @@ export function loadMultiSidebarFromMkdocs(mkdocsPath: string, docsContentDir?: 
     const detectedPath = detectRootPath(converted.items)
     const pathKey = detectedPath || labelToPathKey(converted.label)
     
-    multiSidebar[pathKey] = converted.items.map(toStarlightItem)
+    multiSidebar[pathKey] = converted.items.map(item => toStarlightItem(item, 0))
   }
   
   return multiSidebar
@@ -250,7 +258,7 @@ export function getTabsFromMkdocs(mkdocsPath: string, docsContentDir?: string): 
     tabs.push({
       label: converted.label,
       slug,
-      items: converted.items.map(toStarlightItem),
+      items: converted.items.map(item => toStarlightItem(item, 0)),
     })
   }
   

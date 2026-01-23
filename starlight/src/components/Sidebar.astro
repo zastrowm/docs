@@ -1,0 +1,37 @@
+---
+import MobileMenuFooter from 'virtual:starlight/components/MobileMenuFooter';
+import SidebarPersister from '@astrojs/starlight/components/SidebarPersister.astro';
+import SidebarSublist from '@astrojs/starlight/components/SidebarSublist.astro';
+
+// Multi-sidebar: only show the sidebar for the current top-level section
+// Top-level tabs are rendered in the Header component
+
+const { sidebar } = Astro.locals.starlightRoute;
+
+// Find which top-level group contains the current page
+const findCurrentInGroup = (items: typeof sidebar): boolean => {
+  for (const item of items) {
+    if (item.type === 'link' && item.isCurrent) return true;
+    if (item.type === 'group' && findCurrentInGroup(item.entries)) return true;
+  }
+  return false;
+};
+
+// Get the entries for the current section only
+let currentSectionEntries = sidebar;
+
+for (const entry of sidebar) {
+  if (entry.type === 'group' && findCurrentInGroup(entry.entries)) {
+    currentSectionEntries = entry.entries;
+    break;
+  }
+}
+---
+
+<SidebarPersister>
+  <SidebarSublist sublist={currentSectionEntries} />
+</SidebarPersister>
+
+<div class="md:sl-hidden">
+  <MobileMenuFooter />
+</div>

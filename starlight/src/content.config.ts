@@ -16,3 +16,4 @@ const slimSchema = z.object({
 export const collections = {
 	docs: defineCollection({ loader: docsLoader(), schema: slimSchema }),
 };
+

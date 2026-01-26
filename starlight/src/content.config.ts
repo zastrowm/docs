@@ -11,9 +11,13 @@ const slimSchema = z.object({
     .default({}),
   languages: z.string().optional(),
   community: z.boolean().default(false),
+  /**
+   * Indicates that this page is a draft and will not be included in production builds.
+   * Note that the page will still be available when running Astro in development mode.
+   */
+  draft: z.boolean().default(false),
 })
 
 export const collections = {
 	docs: defineCollection({ loader: docsLoader(), schema: slimSchema }),
 };
-

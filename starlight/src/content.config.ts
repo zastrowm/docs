@@ -1,9 +1,10 @@
 import { defineCollection } from 'astro:content';
-import { docsLoader } from '@astrojs/starlight/loaders';
+import { docsLoader, } from '@astrojs/starlight/loaders';
 import { z } from 'astro/zod'
+import { docsSchema } from '@astrojs/starlight/schema';
 
 const slimSchema = z.object({
-  title: z.string().optional(),
+  title: z.string(),
   head: z.array(z.object({})).default([]),
   sidebar: z
     .object({
@@ -20,7 +21,7 @@ const slimSchema = z.object({
 })
 
 export const collections = {
-	docs: defineCollection({ loader: docsLoader(), schema: slimSchema }),
+	docs: defineCollection({ loader: docsLoader(), schema: docsSchema() }),
 };
 
 

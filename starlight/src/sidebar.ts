@@ -4,9 +4,9 @@ import yaml from 'js-yaml'
 
 // Starlight-compatible sidebar item types
 export type StarlightSidebarItem = 
-  | { label: string; slug: string; attrs?: Record<string, string> }  // Internal link
-  | { label: string; link: string; attrs?: Record<string, string> }  // External link
-  | { label: string; items: StarlightSidebarItem[]; collapsed?: boolean }  // Group
+  | { slug: string; label?: string; attrs?: Record<string, string> }  // Internal link (label optional - uses page title)
+  | { label: string; link: string; attrs?: Record<string, string> }  // External link (label required)
+  | { label: string; items: StarlightSidebarItem[]; collapsed?: boolean }  // Group (label required)
 
 // Internal type for conversion (before we know if it's a link or group)
 interface SidebarItemInternal {
@@ -115,6 +115,7 @@ function getGroupIndexSlug(items: SidebarItemInternal[]): string | null {
  */
 function toStarlightItem(item: SidebarItemInternal, depth: number = 0): StarlightSidebarItem {
   if (item.link) {
+    // External links require a label
     return { label: item.label, link: item.link, ...(item.attrs && { attrs: item.attrs }) }
   }
   if (item.items) {
@@ -125,8 +126,8 @@ function toStarlightItem(item: SidebarItemInternal, depth: number = 0): Starligh
     let groupItems = item.items.map(child => toStarlightItem(child, depth + 1))
     
     if (indexSlug) {
-      // Add "Overview" link as first item pointing to the index
-      const overviewItem: StarlightSidebarItem = { label: 'Overview', slug: indexSlug }
+      // Add overview link as first item pointing to the index (no label - uses page title)
+      const overviewItem: StarlightSidebarItem = { slug: indexSlug }
       groupItems = [overviewItem, ...groupItems]
     }
     
@@ -138,8 +139,8 @@ function toStarlightItem(item: SidebarItemInternal, depth: number = 0): Starligh
       ...(collapsed && { collapsed })
     }
   }
-  // Must have slug
-  return { label: item.label, slug: item.slug!, ...(item.attrs && { attrs: item.attrs }) }
+  // Internal link - omit label so Starlight uses page title from frontmatter
+  return { slug: item.slug!, ...(item.attrs && { attrs: item.attrs }) }
 }
 
 /**

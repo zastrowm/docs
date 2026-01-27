@@ -87,4 +87,29 @@ describe('Sidebar Generation', () => {
       ]
     })
   })
+
+  it('should omit labels for internal links in final output (uses page title from frontmatter)', () => {
+    // The final Starlight output should not include labels for internal links
+    // Starlight will automatically use the page's title frontmatter
+    const sidebar = loadSidebarFromMkdocs(path.resolve('../mkdocs.yml'))
+    
+    // Find a leaf item (internal link) and verify it has slug but no label
+    function findLeafItem(items: StarlightSidebarItem[]): StarlightSidebarItem | null {
+      for (const item of items) {
+        if ('slug' in item && !('items' in item)) {
+          return item
+        }
+        if ('items' in item) {
+          const found = findLeafItem(item.items)
+          if (found) return found
+        }
+      }
+      return null
+    }
+    
+    const leafItem = findLeafItem(sidebar)
+    expect(leafItem).toBeDefined()
+    expect(leafItem).toHaveProperty('slug')
+    expect(leafItem).not.toHaveProperty('label')
+  })
 })

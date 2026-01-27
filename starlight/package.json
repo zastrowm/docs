@@ -9,7 +9,7 @@
     "preview": "astro preview",
     "astro": "astro",
     "docs:update": "tsx scripts/update-docs.ts",
-    "docs:revert": "git -C .. checkout HEAD -- docs/"
+    "docs:revert": "git -C .. checkout HEAD -- docs/ && git -C .. clean -d -f docs/"
   },
   "dependencies": {
     "@astrojs/mdx": "^4.3.13",

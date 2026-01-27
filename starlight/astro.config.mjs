@@ -85,7 +85,6 @@ export default defineConfig({
     sidebar,
     customCss: ['./src/styles/custom.css'],
     components: {
-      Header: './src/components/Header.astro',
       Sidebar: './src/components/Sidebar.astro',
       MarkdownContent: './src/components/MarkdownContent.astro',
     },

@@ -388,6 +388,87 @@ Have your own integration? [We'd love to add it here too!](https://github.com/st
   return content.replace(pattern, banner);
 }
 
+/**
+ * Extract the first L1 heading (# Title) from content
+ * Returns the title text or null if not found
+ */
+function extractH1Title(content: string): string | null {
+  // Match # Title at the start of a line (not inside code blocks)
+  const lines = content.split("\n");
+  let inCodeBlock = false;
+
+  for (const line of lines) {
+    // Track code blocks to avoid matching headings inside them
+    if (line.trim().startsWith("```")) {
+      inCodeBlock = !inCodeBlock;
+      continue;
+    }
+
+    if (!inCodeBlock) {
+      const h1Match = line.match(/^#\s+(.+)$/);
+      if (h1Match) {
+        return h1Match[1].trim();
+      }
+    }
+  }
+
+  return null;
+}
+
+/**
+ * Check if frontmatter already has a title field
+ */
+function frontmatterHasTitle(content: string): boolean {
+  const lines = content.split("\n");
+  if (lines[0] !== "---") return false;
+
+  for (let i = 1; i < lines.length; i++) {
+    if (lines[i] === "---") break;
+    if (lines[i].match(/^title:\s*.+$/)) {
+      return true;
+    }
+  }
+
+  return false;
+}
+
+/**
+ * Remove the first L1 heading from content
+ */
+function removeH1Heading(content: string): string {
+  const lines = content.split("\n");
+  const result: string[] = [];
+  let inCodeBlock = false;
+  let removedH1 = false;
+
+  for (let i = 0; i < lines.length; i++) {
+    const line = lines[i];
+
+    // Track code blocks
+    if (line.trim().startsWith("```")) {
+      inCodeBlock = !inCodeBlock;
+      result.push(line);
+      continue;
+    }
+
+    if (!inCodeBlock && !removedH1) {
+      const h1Match = line.match(/^#\s+.+$/);
+      if (h1Match) {
+        removedH1 = true;
+        // Skip blank line after H1 if present
+        if (i + 1 < lines.length && lines[i + 1].trim() === "") {
+          i++;
+        }
+        continue;
+      }
+    }
+
+    result.push(line);
+  }
+
+  return result.join("\n");
+}
+
 function processFile(content: string): { modified: boolean; newContent: string } {
   const hasLanguageBlock = content.includes(INFO_BLOCK_PATTERN);
   const hasCommunityBanner = content.includes(COMMUNITY_BANNER);
@@ -405,6 +486,17 @@ function processFile(content: string): { modified: boolean; newContent: string }
   newContent = convertMkdocsTabs(newContent);
   newContent = convertHtmlCommentsToJsx(newContent);
 
+  // Handle H1 heading and title frontmatter
+  const h1Title = extractH1Title(newContent);
+  const hasExistingTitle = frontmatterHasTitle(newContent);
+
+  // If there's an H1 heading, we'll either:
+  // 1. Add it as frontmatter title and remove the H1, OR
+  // 2. If frontmatter already has title, just remove the H1
+  if (h1Title) {
+    newContent = removeH1Heading(newContent);
+  }
+
   // Check if macros were replaced
   const macrosReplaced = newContent !== content;
 
@@ -413,8 +505,9 @@ function processFile(content: string): { modified: boolean; newContent: string }
   const needsCommunity = hasCommunityBanner && !alreadyHasCommunity;
   const needsToStripLanguageBlock = newContent.includes(INFO_BLOCK_PATTERN);
   const needsToStripCommunityBanner = newContent.includes(COMMUNITY_BANNER);
+  const needsTitle = h1Title && !hasExistingTitle;
 
-  if (!macrosReplaced && !needsLanguages && !needsCommunity && !needsToStripLanguageBlock && !needsToStripCommunityBanner) {
+  if (!macrosReplaced && !needsLanguages && !needsCommunity && !needsToStripLanguageBlock && !needsToStripCommunityBanner && !needsTitle) {
     return { modified: false, newContent: content };
   }
 
@@ -424,6 +517,7 @@ function processFile(content: string): { modified: boolean; newContent: string }
   let inFrontMatter = false;
   let addedLanguages = alreadyHasLanguages;
   let addedCommunity = alreadyHasCommunity;
+  let addedTitle = hasExistingTitle;
   let skipNextLine = false;
 
   for (let i = 0; i < lines.length; i++) {
@@ -455,6 +549,14 @@ function processFile(content: string): { modified: boolean; newContent: string }
 
     if (inFrontMatter && line === "---") {
       // End of front-matter - add fields before closing ---
+      if (h1Title && !addedTitle) {
+        // Escape quotes in title for YAML
+        const escapedTitle = h1Title.includes(":") || h1Title.includes('"') || h1Title.includes("'")
+          ? `"${h1Title.replace(/"/g, '\\"')}"`
+          : h1Title;
+        newLines.push(`title: ${escapedTitle}`);
+        addedTitle = true;
+      }
       if (hasLanguageBlock && !addedLanguages) {
         newLines.push("languages: Python");
         addedLanguages = true;
@@ -474,6 +576,12 @@ function processFile(content: string): { modified: boolean; newContent: string }
   // If no front-matter existed, add it at the beginning
   if (!hasFrontMatter) {
     const frontMatterFields: string[] = [];
+    if (h1Title) {
+      const escapedTitle = h1Title.includes(":") || h1Title.includes('"') || h1Title.includes("'")
+        ? `"${h1Title.replace(/"/g, '\\"')}"`
+        : h1Title;
+      frontMatterFields.push(`title: ${escapedTitle}`);
+    }
     if (hasLanguageBlock) frontMatterFields.push("languages: Python");
     if (hasCommunityBanner) frontMatterFields.push("community: true");
     if (frontMatterFields.length > 0) {

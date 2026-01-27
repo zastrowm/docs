@@ -358,6 +358,19 @@ function convertAdmonitions(content: string): string {
 }
 
 /**
+ * Convert HTML comments to JSX comments
+ * HTML format: <!-- comment -->
+ * JSX format: \{/* comment *\/\}
+ */
+function convertHtmlCommentsToJsx(content: string): string {
+  // Match HTML comments: <!-- ... -->
+  // Use non-greedy match to handle multiple comments
+  return content.replace(/<!--([\s\S]*?)-->/g, (_match, commentContent) => {
+    return `{/*${commentContent}*/}`;
+  });
+}
+
+/**
  * Replace community_contribution_banner macro
  * Generates the community contribution info box
  */
@@ -389,6 +402,7 @@ function processFile(content: string): { modified: boolean; newContent: string }
   newContent = replaceCommunityBanner(newContent);
   newContent = convertAdmonitions(newContent);
   newContent = convertMkdocsTabs(newContent);
+  newContent = convertHtmlCommentsToJsx(newContent);
 
   // Check if macros were replaced
   const macrosReplaced = newContent !== content;

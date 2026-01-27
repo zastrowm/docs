@@ -77,6 +77,11 @@ export default defineConfig({
         `,
       },
     ],
+    markdown: {
+      processedDirs: [
+        path.resolve("../docs"),
+      ]
+    },
     sidebar,
     customCss: ['./src/styles/custom.css'],
     components: {

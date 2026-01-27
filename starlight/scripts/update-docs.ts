@@ -106,17 +106,13 @@ function replaceTsNotSupportedCode(content: string): string {
 }
 
 /**
- * Replace experimental_feature_warning() macro calls
- * Generates: !!! warning "Experimental Feature"\n    {message}
+ * Remove experimental_feature_warning() macro from content
+ * The experimental status is tracked via frontmatter instead
  */
 function replaceExperimentalWarning(content: string): string {
-  // Match {{ experimental_feature_warning() }} or {{ experimental_feature_warning("message") }}
-  const pattern = /\{\{\s*experimental_feature_warning\(\s*(?:"([^"]*)"|'([^']*)')?\s*\)\s*\}\}/g;
-
-  return content.replace(pattern, (_match, doubleQuoted, singleQuoted) => {
-    const message = doubleQuoted ?? singleQuoted ?? DEFAULT_EXPERIMENTAL_WARNING;
-    return `:::caution[Experimental Feature]\n${message}\n:::`;
-  });
+  // Only match the exact macro with no arguments: {{ experimental_feature_warning() }}
+  const pattern = /\{\{\s*experimental_feature_warning\(\)\s*\}\}\n?/g;
+  return content.replace(pattern, "");
 }
 
 /**
@@ -520,8 +516,11 @@ function processFile(content: string, explicitTitle?: string, hasCommunityLabel?
   // Detect features BEFORE any transformations
   const hasLanguageBlock = content.includes(INFO_BLOCK_PATTERN);
   const hasCommunityBanner = content.includes(COMMUNITY_BANNER);
+  // Only match the exact macro with no arguments
+  const hasExperimentalWarningMacro = content.includes("{{ experimental_feature_warning() }}");
   const alreadyHasLanguages = content.includes("languages:");
   const alreadyHasCommunity = content.includes("community:");
+  const alreadyHasExperimental = content.includes("experimental:");
   const alreadyHasSidebarBadge = content.includes("sidebar:");
 
   // Determine what frontmatter needs to be added based on original content
@@ -552,10 +551,13 @@ function processFile(content: string, explicitTitle?: string, hasCommunityLabel?
     titleToUse = titleToUse.replace(/\s*\[Experimental\]\s*/g, "").trim();
   }
   
+  // Determine if file needs experimental frontmatter (from title or macro)
+  const hasExperimentalContent = hasExperimentalInTitle || hasExperimentalWarningMacro;
+  const needsExperimental = hasExperimentalContent && !alreadyHasExperimental;
   const needsTitle = titleToUse && !hasExistingTitle;
   
   // Determine sidebar badge type (experimental takes precedence over community)
-  const needsExperimentalBadge = hasExperimentalInTitle && !alreadyHasSidebarBadge;
+  const needsExperimentalBadge = hasExperimentalContent && !alreadyHasSidebarBadge;
   const needsCommunityBadge = hasCommunityLabel && !alreadyHasSidebarBadge && !needsExperimentalBadge;
   const needsSidebarBadge = needsExperimentalBadge || needsCommunityBadge;
 
@@ -568,7 +570,7 @@ function processFile(content: string, explicitTitle?: string, hasCommunityLabel?
   const contentTransformed = newContent !== content;
 
   // Determine if any modifications are needed
-  const needsModification = contentTransformed || needsLanguages || needsCommunity || needsTitle || needsSidebarBadge;
+  const needsModification = contentTransformed || needsLanguages || needsCommunity || needsExperimental || needsTitle || needsSidebarBadge;
 
   if (!needsModification) {
     return { modified: false, newContent: content };
@@ -580,6 +582,7 @@ function processFile(content: string, explicitTitle?: string, hasCommunityLabel?
   let inFrontMatter = false;
   let addedLanguages = alreadyHasLanguages;
   let addedCommunity = alreadyHasCommunity;
+  let addedExperimental = alreadyHasExperimental;
   let addedTitle = hasExistingTitle;
   let addedSidebarBadge = alreadyHasSidebarBadge;
 
@@ -611,7 +614,11 @@ function processFile(content: string, explicitTitle?: string, hasCommunityLabel?
         newLines.push("community: true");
         addedCommunity = true;
       }
-      if (hasCommunityLabel && !addedSidebarBadge) {
+      if (hasExperimentalContent && !addedExperimental) {
+        newLines.push("experimental: true");
+        addedExperimental = true;
+      }
+      if (hasCommunityLabel && !addedSidebarBadge && !needsExperimentalBadge) {
         newLines.push("sidebar:");
         newLines.push("  badge:");
         newLines.push("    text: Community");
@@ -644,6 +651,7 @@ function processFile(content: string, explicitTitle?: string, hasCommunityLabel?
     }
     if (hasLanguageBlock) frontMatterFields.push("languages: Python");
     if (hasCommunityBanner) frontMatterFields.push("community: true");
+    if (hasExperimentalContent) frontMatterFields.push("experimental: true");
     if (hasCommunityLabel && !needsExperimentalBadge) {
       frontMatterFields.push("sidebar:");
       frontMatterFields.push("  badge:");

@@ -2,12 +2,14 @@
 import '@astrojs/starlight/style/markdown.css';
 import CommunityContributionAside from './CommunityContributionAside.astro';
 import LanguageSupportAside from './LanguageSupportAside.astro';
+import ExperimentalAside from './ExperimentalAside.astro';
 
 const { starlightRoute } = Astro.locals;
-const { languages, community } = starlightRoute.entry.data;
+const { languages, community, experimental } = starlightRoute.entry.data;
 ---
 
 <div class="sl-markdown-content">
+  {experimental && <ExperimentalAside />}
   {community && <CommunityContributionAside />}
   {languages && <LanguageSupportAside languages={languages} />}
   <slot />

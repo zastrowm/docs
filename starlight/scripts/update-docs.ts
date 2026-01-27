@@ -1,4 +1,4 @@
-import { readdir, readFile, writeFile } from "fs/promises";
+import { readdir, readFile, writeFile, rename } from "fs/promises";
 import { join } from "path";
 
 const DOCS_DIR = "src/content/docs";
@@ -87,7 +87,7 @@ function replaceTsNotSupportedCode(content: string): string {
 
   return content.replace(pattern, (_match, doubleQuoted, singleQuoted) => {
     const message = doubleQuoted ?? singleQuoted ?? DEFAULT_TS_NOT_SUPPORTED_CODE;
-    return `=== "TypeScript"\n    \`\`\`ts\n    // ${message}\n    \`\`\``;
+    return `=== "TypeScript"\n\n    \`\`\`ts\n    // ${message}\n    \`\`\``;
   });
 }
 
@@ -103,6 +103,138 @@ function replaceExperimentalWarning(content: string): string {
     const message = doubleQuoted ?? singleQuoted ?? DEFAULT_EXPERIMENTAL_WARNING;
     return `:::caution[Experimental Feature]\n${message}\n:::`;
   });
+}
+
+/**
+ * Convert MkDocs tabs syntax to <tabs>/<tab> format
+ * MkDocs format:
+ *   === "Label"
+ *       content (indented 4 spaces)
+ *   === "Label2"
+ *       content (indented 4 spaces)
+ * 
+ * New format:
+ *   <tabs>
+ *   <tab label="Label">
+ *   content (no indent)
+ *   </tab>
+ *   <tab label="Label2">
+ *   content (no indent)
+ *   </tab>
+ *   </tabs>
+ */
+function convertMkdocsTabs(content: string): string {
+  const lines = content.split("\n");
+  const result: string[] = [];
+  let i = 0;
+
+  while (i < lines.length) {
+    const line = lines[i];
+
+    // Match tab start: === "Label" or === 'Label'
+    const tabMatch = line.match(/^(\s*)===\s+["']([^"']+)["']\s*$/);
+
+    if (tabMatch) {
+      const [, leadingWhitespace, firstLabel] = tabMatch;
+      const baseIndent = leadingWhitespace.length;
+      const contentIndent = baseIndent + 4;
+
+      // Start collecting tabs
+      const tabs: Array<{ label: string; content: string[] }> = [];
+      
+      // Process first tab
+      let currentLabel = firstLabel;
+      let currentContent: string[] = [];
+      i++;
+
+      while (i < lines.length) {
+        const currentLine = lines[i];
+        
+        // Check for next tab at same indentation level
+        const nextTabMatch = currentLine.match(/^(\s*)===\s+["']([^"']+)["']\s*$/);
+        if (nextTabMatch && nextTabMatch[1].length === baseIndent) {
+          // Save current tab and start new one
+          tabs.push({ label: currentLabel, content: currentContent });
+          currentLabel = nextTabMatch[2];
+          currentContent = [];
+          i++;
+          continue;
+        }
+
+        // Check if we've exited the tab block (non-empty line at base indent or less)
+        if (currentLine.trim() !== "") {
+          const lineIndent = currentLine.match(/^(\s*)/)?.[1].length ?? 0;
+          if (lineIndent < contentIndent && !currentLine.match(/^(\s*)===\s+["']/)) {
+            // We've exited the tabs block
+            break;
+          }
+        }
+
+        // Handle content lines
+        if (currentLine.trim() === "") {
+          // Empty line - check if we're still in tabs
+          let nextNonEmpty = i + 1;
+          while (nextNonEmpty < lines.length && lines[nextNonEmpty].trim() === "") {
+            nextNonEmpty++;
+          }
+
+          if (nextNonEmpty < lines.length) {
+            const nextLine = lines[nextNonEmpty];
+            const nextTabMatch = nextLine.match(/^(\s*)===\s+["']([^"']+)["']\s*$/);
+            const nextIndent = nextLine.match(/^(\s*)/)?.[1].length ?? 0;
+            
+            // Continue if next content is indented or is another tab
+            if (nextIndent >= contentIndent || (nextTabMatch && nextTabMatch[1].length === baseIndent)) {
+              currentContent.push("");
+              i++;
+              continue;
+            }
+          }
+          // End of tabs block
+          break;
+        }
+
+        // Content line - remove the 4-space indentation
+        const lineIndent = currentLine.match(/^(\s*)/)?.[1].length ?? 0;
+        if (lineIndent >= contentIndent) {
+          currentContent.push(currentLine.slice(contentIndent));
+        } else {
+          currentContent.push(currentLine.slice(lineIndent));
+        }
+        i++;
+      }
+
+      // Save last tab
+      tabs.push({ label: currentLabel, content: currentContent });
+
+      // Only convert if we have multiple tabs (single === might be something else)
+      if (tabs.length >= 1) {
+        // Build the new tabs format
+        result.push(`${leadingWhitespace}<Tabs>`);
+        for (const tab of tabs) {
+          result.push(`${leadingWhitespace}<Tab label="${tab.label}">`);
+          // Trim trailing empty lines from content
+          while (tab.content.length > 0 && tab.content[tab.content.length - 1].trim() === "") {
+            tab.content.pop();
+          }
+          // Add content without extra indentation
+          for (const contentLine of tab.content) {
+            result.push(`${leadingWhitespace}${contentLine}`);
+          }
+          result.push(`${leadingWhitespace}</Tab>`);
+        }
+        result.push(`${leadingWhitespace}</Tabs>`);
+      } else {
+        // Not a valid tabs block, restore original
+        result.push(line);
+      }
+    } else {
+      result.push(line);
+      i++;
+    }
+  }
+
+  return result.join("\n");
 }
 
 /**
@@ -256,6 +388,7 @@ function processFile(content: string): { modified: boolean; newContent: string }
   newContent = replaceExperimentalWarning(newContent);
   newContent = replaceCommunityBanner(newContent);
   newContent = convertAdmonitions(newContent);
+  newContent = convertMkdocsTabs(newContent);
 
   // Check if macros were replaced
   const macrosReplaced = newContent !== content;
@@ -357,9 +490,16 @@ async function main() {
       console.log(`✓ Processed: ${file}`);
       processedCount++;
     }
+
+    // Rename .md to .mdx
+    if (file.endsWith(".md")) {
+      const newPath = file.replace(/\.md$/, ".mdx");
+      await rename(file, newPath);
+      console.log(`✓ Renamed: ${file} → ${newPath}`);
+    }
   }
 
-  console.log(`\nDone! Processed ${processedCount} file(s).`);
+  console.log(`\nDone! Processed ${processedCount} file(s) and renamed all .md files to .mdx.`);
 }
 
 main().catch(console.error);

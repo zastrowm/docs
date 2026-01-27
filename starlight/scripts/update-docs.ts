@@ -1,8 +1,10 @@
 import { readdir, readFile, writeFile, rename } from "fs/promises";
 import { join } from "path";
 import { updateQuickstart } from "./update-quickstart.js";
+import { getCommunityLabeledFiles } from "../src/sidebar.js";
 
 const DOCS_DIR = "src/content/docs";
+const MKDOCS_PATH = "example-mkdocs.yml";
 const INFO_BLOCK_PATTERN = '!!! info "Language Support"';
 const INFO_BLOCK_CONTENT = "    This provider is only supported in Python.";
 const COMMUNITY_BANNER = "{{ community_contribution_banner }}";
@@ -514,12 +516,13 @@ function removeH1Heading(content: string): string {
   return result.join("\n");
 }
 
-function processFile(content: string, explicitTitle?: string): { modified: boolean; newContent: string } {
+function processFile(content: string, explicitTitle?: string, hasCommunityLabel?: boolean): { modified: boolean; newContent: string } {
   // Detect features BEFORE any transformations
   const hasLanguageBlock = content.includes(INFO_BLOCK_PATTERN);
   const hasCommunityBanner = content.includes(COMMUNITY_BANNER);
   const alreadyHasLanguages = content.includes("languages:");
   const alreadyHasCommunity = content.includes("community:");
+  const alreadyHasSidebarBadge = content.includes("sidebar:");
 
   // Determine what frontmatter needs to be added based on original content
   const needsLanguages = hasLanguageBlock && !alreadyHasLanguages;
@@ -541,8 +544,20 @@ function processFile(content: string, explicitTitle?: string): { modified: boole
   // Handle H1 heading and title frontmatter
   const h1Title = extractH1Title(newContent);
   const hasExistingTitle = frontmatterHasTitle(newContent);
-  const titleToUse = explicitTitle ?? h1Title;
+  let titleToUse = explicitTitle ?? h1Title;
+  
+  // Check if title contains [Experimental] and strip it
+  const hasExperimentalInTitle = titleToUse?.includes("[Experimental]") ?? false;
+  if (hasExperimentalInTitle && titleToUse) {
+    titleToUse = titleToUse.replace(/\s*\[Experimental\]\s*/g, "").trim();
+  }
+  
   const needsTitle = titleToUse && !hasExistingTitle;
+  
+  // Determine sidebar badge type (experimental takes precedence over community)
+  const needsExperimentalBadge = hasExperimentalInTitle && !alreadyHasSidebarBadge;
+  const needsCommunityBadge = hasCommunityLabel && !alreadyHasSidebarBadge && !needsExperimentalBadge;
+  const needsSidebarBadge = needsExperimentalBadge || needsCommunityBadge;
 
   // If there's an H1 heading, remove it (title goes in frontmatter)
   if (h1Title) {
@@ -553,7 +568,7 @@ function processFile(content: string, explicitTitle?: string): { modified: boole
   const contentTransformed = newContent !== content;
 
   // Determine if any modifications are needed
-  const needsModification = contentTransformed || needsLanguages || needsCommunity || needsTitle;
+  const needsModification = contentTransformed || needsLanguages || needsCommunity || needsTitle || needsSidebarBadge;
 
   if (!needsModification) {
     return { modified: false, newContent: content };
@@ -566,6 +581,7 @@ function processFile(content: string, explicitTitle?: string): { modified: boole
   let addedLanguages = alreadyHasLanguages;
   let addedCommunity = alreadyHasCommunity;
   let addedTitle = hasExistingTitle;
+  let addedSidebarBadge = alreadyHasSidebarBadge;
 
   for (let i = 0; i < lines.length; i++) {
     const line = lines[i];
@@ -595,6 +611,20 @@ function processFile(content: string, explicitTitle?: string): { modified: boole
         newLines.push("community: true");
         addedCommunity = true;
       }
+      if (hasCommunityLabel && !addedSidebarBadge) {
+        newLines.push("sidebar:");
+        newLines.push("  badge:");
+        newLines.push("    text: Community");
+        newLines.push("    variant: note");
+        addedSidebarBadge = true;
+      }
+      if (needsExperimentalBadge && !addedSidebarBadge) {
+        newLines.push("sidebar:");
+        newLines.push("  badge:");
+        newLines.push("    text: Experimental");
+        newLines.push("    variant: note");
+        addedSidebarBadge = true;
+      }
       inFrontMatter = false;
       newLines.push(line);
       continue;
@@ -614,6 +644,18 @@ function processFile(content: string, explicitTitle?: string): { modified: boole
     }
     if (hasLanguageBlock) frontMatterFields.push("languages: Python");
     if (hasCommunityBanner) frontMatterFields.push("community: true");
+    if (hasCommunityLabel && !needsExperimentalBadge) {
+      frontMatterFields.push("sidebar:");
+      frontMatterFields.push("  badge:");
+      frontMatterFields.push("    text: Community");
+      frontMatterFields.push("    variant: note");
+    }
+    if (needsExperimentalBadge) {
+      frontMatterFields.push("sidebar:");
+      frontMatterFields.push("  badge:");
+      frontMatterFields.push("    text: Experimental");
+      frontMatterFields.push("    variant: note");
+    }
     if (frontMatterFields.length > 0) {
       newLines.unshift("---", ...frontMatterFields, "---", "");
     }
@@ -625,6 +667,10 @@ function processFile(content: string, explicitTitle?: string): { modified: boole
 
 async function main() {
   console.log(`Scanning ${DOCS_DIR} for markdown files...`);
+
+  // Load community-labeled files from mkdocs.yml nav
+  const communityLabeledFiles = getCommunityLabeledFiles(MKDOCS_PATH);
+  console.log(`Found ${communityLabeledFiles.size} community-labeled files in nav`);
 
   const files = await getAllMarkdownFiles(DOCS_DIR);
   let processedCount = 0;
@@ -641,7 +687,10 @@ async function main() {
     const relativePath = file.replace(`${DOCS_DIR}/`, "");
     const explicitTitle = EXPLICIT_TITLES[relativePath];
     
-    const { modified, newContent } = processFile(content, explicitTitle);
+    // Check if this file has a community label in the nav
+    const hasCommunityLabel = communityLabeledFiles.has(relativePath);
+    
+    const { modified, newContent } = processFile(content, explicitTitle, hasCommunityLabel);
 
     if (modified) {
       await writeFile(file, newContent, "utf-8");

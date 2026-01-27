@@ -113,3 +113,26 @@ describe('Sidebar Generation', () => {
     expect(leafItem).not.toHaveProperty('label')
   })
 })
+
+
+describe('getCommunityLabeledFiles', () => {
+  it('should extract files with <sup> community</sup> in nav label', async () => {
+    const { getCommunityLabeledFiles } = await import('../src/sidebar')
+    const communityFiles = getCommunityLabeledFiles(path.resolve('example-mkdocs.yml'))
+    
+    console.log('\n=== Community Labeled Files ===\n')
+    console.log([...communityFiles])
+    
+    expect(communityFiles).toBeDefined()
+    expect(communityFiles instanceof Set).toBe(true)
+    
+    // Should find the community-labeled model providers
+    expect(communityFiles.has('user-guide/concepts/model-providers/cohere.md')).toBe(true)
+    expect(communityFiles.has('user-guide/concepts/model-providers/clova-studio.md')).toBe(true)
+    expect(communityFiles.has('user-guide/concepts/model-providers/fireworksai.md')).toBe(true)
+    expect(communityFiles.has('user-guide/concepts/model-providers/nebius-token-factory.md')).toBe(true)
+    
+    // Should NOT include non-community files
+    expect(communityFiles.has('user-guide/concepts/model-providers/openai.md')).toBe(false)
+  })
+})

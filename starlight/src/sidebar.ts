@@ -160,11 +160,14 @@ export function convertNavItem(item: unknown): SidebarItemInternal | null {
   // Object item: { "Label": "path.md" } or { "Label": [...] }
   if (typeof item === 'object' && item !== null) {
     const [label, value] = Object.entries(item)[0]
+    
+    // Strip HTML tags like <sup> community</sup> from label for display
+    const cleanLabel = label.replace(/<[^>]+>/g, '').trim()
 
     // External link
     if (typeof value === 'string' && value.startsWith('http')) {
       return {
-        label,
+        label: cleanLabel,
         link: value,
         attrs: { target: '_blank' },
       }
@@ -180,7 +183,7 @@ export function convertNavItem(item: unknown): SidebarItemInternal | null {
       const slug = mdPathToSlug(value)
       if (!contentExists(slug)) return null
       return {
-        label,
+        label: cleanLabel,
         slug,
       }
     }
@@ -191,7 +194,7 @@ export function convertNavItem(item: unknown): SidebarItemInternal | null {
       // Skip empty groups
       if (items.length === 0) return null
       return {
-        label,
+        label: cleanLabel,
         items,
       }
     }
@@ -320,4 +323,47 @@ export function getTabsFromMkdocs(mkdocsPath: string, docsContentDir?: string): 
   }
   
   return tabs
+}
+
+
+/**
+ * Extract files that have <sup> community</sup> in their nav label from mkdocs.yml
+ * Returns a Set of file paths (e.g., "user-guide/concepts/model-providers/cohere.md")
+ */
+export function getCommunityLabeledFiles(mkdocsPath: string): Set<string> {
+  const communityFiles = new Set<string>()
+  
+  let mkdocsContent = fs.readFileSync(mkdocsPath, 'utf-8')
+  
+  // Strip Python-specific YAML tags that js-yaml can't handle
+  mkdocsContent = mkdocsContent.replace(/!!python\/[^\s]+/g, '')
+  
+  const mkdocs = yaml.load(mkdocsContent) as { nav?: unknown[] }
+  
+  if (!mkdocs.nav) return communityFiles
+  
+  // Recursively search nav for items with <sup> community</sup> in label
+  function searchNav(items: unknown[]) {
+    for (const item of items) {
+      if (typeof item === 'object' && item !== null) {
+        const entries = Object.entries(item)
+        for (const [label, value] of entries) {
+          // Check if label contains <sup> community</sup> (case-insensitive)
+          if (/<sup>\s*community\s*<\/sup>/i.test(label)) {
+            if (typeof value === 'string' && value.endsWith('.md')) {
+              communityFiles.add(value)
+            }
+          }
+          // Recurse into nested arrays
+          if (Array.isArray(value)) {
+            searchNav(value)
+          }
+        }
+      }
+    }
+  }
+  
+  searchNav(mkdocs.nav)
+  
+  return communityFiles
 }

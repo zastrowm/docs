@@ -1,5 +1,6 @@
 import { readdir, readFile, writeFile, rename } from "fs/promises";
 import { join } from "path";
+import { updateQuickstart } from "./update-quickstart.js";
 
 const DOCS_DIR = "src/content/docs";
 const INFO_BLOCK_PATTERN = '!!! info "Language Support"';
@@ -514,6 +515,9 @@ async function main() {
   }
 
   console.log(`\nDone! Processed ${processedCount} file(s) and renamed all .md files to .mdx.`);
+
+  // Run special-case page updates
+  await updateQuickstart();
 }
 
 main().catch(console.error);

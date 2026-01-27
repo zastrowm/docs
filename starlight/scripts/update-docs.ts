@@ -372,20 +372,45 @@ function convertHtmlCommentsToJsx(content: string): string {
 }
 
 /**
- * Replace community_contribution_banner macro
- * Generates the community contribution info box
+ * Remove community_contribution_banner macro from content
+ * The banner is rendered via a component based on `community: true` frontmatter
  */
-function replaceCommunityBanner(content: string): string {
-  const pattern = /\{\{\s*community_contribution_banner\s*\}\}/g;
+function removeCommunityBannerMacro(content: string): string {
+  const pattern = /\{\{\s*community_contribution_banner\s*\}\}\n?/g;
+  return content.replace(pattern, "");
+}
 
-  const banner = `:::note[Community Contribution]
-This is a community-maintained package that is not owned or supported by the Strands team. Validate and review
-the package before using it in your project.
+/**
+ * Remove the Language Support info block from content
+ * The language support is indicated via `languages: Python` frontmatter
+ */
+function removeLanguageSupportBlock(content: string): string {
+  const lines = content.split("\n");
+  const result: string[] = [];
+  let i = 0;
 
-Have your own integration? [We'd love to add it here too!](https://github.com/strands-agents/docs/issues/new?assignees=&labels=enhancement&projects=&template=content_addition.yml&title=%5BContent+Addition%5D%3A+)
-:::`;
+  while (i < lines.length) {
+    const line = lines[i];
 
-  return content.replace(pattern, banner);
+    // Check for the language support info block
+    if (line === INFO_BLOCK_PATTERN) {
+      i++;
+      // Skip the content line if it matches
+      if (i < lines.length && lines[i] === INFO_BLOCK_CONTENT) {
+        i++;
+      }
+      // Skip trailing blank line if present
+      if (i < lines.length && lines[i].trim() === "") {
+        i++;
+      }
+      continue;
+    }
+
+    result.push(line);
+    i++;
+  }
+
+  return result.join("\n");
 }
 
 /**
@@ -470,18 +495,24 @@ function removeH1Heading(content: string): string {
 }
 
 function processFile(content: string): { modified: boolean; newContent: string } {
+  // Detect features BEFORE any transformations
   const hasLanguageBlock = content.includes(INFO_BLOCK_PATTERN);
   const hasCommunityBanner = content.includes(COMMUNITY_BANNER);
   const alreadyHasLanguages = content.includes("languages:");
   const alreadyHasCommunity = content.includes("community:");
 
-  // First, apply all macro replacements and conversions
+  // Determine what frontmatter needs to be added based on original content
+  const needsLanguages = hasLanguageBlock && !alreadyHasLanguages;
+  const needsCommunity = hasCommunityBanner && !alreadyHasCommunity;
+
+  // Apply all macro replacements and conversions
   let newContent = content;
   newContent = replaceMkdocsVariables(newContent);
   newContent = replaceTsNotSupported(newContent);
   newContent = replaceTsNotSupportedCode(newContent);
   newContent = replaceExperimentalWarning(newContent);
-  newContent = replaceCommunityBanner(newContent);
+  newContent = removeCommunityBannerMacro(newContent);
+  newContent = removeLanguageSupportBlock(newContent);
   newContent = convertAdmonitions(newContent);
   newContent = convertMkdocsTabs(newContent);
   newContent = convertHtmlCommentsToJsx(newContent);
@@ -489,25 +520,20 @@ function processFile(content: string): { modified: boolean; newContent: string }
   // Handle H1 heading and title frontmatter
   const h1Title = extractH1Title(newContent);
   const hasExistingTitle = frontmatterHasTitle(newContent);
+  const needsTitle = h1Title && !hasExistingTitle;
 
-  // If there's an H1 heading, we'll either:
-  // 1. Add it as frontmatter title and remove the H1, OR
-  // 2. If frontmatter already has title, just remove the H1
+  // If there's an H1 heading, remove it (title goes in frontmatter)
   if (h1Title) {
     newContent = removeH1Heading(newContent);
   }
 
-  // Check if macros were replaced
-  const macrosReplaced = newContent !== content;
+  // Check if content was transformed
+  const contentTransformed = newContent !== content;
 
-  // Now handle the legacy language block and community banner frontmatter logic
-  const needsLanguages = hasLanguageBlock && !alreadyHasLanguages;
-  const needsCommunity = hasCommunityBanner && !alreadyHasCommunity;
-  const needsToStripLanguageBlock = newContent.includes(INFO_BLOCK_PATTERN);
-  const needsToStripCommunityBanner = newContent.includes(COMMUNITY_BANNER);
-  const needsTitle = h1Title && !hasExistingTitle;
+  // Determine if any modifications are needed
+  const needsModification = contentTransformed || needsLanguages || needsCommunity || needsTitle;
 
-  if (!macrosReplaced && !needsLanguages && !needsCommunity && !needsToStripLanguageBlock && !needsToStripCommunityBanner && !needsTitle) {
+  if (!needsModification) {
     return { modified: false, newContent: content };
   }
 
@@ -518,27 +544,9 @@ function processFile(content: string): { modified: boolean; newContent: string }
   let addedLanguages = alreadyHasLanguages;
   let addedCommunity = alreadyHasCommunity;
   let addedTitle = hasExistingTitle;
-  let skipNextLine = false;
 
   for (let i = 0; i < lines.length; i++) {
     const line = lines[i];
-
-    // Skip the info block and its content line
-    if (line === INFO_BLOCK_PATTERN) {
-      skipNextLine = true;
-      continue;
-    }
-
-    if (skipNextLine && line === INFO_BLOCK_CONTENT) {
-      skipNextLine = false;
-      // Skip blank line after the info block if present
-      if (i + 1 < lines.length && lines[i + 1].trim() === "") {
-        i++;
-      }
-      continue;
-    }
-
-    skipNextLine = false;
 
     // Handle front-matter
     if (i === 0 && line === "---") {

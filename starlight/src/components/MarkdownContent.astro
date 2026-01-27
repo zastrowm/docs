@@ -4,11 +4,11 @@ import CommunityContributionAside from './CommunityContributionAside.astro';
 import LanguageSupportAside from './LanguageSupportAside.astro';
 
 const { starlightRoute } = Astro.locals;
-const { languages, community, title } = starlightRoute.entry.data;
+const { languages, community } = starlightRoute.entry.data;
 ---
 
 <div class="sl-markdown-content">
-  {languages && <LanguageSupportAside languages={languages} />}
   {community && <CommunityContributionAside />}
+  {languages && <LanguageSupportAside languages={languages} />}
   <slot />
 </div>

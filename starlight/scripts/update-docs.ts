@@ -372,6 +372,15 @@ function convertHtmlCommentsToJsx(content: string): string {
 }
 
 /**
+ * Convert HTML <br> tags to self-closing JSX <br /> tags
+ * MDX requires self-closing tags
+ */
+function convertBrToSelfClosing(content: string): string {
+  // Match <br> that isn't already self-closing (not followed by optional whitespace and /)
+  return content.replace(/<br\s*(?!\/)>/gi, "<br />");
+}
+
+/**
  * Remove community_contribution_banner macro from content
  * The banner is rendered via a component based on `community: true` frontmatter
  */
@@ -516,6 +525,7 @@ function processFile(content: string): { modified: boolean; newContent: string }
   newContent = convertAdmonitions(newContent);
   newContent = convertMkdocsTabs(newContent);
   newContent = convertHtmlCommentsToJsx(newContent);
+  newContent = convertBrToSelfClosing(newContent);
 
   // Handle H1 heading and title frontmatter
   const h1Title = extractH1Title(newContent);

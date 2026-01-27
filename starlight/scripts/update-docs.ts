@@ -6,7 +6,18 @@ const DOCS_DIR = "src/content/docs";
 const INFO_BLOCK_PATTERN = '!!! info "Language Support"';
 const INFO_BLOCK_CONTENT = "    This provider is only supported in Python.";
 const COMMUNITY_BANNER = "{{ community_contribution_banner }}";
-const SKIP_FILES = ["get-featured.md"];
+const SKIP_FILES: string[] = [];
+
+// Files that need explicit titles because they don't have H1 headings
+const EXPLICIT_TITLES: Record<string, string> = {
+  "user-guide/quickstart.md": "Quickstart",
+  "user-guide/quickstart/python.md": "Python Quickstart",
+  // Redirect pages (have <auto-redirect /> but no H1)
+  "user-guide/concepts/model-providers/clova-studio.md": "Clova Studio",
+  "user-guide/concepts/model-providers/cohere.md": "Cohere",
+  "user-guide/concepts/model-providers/fireworksai.md": "Fireworks AI",
+  "user-guide/concepts/model-providers/nebius-token-factory.md": "Nebius Token Factory",
+};
 
 // MkDocs extra variables from mkdocs.yml
 const MKDOCS_VARIABLES: Record<string, string> = {
@@ -503,7 +514,7 @@ function removeH1Heading(content: string): string {
   return result.join("\n");
 }
 
-function processFile(content: string): { modified: boolean; newContent: string } {
+function processFile(content: string, explicitTitle?: string): { modified: boolean; newContent: string } {
   // Detect features BEFORE any transformations
   const hasLanguageBlock = content.includes(INFO_BLOCK_PATTERN);
   const hasCommunityBanner = content.includes(COMMUNITY_BANNER);
@@ -530,7 +541,8 @@ function processFile(content: string): { modified: boolean; newContent: string }
   // Handle H1 heading and title frontmatter
   const h1Title = extractH1Title(newContent);
   const hasExistingTitle = frontmatterHasTitle(newContent);
-  const needsTitle = h1Title && !hasExistingTitle;
+  const titleToUse = explicitTitle ?? h1Title;
+  const needsTitle = titleToUse && !hasExistingTitle;
 
   // If there's an H1 heading, remove it (title goes in frontmatter)
   if (h1Title) {
@@ -567,11 +579,11 @@ function processFile(content: string): { modified: boolean; newContent: string }
 
     if (inFrontMatter && line === "---") {
       // End of front-matter - add fields before closing ---
-      if (h1Title && !addedTitle) {
+      if (titleToUse && !addedTitle) {
         // Escape quotes in title for YAML
-        const escapedTitle = h1Title.includes(":") || h1Title.includes('"') || h1Title.includes("'")
-          ? `"${h1Title.replace(/"/g, '\\"')}"`
-          : h1Title;
+        const escapedTitle = titleToUse.includes(":") || titleToUse.includes('"') || titleToUse.includes("'")
+          ? `"${titleToUse.replace(/"/g, '\\"')}"`
+          : titleToUse;
         newLines.push(`title: ${escapedTitle}`);
         addedTitle = true;
       }
@@ -594,10 +606,10 @@ function processFile(content: string): { modified: boolean; newContent: string }
   // If no front-matter existed, add it at the beginning
   if (!hasFrontMatter) {
     const frontMatterFields: string[] = [];
-    if (h1Title) {
-      const escapedTitle = h1Title.includes(":") || h1Title.includes('"') || h1Title.includes("'")
-        ? `"${h1Title.replace(/"/g, '\\"')}"`
-        : h1Title;
+    if (titleToUse) {
+      const escapedTitle = titleToUse.includes(":") || titleToUse.includes('"') || titleToUse.includes("'")
+        ? `"${titleToUse.replace(/"/g, '\\"')}"`
+        : titleToUse;
       frontMatterFields.push(`title: ${escapedTitle}`);
     }
     if (hasLanguageBlock) frontMatterFields.push("languages: Python");
@@ -624,7 +636,12 @@ async function main() {
     }
 
     const content = await readFile(file, "utf-8");
-    const { modified, newContent } = processFile(content);
+    
+    // Check if this file needs an explicit title
+    const relativePath = file.replace(`${DOCS_DIR}/`, "");
+    const explicitTitle = EXPLICIT_TITLES[relativePath];
+    
+    const { modified, newContent } = processFile(content, explicitTitle);
 
     if (modified) {
       await writeFile(file, newContent, "utf-8");

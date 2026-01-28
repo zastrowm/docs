@@ -95,11 +95,11 @@ agent("Remember that my favorite color is orange.")
 
 # Save to file
 snapshot = agent.save_snapshot(metadata={"user_id": "123"})
-with open("checkpoint.json", "w") as f:
+with open("snapshot.json", "w") as f:
     json.dump(asdict(snapshot), f)
 
 # Later, restore from file
-with open("checkpoint.json", "r") as f:
+with open("snapshot.json", "r") as f:
     data = json.load(f)
 snapshot = Snapshot(**data)
 

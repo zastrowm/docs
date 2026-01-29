@@ -47,13 +47,13 @@ The intent is that anything stored or restored by session-management would be st
 
 ### Contract
 
-- **`metadata`** — Caller-owned. Strands does not read, modify, or manage this field. Use it to store checkpoint labels, timestamps, or any application-specific data.
+- **`metadata`** — Application-owned. Strands does not read, modify, or manage this field. Use it to store checkpoint labels, timestamps, or any application-specific data without the need for a separate/standalone object/datastore.
 - **`type` and `state`** — Strands-owned. These fields are managed internally and should be treated as opaque. The format of `state` is subject to change; do not modify or depend on its structure.
 - **Serialization** — Strands guarantees that `type` and `state` will only contain JSON-serializable values.
 
 ### Future Concerns
 
-- Snapshotting for MultiAgent constructs: This proposal would 
+- Snapshotting for MultiAgent constructs - Snapshot is designed in a way that the snapshot could be reused for multi-agent with a similar api
 - Providing a storage API for snapshot CRUD operations (save to disk, database, etc.)
 - Providing APIs to customize serialization formats
 

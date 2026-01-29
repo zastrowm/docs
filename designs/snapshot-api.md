@@ -6,6 +6,19 @@
 
 **Issue**: https://github.com/strands-agents/sdk-python/issues/1138
 
+## Motivation
+
+Today, developers who want to manually snapshot and restore agent state can *almost* do so by saving and loading these properties directly:
+
+- `Agent.messages` — the conversation history
+- `Agent.state` — custom application state
+- `Agent._interrupt_state` — internal state for interrupt handling
+- Conversation manager internal state — state held by the conversation manager (e.g., sliding window position)
+
+However, this approach is fragile: it requires knowledge of internal implementation details, and the set of properties may change between versions. This proposal introduces a stable, convenient API to accomplish the same thing without relying on internals.
+
+**This API does not change agent behavior** — it simply provides a clean way to serialize and restore the existing state that already exists on the agent.
+
 ## Context
 
 Developers need a way to preserve and restore the exact state of an agent at a specific point in time. The existing SessionManagement doesn't address this:
@@ -21,7 +34,7 @@ Add a low-level, explicit snapshot API as an alternative to automatic session-ma
 ### API Changes
 
 ```python
-class Snapshot:
+class Snapshot(TypedDict):
     type: str              # the type of data stored (e.g., "agent")
     state: dict[str, Any]  # opaque; do not modify — format subject to change
     metadata: dict         # user-provided data to be stored with the snapshot
@@ -67,10 +80,14 @@ snapshot = agent.save_snapshot()
 
 result1 = agent("What is the weather?")
 
+# ...
+
 agent2 = Agent(tools=[tool3, tool4])
 agent2.load_snapshot(snapshot)
 result2 = agent2("What is the weather?")
-# Compare result1 and result2
+# ... 
+# Human/manual evaluation if one outcome was better than the other
+# ...
 ```
 
 ### Advanced Context Management
@@ -88,7 +105,6 @@ later_agent.load_snapshot(snapshot)
 
 ```python
 import json
-from dataclasses import asdict
 
 agent = Agent(tools=[tool1, tool2])
 agent("Remember that my favorite color is orange.")
@@ -96,12 +112,11 @@ agent("Remember that my favorite color is orange.")
 # Save to file
 snapshot = agent.save_snapshot(metadata={"user_id": "123"})
 with open("snapshot.json", "w") as f:
-    json.dump(asdict(snapshot), f)
+    json.dump(snapshot, f)
 
 # Later, restore from file
 with open("snapshot.json", "r") as f:
-    data = json.load(f)
-snapshot = Snapshot(**data)
+    snapshot: Snapshot = json.load(f)
 
 agent = Agent(tools=[tool1, tool2])
 agent.load_snapshot(snapshot)
@@ -117,6 +132,30 @@ agent1 = Agent(tools=[tool1, tool2])
 snapshot = agent1.save_snapshot()
 agent_no = Agent(snapshot)  # tools are NOT restored
 ```
+
+## Up for Debate
+
+### What state should be included in a snapshot?
+
+The current proposal includes:
+
+- **messages** — conversation history
+- **interrupt state** — internal state for paused/resumed interrupts
+- **agent state** — custom application state (`agent.state`)
+- **conversation manager state** — internal state of the conversation manager (but not the conversation manager itself)
+
+This draws a distinction between "evolving state" (data that changes as the agent runs) and "agent definition" (configuration that defines what the agent *is*):
+
+| Evolving State (snapshotted) | Agent Definition (not snapshotted) |
+|------------------------------|-----------------------------------|
+| messages | system_prompt |
+| interrupt state | tools |
+| agent state | model |
+| conversation manager state | conversation_manager |
+
+Further justification: these three properties are also what SessionManagement persists today, so this API aligns with existing behavior.
+
+**Open question:** Is this the right boundary? Are there other properties that should be considered "evolving state"?
 
 ## Consequences
 

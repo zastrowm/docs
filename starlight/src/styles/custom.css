@@ -27,3 +27,26 @@
   max-width: 100%;
   height: auto;
 }
+
+/* Override Starlight's header grid layout */
+@media (min-width: 50rem) {
+  .header {
+    display: flex !important;
+    grid-template-columns: unset !important;
+    width: 100% !important;
+  }
+  
+  .header .title-wrapper {
+    flex-shrink: 0;
+  }
+  
+  .header .header-tabs {
+    flex: 1;
+    justify-content: flex-start;
+  }
+  
+  .header .right-section {
+    flex-shrink: 0;
+    margin-left: auto;
+  }
+}

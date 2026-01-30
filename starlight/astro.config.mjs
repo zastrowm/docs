@@ -17,6 +17,7 @@ const sidebar = loadSidebarFromMkdocs(
 // https://astro.build/config
 export default defineConfig({
   site: 'https://strandsagents.com',
+  outDir: "../dist",
   markdown: {
     remarkPlugins: [remarkMkdocsSnippets],
   },

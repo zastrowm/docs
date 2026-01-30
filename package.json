@@ -9,7 +9,8 @@
     "docs:clone": "rm -rf sdk-typescript && git clone https://github.com/strands-agents/sdk-typescript.git",
     "docs:ts": "typedoc --options typedoc.json",
     "serve": "npm run docs:clone && npm run docs:ts && mkdocs serve",
-    "clean": "rm -rf docs/api-reference/typescript node_modules"
+    "clean": "rm -rf docs/api-reference/typescript node_modules",
+    "cms:build": "cd starlight && npm install && npm run docs:update && npm run build"
   },
   "author": "",
   "license": "Apache-2.0",

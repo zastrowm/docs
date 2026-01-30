@@ -4,7 +4,7 @@ import { updateQuickstart } from "./update-quickstart.js";
 import { getCommunityLabeledFiles } from "../src/sidebar.js";
 
 const DOCS_DIR = "src/content/docs";
-const MKDOCS_PATH = "example-mkdocs.yml";
+const MKDOCS_PATH = "../mkdocs.yml";
 const INFO_BLOCK_PATTERN = '!!! info "Language Support"';
 const INFO_BLOCK_CONTENT = "    This provider is only supported in Python.";
 const COMMUNITY_BANNER = "{{ community_contribution_banner }}";

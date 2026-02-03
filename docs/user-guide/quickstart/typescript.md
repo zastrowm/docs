@@ -17,6 +17,7 @@ Create a new directory for your project and initialize it:
 mkdir my-agent
 cd my-agent
 npm init -y
+npm pkg set type=module
 ```
 
 Learn more about the [npm init command](https://docs.npmjs.com/cli/v8/commands/npm-init) and its options.
@@ -183,7 +184,7 @@ See the [Async Iterators](../concepts/streaming/async-iterators.md) documentatio
 
 Ready to learn more? Check out these resources:
 
-- [Examples](../../examples/README.md) - Examples for many use cases
+- [Examples](https://github.com/strands-agents/sdk-typescript/tree/main/examples) - Examples for many use cases
 - [TypeScript SDK Repository]({{ ts_sdk_repo_home }}) - Explore the TypeScript SDK source code and contribute
 - [Agent Loop](../concepts/agents/agent-loop.md) - Learn how Strands agents work under the hood
 - [State](../concepts/agents/state.md) - Understand how agents maintain context and state across a conversation

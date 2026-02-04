@@ -153,21 +153,27 @@ import { Tabs, TabItem } from '@astrojs/starlight/components';
 
 Available: `Tabs`/`TabItem`, `Aside`, `Card`/`CardGrid`, `LinkCard`, `Icon`, `Badge`
 
+### Auto-Imported Components
+
+We use [astro-auto-import](https://github.com/delucis/astro-auto-import) to make `Tabs` and `Tab` available globally without explicit imports. Since language tabs appear on nearly every page, this reduces boilerplate.
+
+```mdx
+<!-- No import needed — just use directly -->
+<Tabs>
+  <Tab label="Python">pip install strands</Tab>
+  <Tab label="TypeScript">npm install @strands-agents/sdk</Tab>
+</Tabs>
+```
+
+`Tabs` maps to our `AutoSyncTabs` component (auto-syncs tabs with matching labels), and `Tab` maps to Starlight's `TabItem`.
+
+For other components, use [explicit imports](https://starlight.astro.build/components/using-components/).
+
 ## Custom Components (`src/components/`)
 
 ### `AutoSyncTabs`
 
-A wrapper around Starlight's `Tabs` that auto-generates a `syncKey` from tab labels. Tabs with identical label sets automatically sync together across the page.
-
-```mdx
-import AutoSyncTabs from '@/components/AutoSyncTabs.astro';
-import { TabItem } from '@astrojs/starlight/components';
-
-<AutoSyncTabs>
-  <TabItem label="Python">pip install strands</TabItem>
-  <TabItem label="TypeScript">npm install @strands-agents/sdk</TabItem>
-</AutoSyncTabs>
-```
+A wrapper around Starlight's `Tabs` that auto-generates a `syncKey` from tab labels. Tabs with identical label sets automatically sync together across the page. Auto-imported as `Tabs` (see above).
 
 ### Starlight Overrides (`src/components/overrides/`)
 

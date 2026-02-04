@@ -59,9 +59,6 @@ export default defineConfig({
   AutoImport({
       imports: [
         {
-          // Explicitly alias a default export
-          // generates:
-          // import { default as B } from './src/components/B.astro';
           '@astrojs/starlight/components': [
             ['TabItem', 'Tab']
           ],

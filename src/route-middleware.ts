@@ -12,8 +12,7 @@ type SidebarEntry = StarlightRouteData['sidebar'][number]
  * Also expands first-level groups by default.
  */
 export const onRequest = defineRouteMiddleware((context) => {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const starlightRoute = (context.locals as any).starlightRoute as StarlightRouteData
+  const { starlightRoute } = context.locals
   const { sidebar } = starlightRoute
 
   // Find which top-level group contains the current page

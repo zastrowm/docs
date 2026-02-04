@@ -14,25 +14,11 @@ We're using [Astro](https://astro.build/) with the [Starlight](https://starlight
 
 **Why:** Starlight can auto-generate sidebars from the file structure, but we have a specific navigation layout defined in `mkdocs.yml` that we want to preserve. This ensures consistency during the migration from MkDocs to Astro.
 
-**How it works:**
-- Parses `mkdocs.yml` using `js-yaml`
-- Converts MkDocs nav items to Starlight sidebar items
-- Handles path conversions (e.g., `README.md` → `index`, `.md` extension stripping)
-- Validates that referenced content files actually exist
-- Applies collapse behavior to nested groups (depth >= 1 are collapsed by default)
-- Strips HTML tags from labels (e.g., `<sup>community</sup>`)
-
 ### 2. Route Middleware (`src/route-middleware.ts`)
 
-**What it does:** Filters the sidebar at runtime so each page only shows items from its top-level group.
+**What it does:** Filters the sidebar at buildtime so each page only shows items from its top-level group.
 
 **Why:** Our sidebar is organized into top-level groups (User Guide, Community, Examples, etc.). Without this middleware, every page would show the entire sidebar. This middleware scopes the sidebar to the current section, providing a cleaner navigation experience.
-
-**How it works:**
-- Uses Starlight's `defineRouteMiddleware` API
-- Finds which top-level group contains the current page
-- Replaces the full sidebar with just that group's entries
-- Expands first-level groups by default (sets `collapsed: false`)
 
 ### 3. MkDocs Snippets Plugin (`src/plugins/remark-mkdocs-snippets.ts`)
 
@@ -53,12 +39,6 @@ We're using [Astro](https://astro.build/) with the [Starlight](https://starlight
 const example = "This code will be included"
 // --8<-- [end:section_name]
 ```
-
-**Features:**
-- Resolves file paths relative to `src/content/docs`
-- Extracts named sections from source files
-- Automatically dedents extracted code (removes common leading whitespace)
-- Warns on missing files or sections
 
 ## Configuration (`astro.config.mjs`)
 

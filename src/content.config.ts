@@ -9,7 +9,8 @@ export const collections = {
     schema: docsSchema({
       // We have certain flags/behavior based on the following properties; see CMS-README.md for more info
       extend: z.object({
-        languages: z.string().optional(),
+        // Can be a single value or an array of supported values
+        languages: z.union([z.string(), z.array(z.string())]).optional(),
         community: z.boolean().default(false),
         experimental: z.boolean().default(false),
       }),

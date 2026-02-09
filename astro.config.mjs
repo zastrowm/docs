@@ -5,7 +5,7 @@ import path from 'node:path'
 import remarkMkdocsSnippets from './src/plugins/remark-mkdocs-snippets.ts'
 
 import { loadSidebarFromMkdocs } from "./src/sidebar.ts"
-import AutoImport from 'astro-auto-import'
+import AutoImport from './src/plugins/astro-auto-import.ts'
 import astroExpressiveCode from "astro-expressive-code"
 import mdx from '@astrojs/mdx';
 

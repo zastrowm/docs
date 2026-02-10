@@ -1,0 +1,49 @@
+name: Build Docs Preview
+
+on:
+  pull_request:
+    types: [opened, reopened, synchronize]
+    branches:
+      # TODO once we merge to main, adjust this
+      - 'workstream/cms-migration'
+
+concurrency:
+  group: preview-build-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: '20'
+
+      - name: Build CMS
+        run: npm run cms:build
+
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: docs-preview-${{ github.event.pull_request.number }}
+          path: dist/
+          retention-days: 1
+
+      - name: Save PR metadata
+        run: |
+          mkdir -p pr-metadata
+          echo "${{ github.event.pull_request.number }}" > pr-metadata/pr_number
+          echo "${{ github.event.pull_request.head.sha }}" > pr-metadata/pr_sha
+
+      - name: Upload PR metadata
+        uses: actions/upload-artifact@v4
+        with:
+          name: pr-metadata-${{ github.event.pull_request.number }}
+          path: pr-metadata/
+          retention-days: 1

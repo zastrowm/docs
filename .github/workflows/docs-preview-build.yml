@@ -29,6 +29,8 @@ jobs:
         run: npm install
 
       - name: Build CMS
+        env:
+          ASTRO_BASE_PATH: /${{ env.S3_PATH }}/
         run: npm run cms:build
 
       - name: Upload build artifact

@@ -83,7 +83,7 @@ jobs:
       # Derived paths (defined once, used everywhere)
       BUILD_OUTPUT_DIR: dist
       S3_PATH: pr-local-cms-${{ github.event.pull_request.number }}
-      PREVIEW_URL: https://${{ vars.CLOUDFRONT_DOMAIN }}/pr-local-cms-${{ github.event.pull_request.number }}/
+      PREVIEW_URL: https://${{ vars.CLOUDFRONT_DOMAIN }}/pr-local-cms-${{ github.event.pull_request.number }}//user-guide/quickstart
       RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
 
     steps:
@@ -101,6 +101,8 @@ jobs:
         run: npm install
 
       - name: Build CMS
+        env:
+          ASTRO_BASE_PATH: /${{ env.S3_PATH }}/
         run: npm run cms:build
 
       - name: Configure AWS credentials

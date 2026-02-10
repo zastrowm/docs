@@ -19,6 +19,7 @@ const EXPLICIT_TITLES: Record<string, string> = {
   "user-guide/concepts/model-providers/cohere.md": "Cohere",
   "user-guide/concepts/model-providers/fireworksai.md": "Fireworks AI",
   "user-guide/concepts/model-providers/nebius-token-factory.md": "Nebius Token Factory",
+  "user-guide/concepts/model-providers/xai.md": "xAI",
 };
 
 // MkDocs extra variables from mkdocs.yml

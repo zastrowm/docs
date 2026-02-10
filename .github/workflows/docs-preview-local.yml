@@ -1,11 +1,8 @@
-name: Deploy MkDocs Preview (Local PRs)
+name: Deploy Docs Preview (Local PRs)
 
 on:
   pull_request:
     types: [opened, reopened, synchronize]
-    branches:
-      # TODO once we merge to main, adjust this
-      - 'workstream/cms-migration'
 
 concurrency:
   group: preview-local-cms-${{ github.event.pull_request.number }}

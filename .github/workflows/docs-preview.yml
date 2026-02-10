@@ -1,97 +1,82 @@
 name: Deploy Docs Preview
 
 on:
-  workflow_run:
-    workflows: ["Build Docs Preview"]
-    types:
-      - completed
+  pull_request_target:
+    branches:
+      # TODO once we merge the new CMS to main, adjust this
+      - 'workstream/cms-migration'
+    types: [opened, reopened, synchronize]
+
+concurrency:
+  group: preview-cms-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
 
 jobs:
   authorization-check:
-    if: github.event.workflow_run.conclusion == 'success'
-    permissions:
-      contents: read
-      actions: read
+    name: Authorization Check
+    permissions: read-all
     runs-on: ubuntu-latest
     outputs:
       approval-env: ${{ steps.auth.outputs.result }}
-      pr_number: ${{ steps.get-pr.outputs.pr_number }}
-      pr_sha: ${{ steps.get-pr.outputs.pr_sha }}
     steps:
-      - name: Download PR metadata
-        uses: actions/download-artifact@v4
-        with:
-          name: pr-metadata-${{ github.event.workflow_run.pull_requests[0].number }}
-          path: pr-metadata
-          run-id: ${{ github.event.workflow_run.id }}
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Get PR info
-        id: get-pr
-        run: |
-          echo "pr_number=$(cat pr-metadata/pr_number)" >> $GITHUB_OUTPUT
-          echo "pr_sha=$(cat pr-metadata/pr_sha)" >> $GITHUB_OUTPUT
-
-      - name: Get PR author
-        id: get-author
-        uses: actions/github-script@v8
-        with:
-          result-encoding: string
-          script: |
-            const { data: pr } = await github.rest.pulls.get({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              pull_number: ${{ steps.get-pr.outputs.pr_number }},
-            });
-            return pr.user.login;
-
       - name: Check Authorization
         id: auth
         uses: strands-agents/devtools/authorization-check@main
         with:
-          username: ${{ steps.get-author.outputs.result }}
+          username: ${{ github.event.pull_request.user.login }}
           allowed-roles: 'write,maintain,admin'
 
-  approval-gate:
+  build-and-deploy:
+    name: Build and Deploy Preview
     runs-on: ubuntu-latest
-    needs: [authorization-check]
-    if: always() && needs.authorization-check.result == 'success'
+    needs: authorization-check
     environment: ${{ needs.authorization-check.outputs.approval-env }}
-    steps:
-      - run: echo "Deployment approved"
-
-  deploy:
-    runs-on: ubuntu-latest
-    needs: [authorization-check, approval-gate]
-    if: always() && needs.approval-gate.result == 'success'
 
     permissions:
       contents: read
       issues: write
       pull-requests: write
-      id-token: write
-      actions: read
+      id-token: write # For OIDC authentication
 
     env:
-      PR_NUMBER: ${{ needs.authorization-check.outputs.pr_number }}
-      PR_HEAD_SHA: ${{ needs.authorization-check.outputs.pr_sha }}
+      # PR metadata
+      PR_NUMBER: ${{ github.event.pull_request.number }}
+      PR_HEAD_SHA: ${{ github.event.pull_request.head.sha }}
       RUN_ID: ${{ github.run_id }}
+      # Secrets
       AWS_DEPLOY_ROLE: ${{ secrets.STRANDS_DOCS_DEPLOY_ROLE }}
       S3_BUCKET: ${{ secrets.STRANDS_DOCS_BUCKET }}
-      CLOUDFRONT_DISTRIBUTION_ID: ${{ vars.CLOUDFRONT_DISTRIBUTION_ID }}
-      CLOUDFRONT_DOMAIN: ${{ vars.CLOUDFRONT_DOMAIN }}
+      CLOUDFRONT_DISTRIBUTION_ID: ${{ secrets.CLOUDFRONT_DISTRIBUTION_ID }}
+      CLOUDFRONT_DOMAIN: ${{ secrets.CLOUDFRONT_DOMAIN }}
+      # Derived paths (defined once, used everywhere)
+      BUILD_OUTPUT_DIR: dist
+      S3_PATH: pr-cms-${{ github.event.pull_request.number }}
+      # TODO - update subpath to point at root instead of subfolder
+      PREVIEW_URL: https://${{ secrets.CLOUDFRONT_DOMAIN }}/pr-cms-${{ github.event.pull_request.number }}/user-guide/quickstart/overview/
+      RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
 
     steps:
-      - name: Download build artifact
-        uses: actions/download-artifact@v4
+      - name: Checkout head commit
+        uses: actions/checkout@v4
         with:
-          name: docs-preview-${{ env.PR_NUMBER }}
-          path: dist
-          run-id: ${{ github.event.workflow_run.id }}
-          github-token: ${{ secrets.GITHUB_TOKEN }}
+          ref: ${{ env.PR_HEAD_SHA }}
+          persist-credentials: false # Don't persist credentials for subsequent actions
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build CMS
+        env:
+          ASTRO_BASE_PATH: /${{ env.S3_PATH }}/
+        run: npm run cms:build
 
       - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v5
+        uses: aws-actions/configure-aws-credentials@v4
         with:
           role-to-assume: ${{ env.AWS_DEPLOY_ROLE }}
           role-session-name: GitHubActions-Docs-${{ env.RUN_ID }}
@@ -100,25 +85,30 @@ jobs:
 
       - name: Deploy to S3
         run: |
-          aws s3 sync dist/ s3://${{ env.S3_BUCKET }}/pr-local-cms-${{ env.PR_NUMBER }}/ \
+          aws s3 sync ${{ env.BUILD_OUTPUT_DIR }}/ s3://${{ env.S3_BUCKET }}/${{ env.S3_PATH }}/ \
             --cache-control "public, max-age=3600"
 
       - name: Invalidate CloudFront cache for PR preview
         run: |
           aws cloudfront create-invalidation \
             --distribution-id ${{ env.CLOUDFRONT_DISTRIBUTION_ID }} \
-            --invalidation-batch '{"Paths":{"Quantity":1,"Items":["/pr-local-cms-${{ env.PR_NUMBER }}/*"]},"CallerReference":"'$(date +%s)'"}'
+            --invalidation-batch '{"Paths":{"Quantity":1,"Items":["/${{ env.S3_PATH }}/*"]},"CallerReference":"'$(date +%s)'"}'
+
+      - name: Output deployment info
+        run: |
+          echo "Deployment complete!"
+          echo "Deployed to: ${{ env.PREVIEW_URL }}"
+          echo "This is a preview deployment for PR #${{ env.PR_NUMBER }}"
 
       - name: Comment on PR (success)
         if: success()
-        uses: actions/github-script@v8
-        env:
-          PREVIEW_URL: https://${{ vars.CLOUDFRONT_DOMAIN }}/pr-local-cms-${{ needs.authorization-check.outputs.pr_number }}/
+        uses: actions/github-script@v7
         with:
           script: |
-            const prNumber = ${{ env.PR_NUMBER }};
-            const previewUrl = process.env.PREVIEW_URL;
+            const prNumber = context.payload.pull_request.number;
+            const previewUrl = '${{ env.PREVIEW_URL }}';
 
+            // Find existing bot comment
             const comments = await github.rest.issues.listComments({
               owner: context.repo.owner,
               repo: context.repo.repo,
@@ -158,13 +148,11 @@ jobs:
 
       - name: Comment on PR (failure)
         if: failure()
-        uses: actions/github-script@v8
-        env:
-          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        uses: actions/github-script@v7
         with:
           script: |
-            const prNumber = ${{ env.PR_NUMBER }};
-            const runUrl = process.env.RUN_URL;
+            const prNumber = context.payload.pull_request.number;
+            const runUrl = '${{ env.RUN_URL }}';
 
             const body = [
               '## Documentation Preview Failed',

@@ -6,3 +6,4 @@
 - [ ] Remove Vite SSR workaround for zod in `astro.config.mjs` once CMS build is separated from TS verification (see https://github.com/withastro/astro/issues/14117)
 - [ ] Fix relative links to pages (e.g., `../some-page.md` style links need to be converted to Starlight-compatible paths)
 - [ ] Add API documentation generation/integration for Python and TypeScript SDKs
+- [ ] Update astro-auto-import once https://github.com/delucis/astro-auto-import/pull/110 is merged

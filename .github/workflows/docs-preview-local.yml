@@ -74,9 +74,8 @@ jobs:
       # Secrets
       AWS_DEPLOY_ROLE: ${{ secrets.STRANDS_DOCS_DEPLOY_ROLE }}
       S3_BUCKET: ${{ secrets.STRANDS_DOCS_BUCKET }}
-      # Variables
-      CLOUDFRONT_DISTRIBUTION_ID: ${{ vars.CLOUDFRONT_DISTRIBUTION_ID }}
-      CLOUDFRONT_DOMAIN: ${{ vars.CLOUDFRONT_DOMAIN }}
+      CLOUDFRONT_DISTRIBUTION_ID: ${{ secrets.CLOUDFRONT_DISTRIBUTION_ID }}
+      CLOUDFRONT_DOMAIN: ${{ secrets.CLOUDFRONT_DOMAIN }}
       # Derived paths (defined once, used everywhere)
       BUILD_OUTPUT_DIR: dist
       S3_PATH: pr-local-cms-${{ github.event.pull_request.number }}

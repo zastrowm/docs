@@ -1,6 +1,6 @@
 import { defineRouteMiddleware, type StarlightRouteData } from '@astrojs/starlight/route-data'
 import { getCollection } from 'astro:content'
-import { buildPythonApiSidebar, type DocInfo } from './dynamic-sidebar'
+import { buildPythonApiSidebar, buildTypeScriptApiSidebar, type DocInfo } from './dynamic-sidebar'
 
 type SidebarEntry = StarlightRouteData['sidebar'][number]
 
@@ -9,6 +9,7 @@ type SidebarEntry = StarlightRouteData['sidebar'][number]
  * from the current page's top-level group.
  *
  * For Python API pages, generates a hierarchical sidebar from the docs collection.
+ * For TypeScript API pages, generates a category-based sidebar from the docs collection.
  */
 export const onRequest = defineRouteMiddleware(async (context) => {
   const { starlightRoute } = context.locals
@@ -36,6 +37,31 @@ export const onRequest = defineRouteMiddleware(async (context) => {
     })
 
     starlightRoute.sidebar = pythonSidebar
+    return
+  }
+
+  // Check if we're on a TypeScript API page
+  if (currentSlug.startsWith('api/typescript')) {
+    const docs = await getCollection('docs')
+    const docInfos: DocInfo[] = docs.map((doc) => ({
+      id: doc.id,
+      title: doc.data.title as string,
+      category: doc.data.category as string | undefined,
+    }))
+
+    const tsSidebar = buildTypeScriptApiSidebar(docInfos, currentSlug)
+
+    // Add index link at the top
+    tsSidebar.unshift({
+      type: 'link',
+      label: 'Overview',
+      href: '/api/typescript/',
+      isCurrent: currentSlug === 'api/typescript/index',
+      badge: undefined,
+      attrs: {},
+    })
+
+    starlightRoute.sidebar = tsSidebar
     return
   }
 

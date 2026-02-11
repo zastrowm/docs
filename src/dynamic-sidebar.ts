@@ -17,11 +17,25 @@ export function getDisplayName(moduleName: string): string {
 }
 
 /**
+ * Convert category name to display name for TypeScript API
+ */
+function getCategoryDisplayName(category: string): string {
+  const mapping: Record<string, string> = {
+    classes: 'Classes',
+    interfaces: 'Interfaces',
+    'type-aliases': 'Type Aliases',
+    functions: 'Functions',
+  }
+  return mapping[category] || category
+}
+
+/**
  * Minimal doc info needed for sidebar generation
  */
 export interface DocInfo {
   id: string
   title: string
+  category?: string // For TypeScript API docs
 }
 
 /**
@@ -131,4 +145,76 @@ export function buildPythonApiSidebar(docs: DocInfo[], currentSlug: string): Sid
   }
 
   return treeToSidebar(tree)
+}
+
+/**
+ * Build a sidebar from TypeScript API docs.
+ * Groups by category (classes, interfaces, type-aliases, functions).
+ * Note: Slugs are flat (api/typescript/Agent) but sidebar groups by type.
+ *
+ * Example structure:
+ * - Classes
+ *   - Agent
+ *   - Model
+ * - Interfaces
+ *   - AgentConfig
+ * - Type Aliases
+ *   - ToolList
+ * - Functions
+ *   - tool
+ */
+export function buildTypeScriptApiSidebar(docs: DocInfo[], currentSlug: string): SidebarEntry[] {
+  const tsApiDocs = docs.filter(
+    (doc) => doc.id.startsWith('api/typescript/') && !doc.id.endsWith('api/typescript/index')
+  )
+
+  // Group docs by category from frontmatter
+  const categories: Record<string, DocInfo[]> = {
+    classes: [],
+    interfaces: [],
+    'type-aliases': [],
+    functions: [],
+  }
+
+  for (const doc of tsApiDocs) {
+    const category = doc.category
+    if (category && category in categories) {
+      categories[category]!.push(doc)
+    }
+  }
+
+  // Build sidebar entries
+  const entries: SidebarEntry[] = []
+
+  // Define category order
+  const categoryOrder = ['classes', 'interfaces', 'type-aliases', 'functions']
+
+  for (const category of categoryOrder) {
+    const categoryDocs = categories[category]
+    if (!categoryDocs || categoryDocs.length === 0) continue
+
+    // Sort docs alphabetically by title
+    categoryDocs.sort((a, b) => a.title.localeCompare(b.title))
+
+    const links: SidebarLink[] = categoryDocs.map((doc) => ({
+      type: 'link',
+      label: doc.title,
+      href: `/${doc.id}/`,
+      isCurrent: currentSlug === doc.id,
+      badge: undefined,
+      attrs: {},
+    }))
+
+    const group: SidebarGroup = {
+      type: 'group',
+      label: getCategoryDisplayName(category),
+      entries: links,
+      collapsed: false,
+      badge: undefined,
+    }
+
+    entries.push(group)
+  }
+
+  return entries
 }

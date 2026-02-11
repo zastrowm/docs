@@ -19,6 +19,7 @@ export const collections = {
         "user-guide/**/*.mdx",
         "community/**/*.mdx",
         "examples/**/[!index]*.mdx",
+        "api/python/**/*.mdx",
       ],
       generateId: generateDocsId,
     }),

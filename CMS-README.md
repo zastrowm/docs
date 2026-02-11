@@ -16,9 +16,11 @@ We're using [Astro](https://astro.build/) with the [Starlight](https://starlight
 
 ### 2. Route Middleware (`src/route-middleware.ts`)
 
-**What it does:** Filters the sidebar at buildtime so each page only shows items from its top-level group.
+**What it does:** Filters the sidebar at buildtime so each page only shows items from its top-level group. For Python API pages, it dynamically generates a hierarchical sidebar from the docs collection.
 
 **Why:** Our sidebar is organized into top-level groups (User Guide, Community, Examples, etc.). Without this middleware, every page would show the entire sidebar. This middleware scopes the sidebar to the current section, providing a cleaner navigation experience.
+
+**Python API sidebar:** When viewing pages under `api/python/`, the middleware uses `buildPythonApiSidebar()` from `src/dynamic-sidebar.ts` to generate a nested sidebar structure based on module names (e.g., `strands.agent.agent` becomes `Agent > Agent`).
 
 ### 3. MkDocs Snippets Plugin (`src/plugins/remark-mkdocs-snippets.ts`)
 
@@ -228,3 +230,73 @@ Used by `MarkdownContent.astro` to render frontmatter banners:
 - `LanguageSupportAside.astro`
 
 These are not meant to be imported directly in MDX files—use the frontmatter fields instead.
+
+## Python API Reference Generation
+
+The Python API reference documentation is auto-generated from the SDK source code using pydoc-markdown.
+
+### Generation Script (`scripts/api-generation-python.py`)
+
+**What it does:** Parses Python source code from the SDK and generates MDX documentation files.
+
+**How to run:**
+```bash
+uv run scripts/api-generation-python.py
+```
+
+**Input:** `.build/sdk-python/src` (cloned SDK repository)
+**Output:** `.build/api-docs/python/*.mdx`
+
+**Filtering:**
+- Skips private modules (any module path containing `_` prefix)
+- Skips explicitly excluded modules (e.g., `strands.agent` which just re-exports)
+
+**Output format:** Each module becomes a flat MDX file named `strands.module.name.mdx` with frontmatter containing the title and slug.
+
+### Symlink Setup
+
+The generated docs are accessed via a committed symlink:
+```
+src/content/docs/api/python/_generated -> ../../../../../.build/api-docs/python
+```
+
+This symlink is checked into git, so no manual setup is required. The generation script outputs to `.build/api-docs/python/`, and the symlink makes those files available to the content collection.
+
+The index page (`src/content/docs/api/python/index.mdx`) is a permanent file (not generated) that imports the `PythonApiList` component.
+
+### Dynamic Sidebar (`src/dynamic-sidebar.ts`)
+
+**What it does:** Builds a hierarchical sidebar structure from Python API docs at runtime.
+
+**How it works:**
+1. Filters docs collection for `api/python/*` pages
+2. Parses module names from page titles (e.g., `strands.agent.agent`)
+3. Builds a nested tree structure based on module path segments
+4. Converts tree to Starlight sidebar entries with groups and links
+
+**Sorting:**
+- Alphabetical A-Z within each level
+- "Experimental" group always appears last
+- Groups at depth ≥2 are collapsed by default
+
+**Example transformation:**
+```
+strands.agent.agent      → Agent > Agent
+strands.agent.base       → Agent > Base
+strands.experimental.bidi.types.events → Experimental > Bidi > Types > Events
+```
+
+### Index Page Component (`src/components/PythonApiList.astro`)
+
+**What it does:** Renders the API reference index page with a hierarchical list of all modules.
+
+**How it works:** Uses the same `buildPythonApiSidebar()` function as the route middleware to ensure consistency between the sidebar navigation and the index page listing.
+
+### Path Alias
+
+Components can be imported using the `@components` alias:
+```typescript
+import PythonApiList from '@components/PythonApiList.astro'
+```
+
+This is configured in `tsconfig.json` under `compilerOptions.paths`.

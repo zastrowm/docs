@@ -6,6 +6,8 @@
     "test": "tsc --noEmit",
     "format": "prettier --write docs",
     "format:check": "prettier --check docs",
+    "sdk:clone": "tsx scripts/clone-sdks.ts",
+    "sdk:generate": "uv run scripts/api-generation-python.py",
     "docs:clone": "rm -rf sdk-typescript && git clone https://github.com/strands-agents/sdk-typescript.git",
     "docs:ts": "typedoc --options typedoc.json",
     "serve": "npm run docs:clone && npm run docs:ts && mkdocs serve",

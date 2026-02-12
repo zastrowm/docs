@@ -21,6 +21,26 @@ from pydoc_markdown.contrib.renderers.markdown import MarkdownRenderer
 from pydoc_markdown.contrib.processors.filter import FilterProcessor
 from pydoc_markdown.contrib.processors.crossref import CrossrefProcessor
 from pydoc_markdown.contrib.processors.smart import SmartProcessor
+from pydoc_markdown.contrib.source_linkers.git import GitSourceLinker
+import docspec
+
+
+class CustomGitSourceLinker(GitSourceLinker):
+    """Custom source linker that returns 'Defined in: [path:line](url)' format."""
+
+    def get_source_url(self, obj: docspec.ApiObject) -> str | None:
+        # Get the base URL from parent
+        url = super().get_source_url(obj)
+        if not url or not obj.location:
+            return None
+
+        # Extract path relative to src/
+        path = obj.location.filename
+        if "src/" in path:
+            path = "src/" + path.split("src/")[-1]
+
+        lineno = obj.location.lineno
+        return f"Defined in: [{path}:{lineno}]({url})"
 
 
 def generate_docs():
@@ -57,9 +77,15 @@ def generate_docs():
     # Configure the renderer
     renderer = MarkdownRenderer(
         render_module_header=False,
-        descriptive_class_title=True,
+        descriptive_class_title="",
         add_module_prefix=True,
         render_toc=False,
+        source_linker=CustomGitSourceLinker(
+            root=".build/sdk-python/src",
+            url_template="https://github.com/strands-agents/sdk-python/blob/main/src/{path}#L{lineno}",
+            use_branch=False,
+        ),
+        source_format="{url}",  # URL already contains the full formatted string
     )
     session.renderer = renderer
 

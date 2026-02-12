@@ -300,3 +300,108 @@ import PythonApiList from '@components/PythonApiList.astro'
 ```
 
 This is configured in `tsconfig.json` under `compilerOptions.paths`.
+
+## TypeScript API Reference Generation
+
+The TypeScript API reference documentation is auto-generated from the SDK source code using [typedoc](https://typedoc.org/) with [typedoc-plugin-markdown](https://typedoc-plugin-markdown.org/).
+
+### Generation Script (`scripts/api-generation-typescript.ts`)
+
+**What it does:** Runs typedoc to generate markdown files, then post-processes them to add frontmatter and escape MDX special characters.
+
+**How to run:**
+```bash
+npm run sdk:generate:ts
+# or
+npx tsx scripts/api-generation-typescript.ts
+```
+
+**Input:** `.build/sdk-typescript/src` (cloned SDK repository)
+**Output:** `.build/api-docs/typescript/{classes,interfaces,type-aliases,functions}/*.mdx`
+
+### TypeDoc Configuration (`typedoc.json`)
+
+Key settings:
+- `outputFileStrategy: "members"` - Creates separate files per class/interface/type/function
+- `fileExtension: ".mdx"` - Outputs MDX format for Astro compatibility
+- `basePath: ".build/sdk-typescript"` - Strips build path prefix from source links
+- `hideBreadcrumbs: true`, `hidePageHeader: true` - Cleaner output for Starlight integration
+
+### Post-Processing
+
+The generation script performs these transformations after typedoc runs:
+
+1. **Adds frontmatter** with title, slug, and category:
+   ```yaml
+   ---
+   title: "Agent"
+   slug: api/typescript/Agent
+   category: classes
+   ---
+   ```
+
+2. **Escapes curly braces** (`{` → `\{`) to prevent MDX from interpreting them as JSX expressions
+
+3. **Deletes the generated index.mdx** - We use our own custom index page instead
+
+### Flat Slugs with Category Grouping
+
+Unlike Python API docs which use hierarchical slugs based on module paths, TypeScript API docs use flat slugs:
+- URL: `/api/typescript/Agent/` (not `/api/typescript/classes/Agent/`)
+- The `category` frontmatter field is used for sidebar grouping
+
+This keeps URLs clean while still organizing the sidebar by type (Classes, Interfaces, Type Aliases, Functions).
+
+### Symlink Setup
+
+The generated docs are accessed via a committed symlink:
+```
+src/content/docs/api/typescript/_generated -> ../../../../../.build/api-docs/typescript
+```
+
+The index page (`src/content/docs/api/typescript/index.mdx`) is a permanent file that imports the `TypeScriptApiList` component.
+
+### Dynamic Sidebar (`src/dynamic-sidebar.ts`)
+
+**What it does:** Builds a category-grouped sidebar structure from TypeScript API docs at runtime.
+
+**How it works:**
+1. Filters docs collection for `api/typescript/*` pages
+2. Groups docs by their `category` frontmatter field
+3. Creates sidebar groups for Classes, Interfaces, Type Aliases, and Functions
+4. Sorts entries alphabetically within each group
+
+**Example structure:**
+```
+Classes
+  ├── Agent
+  ├── BedrockModel
+  └── Tool
+Interfaces
+  ├── AgentConfig
+  └── ToolSpec
+Type Aliases
+  ├── ContentBlock
+  └── ToolChoice
+Functions
+  ├── configureLogging
+  └── tool
+```
+
+### Index Page Component (`src/components/TypeScriptApiList.astro`)
+
+**What it does:** Renders the API reference index page with a categorized list of all exports.
+
+**How it works:** Uses the same `buildTypeScriptApiSidebar()` function as the route middleware to ensure consistency between the sidebar navigation and the index page listing.
+
+### Content Collection Schema
+
+The `category` field is defined in `src/content.config.ts`:
+```typescript
+extend: z.object({
+  // ...
+  category: z.string().optional(),
+})
+```
+
+This allows the content collection to validate and expose the category for sidebar generation.

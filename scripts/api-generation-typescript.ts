@@ -107,6 +107,13 @@ function processFile(file: FileInfo): void {
     .replace(/(?<!\\)\{/g, '\\{')
     .replace(/(?<!\\)\}/g, '\\}')
 
+  // Fix relative links to remove category folders (e.g., ../interfaces/AgentData.mdx -> ../AgentData.mdx)
+  // This matches the flat slug structure we use
+  processedContent = processedContent.replace(
+    /\]\(\.\.\/(classes|interfaces|type-aliases|functions)\/([^)]+)\)/g,
+    '](../$2)'
+  )
+
   // Add frontmatter with category for sidebar grouping
   const frontmatter = `---
 title: "${title}"

@@ -1,6 +1,11 @@
 import { defineRouteMiddleware, type StarlightRouteData } from '@astrojs/starlight/route-data'
 import { getCollection } from 'astro:content'
-import { buildPythonApiSidebar, buildTypeScriptApiSidebar, type DocInfo } from './dynamic-sidebar'
+import {
+  buildPythonApiSidebar,
+  buildTypeScriptApiSidebar,
+  getPrevNextLinks,
+  type DocInfo,
+} from './dynamic-sidebar'
 
 type SidebarEntry = StarlightRouteData['sidebar'][number]
 
@@ -37,6 +42,7 @@ export const onRequest = defineRouteMiddleware(async (context) => {
     })
 
     starlightRoute.sidebar = pythonSidebar
+    starlightRoute.pagination = getPrevNextLinks(pythonSidebar)
     return
   }
 
@@ -62,6 +68,7 @@ export const onRequest = defineRouteMiddleware(async (context) => {
     })
 
     starlightRoute.sidebar = tsSidebar
+    starlightRoute.pagination = getPrevNextLinks(tsSidebar)
     return
   }
 

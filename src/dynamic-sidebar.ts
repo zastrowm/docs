@@ -35,7 +35,7 @@ function getCategoryDisplayName(category: string): string {
 export interface DocInfo {
   id: string
   title: string
-  category?: string // For TypeScript API docs
+  category?: string | undefined // For TypeScript API docs
 }
 
 /**
@@ -217,4 +217,30 @@ export function buildTypeScriptApiSidebar(docs: DocInfo[], currentSlug: string):
   }
 
   return entries
+}
+
+/**
+ * Pagination links for prev/next navigation
+ */
+export interface PaginationLinks {
+  prev: SidebarLink | undefined
+  next: SidebarLink | undefined
+}
+
+/**
+ * Turn the nested tree structure of a sidebar into a flat list of all the links.
+ */
+export function flattenSidebar(sidebar: SidebarEntry[]): SidebarLink[] {
+  return sidebar.flatMap((entry) => (entry.type === 'group' ? flattenSidebar(entry.entries) : entry))
+}
+
+/**
+ * Get previous/next pages in the sidebar based on the current page.
+ */
+export function getPrevNextLinks(sidebar: SidebarEntry[]): PaginationLinks {
+  const entries = flattenSidebar(sidebar)
+  const currentIndex = entries.findIndex((entry) => entry.isCurrent)
+  const prev = currentIndex > 0 ? entries[currentIndex - 1] : undefined
+  const next = currentIndex > -1 && currentIndex < entries.length - 1 ? entries[currentIndex + 1] : undefined
+  return { prev, next }
 }

@@ -10,7 +10,7 @@
 
 import { execSync } from 'child_process'
 import { existsSync, readdirSync, readFileSync, writeFileSync, rmSync, statSync } from 'fs'
-import { join, basename, dirname, relative } from 'path'
+import { join, basename, relative } from 'path'
 
 const OUTPUT_DIR = '.build/api-docs/typescript'
 
@@ -21,9 +21,9 @@ interface FileInfo {
 }
 
 /**
- * Recursively get all .mdx files in a directory
+ * Recursively get all .md files in a directory
  */
-function getAllMdxFiles(dir: string, baseDir: string = dir): FileInfo[] {
+function getAllMdFiles(dir: string, baseDir: string = dir): FileInfo[] {
   const files: FileInfo[] = []
 
   if (!existsSync(dir)) {
@@ -35,8 +35,8 @@ function getAllMdxFiles(dir: string, baseDir: string = dir): FileInfo[] {
     const stat = statSync(fullPath)
 
     if (stat.isDirectory()) {
-      files.push(...getAllMdxFiles(fullPath, baseDir))
-    } else if (entry.endsWith('.mdx')) {
+      files.push(...getAllMdFiles(fullPath, baseDir))
+    } else if (entry.endsWith('.md')) {
       const relativePath = relative(baseDir, fullPath)
       const parts = relativePath.split('/')
 
@@ -44,13 +44,13 @@ function getAllMdxFiles(dir: string, baseDir: string = dir): FileInfo[] {
       let name: string
 
       if (parts.length === 1) {
-        // Root level file (index.mdx)
+        // Root level file (index.md)
         category = 'index'
-        name = basename(entry, '.mdx')
+        name = basename(entry, '.md')
       } else {
-        // Nested file (classes/Agent.mdx)
+        // Nested file (classes/Agent.md)
         category = parts[0]!
-        name = basename(entry, '.mdx')
+        name = basename(entry, '.md')
       }
 
       files.push({ path: fullPath, category, name })
@@ -101,15 +101,9 @@ function processFile(file: FileInfo): void {
     return
   }
 
-  // Escape curly braces for MDX (they're interpreted as JSX expressions)
-  // Use negative lookbehind to avoid double-escaping already escaped braces
-  let processedContent = content
-    .replace(/(?<!\\)\{/g, '\\{')
-    .replace(/(?<!\\)\}/g, '\\}')
-
-  // Fix relative links to remove category folders (e.g., ../interfaces/AgentData.mdx -> ../AgentData.mdx)
+  // Fix relative links to remove category folders (e.g., ../interfaces/AgentData.md -> ../AgentData.md)
   // This matches the flat slug structure we use
-  processedContent = processedContent.replace(
+  const processedContent = content.replace(
     /\]\(\.\.\/(classes|interfaces|type-aliases|functions)\/([^)]+)\)/g,
     '](../$2)'
   )
@@ -154,7 +148,7 @@ function main(): void {
 
   // Step 3: Get all generated files
   console.log('\n📝 Post-processing files...\n')
-  const files = getAllMdxFiles(OUTPUT_DIR)
+  const files = getAllMdFiles(OUTPUT_DIR)
 
   // Step 4: Process each file (skip the index file - we have our own)
   for (const file of files) {

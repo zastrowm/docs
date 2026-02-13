@@ -20,7 +20,7 @@ export const collections = {
         "community/**/*.mdx",
         "examples/**/[!index]*.mdx",
         "api/python/**/*.mdx",
-        "api/typescript/**/*.mdx",
+        "api/typescript/**/*.(md|mdx)",
       ],
       generateId: generateDocsId,
     }),

@@ -14,7 +14,7 @@
   "excludeInternal": true,
   "includeVersion": false,
   "outputFileStrategy": "members",
-  "fileExtension": ".mdx",
+  "fileExtension": ".md",
   "entryFileName": "index",
   "hideBreadcrumbs": true,
   "hidePageHeader": true,

@@ -19,7 +19,7 @@
     "docs:update": "tsx scripts/update-docs.ts",
     "docs:revert": "git checkout HEAD -- docs/ && git clean -d -f src/content/docs",
     "sdk:clone": "tsx scripts/clone-sdks.ts",
-    "sdk:generate:py": "command -v uv >/dev/null 2>&1 && uv run scripts/api-generation-python.py || python scripts/api-generation-python.py",
+    "sdk:generate:py": "command -v uv >/dev/null 2>&1 && uv run scripts/api-generation-python.py || (pip install pydoc-markdown>=4.8.2 && python scripts/api-generation-python.py)",
     "sdk:generate:ts": "tsx scripts/api-generation-typescript.ts",
     "sdk:generate": "npm run sdk:generate:py && npm run sdk:generate:ts",
     "astro": "astro"

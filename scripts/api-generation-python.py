@@ -7,29 +7,11 @@
 """Generate markdown documentation for strands-agents SDK using pydoc-markdown.
 
 This script generates per-module markdown files in the .build/api-docs/python/ directory.
-Dependencies are automatically installed if missing when running with plain python.
 
 Usage:
     uv run scripts/api-generation-python.py   # if uv is available
-    python scripts/api-generation-python.py   # fallback, auto-installs deps
+    pip install pydoc-markdown && python scripts/api-generation-python.py  # fallback
 """
-
-import importlib.util
-import subprocess
-import sys
-
-
-def ensure_dependencies():
-    """Install required dependencies if not already available."""
-    if importlib.util.find_spec("pydoc_markdown") is None:
-        print("Installing pydoc-markdown...")
-        subprocess.check_call([sys.executable, "-m", "pip", "install", "pydoc-markdown>=4.8.2"])
-        # Re-exec the script so Python sees the newly installed package
-        import os
-        os.execv(sys.executable, [sys.executable] + sys.argv)
-
-
-ensure_dependencies()
 
 import shutil
 from pathlib import Path

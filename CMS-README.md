@@ -16,11 +16,15 @@ We're using [Astro](https://astro.build/) with the [Starlight](https://starlight
 
 ### 2. Route Middleware (`src/route-middleware.ts`)
 
-**What it does:** Filters the sidebar at buildtime so each page only shows items from its top-level group. For Python API pages, it dynamically generates a hierarchical sidebar from the docs collection.
+**What it does:** Filters the sidebar at buildtime so each page only shows items from its top-level group. For API pages (Python and TypeScript), it dynamically generates sidebars from the docs collection and computes pagination links.
 
 **Why:** Our sidebar is organized into top-level groups (User Guide, Community, Examples, etc.). Without this middleware, every page would show the entire sidebar. This middleware scopes the sidebar to the current section, providing a cleaner navigation experience.
 
 **Python API sidebar:** When viewing pages under `api/python/`, the middleware uses `buildPythonApiSidebar()` from `src/dynamic-sidebar.ts` to generate a nested sidebar structure based on module names (e.g., `strands.agent.agent` becomes `Agent > Agent`).
+
+**TypeScript API sidebar:** When viewing pages under `api/typescript/`, the middleware uses `buildTypeScriptApiSidebar()` to generate a category-grouped sidebar (Classes, Interfaces, Type Aliases, Functions).
+
+**Pagination:** For API pages, the middleware also updates `starlightRoute.pagination` using `getPrevNextLinks()` from `src/dynamic-sidebar.ts`. This ensures the previous/next navigation links at the bottom of pages work correctly with the dynamically generated sidebar.
 
 ### 3. MkDocs Snippets Plugin (`src/plugins/remark-mkdocs-snippets.ts`)
 
@@ -266,13 +270,17 @@ The index page (`src/content/docs/api/python/index.mdx`) is a permanent file (no
 
 ### Dynamic Sidebar (`src/dynamic-sidebar.ts`)
 
-**What it does:** Builds a hierarchical sidebar structure from Python API docs at runtime.
+**What it does:** Builds a hierarchical sidebar structure from Python API docs at runtime, and provides pagination utilities.
 
 **How it works:**
 1. Filters docs collection for `api/python/*` pages
 2. Parses module names from page titles (e.g., `strands.agent.agent`)
 3. Builds a nested tree structure based on module path segments
 4. Converts tree to Starlight sidebar entries with groups and links
+
+**Pagination utilities:**
+- `flattenSidebar()` - Converts nested sidebar structure to a flat list of links
+- `getPrevNextLinks()` - Finds the current page in the flattened sidebar and returns prev/next links
 
 **Sorting:**
 - Alphabetical A-Z within each level
@@ -307,7 +315,7 @@ The TypeScript API reference documentation is auto-generated from the SDK source
 
 ### Generation Script (`scripts/api-generation-typescript.ts`)
 
-**What it does:** Runs typedoc to generate markdown files, then post-processes them to add frontmatter and escape MDX special characters.
+**What it does:** Runs typedoc to generate markdown files, then post-processes them to add frontmatter.
 
 **How to run:**
 ```bash
@@ -317,13 +325,13 @@ npx tsx scripts/api-generation-typescript.ts
 ```
 
 **Input:** `.build/sdk-typescript/src` (cloned SDK repository)
-**Output:** `.build/api-docs/typescript/{classes,interfaces,type-aliases,functions}/*.mdx`
+**Output:** `.build/api-docs/typescript/{classes,interfaces,type-aliases,functions}/*.md`
 
 ### TypeDoc Configuration (`typedoc.json`)
 
 Key settings:
 - `outputFileStrategy: "members"` - Creates separate files per class/interface/type/function
-- `fileExtension: ".mdx"` - Outputs MDX format for Astro compatibility
+- `fileExtension: ".md"` - Outputs standard markdown format
 - `basePath: ".build/sdk-typescript"` - Strips build path prefix from source links
 - `hideBreadcrumbs: true`, `hidePageHeader: true` - Cleaner output for Starlight integration
 
@@ -340,9 +348,9 @@ The generation script performs these transformations after typedoc runs:
    ---
    ```
 
-2. **Escapes curly braces** (`{` → `\{`) to prevent MDX from interpreting them as JSX expressions
+2. **Fixes relative links** to match the flat slug structure (e.g., `../interfaces/AgentData.md` → `../AgentData.md`)
 
-3. **Deletes the generated index.mdx** - We use our own custom index page instead
+3. **Deletes the generated index.md** - We use our own custom index page instead
 
 ### Flat Slugs with Category Grouping
 

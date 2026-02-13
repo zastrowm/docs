@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "type": "module",
   "scripts": {
+    "build": "astro build",
     "test": "tsc --noEmit",
     "format": "prettier --write docs",
     "format:check": "prettier --check docs",
@@ -14,7 +15,7 @@
     "clean": "rm -rf docs/api-reference/typescript node_modules",
     "cms:dev": "astro dev",
     "cms:start": "astro dev",
-    "cms:build": "npm run docs:revert && npm run docs:update && astro build",
+    "cms:build": "npm run sdk:clone && npm run sdk:generate && npm run docs:revert && npm run docs:update && npm run build",
     "cms:preview": "astro preview",
     "cms:test": "vitest run",
     "docs:update": "tsx scripts/update-docs.ts",

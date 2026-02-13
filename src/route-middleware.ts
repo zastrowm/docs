@@ -6,6 +6,7 @@ import {
   getPrevNextLinks,
   type DocInfo,
 } from './dynamic-sidebar'
+import { pathWithBase } from './util/links'
 
 type SidebarEntry = StarlightRouteData['sidebar'][number]
 
@@ -35,7 +36,7 @@ export const onRequest = defineRouteMiddleware(async (context) => {
     pythonSidebar.unshift({
       type: 'link',
       label: 'Overview',
-      href: '/api/python/',
+      href: pathWithBase('/api/python/'),
       isCurrent: currentSlug === 'api/python/index',
       badge: undefined,
       attrs: {},
@@ -61,7 +62,7 @@ export const onRequest = defineRouteMiddleware(async (context) => {
     tsSidebar.unshift({
       type: 'link',
       label: 'Overview',
-      href: '/api/typescript/',
+      href: pathWithBase('/api/typescript/'),
       isCurrent: currentSlug === 'api/typescript/index',
       badge: undefined,
       attrs: {},

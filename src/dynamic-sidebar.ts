@@ -1,4 +1,5 @@
 import type { StarlightRouteData } from '@astrojs/starlight/route-data'
+import { pathWithBase } from './util/links'
 
 type SidebarEntry = StarlightRouteData['sidebar'][number]
 type SidebarGroup = Extract<SidebarEntry, { type: 'group' }>
@@ -94,7 +95,7 @@ export function buildPythonApiSidebar(docs: DocInfo[], currentSlug: string): Sid
       if (hasDoc && !hasChildren) {
         // Leaf node - create a link
         const doc = value.__doc
-        const href = `/${doc.id}/`
+        const href = pathWithBase(`/${doc.id}/`)
         const link: SidebarLink = {
           type: 'link',
           label: displayName,
@@ -111,7 +112,7 @@ export function buildPythonApiSidebar(docs: DocInfo[], currentSlug: string): Sid
         // If this node also has a doc, add it as the first item in the group
         if (hasDoc) {
           const doc = value.__doc
-          const href = `/${doc.id}/`
+          const href = pathWithBase(`/${doc.id}/`)
           childEntries.unshift({
             type: 'link',
             label: 'Overview',
@@ -199,7 +200,7 @@ export function buildTypeScriptApiSidebar(docs: DocInfo[], currentSlug: string):
     const links: SidebarLink[] = categoryDocs.map((doc) => ({
       type: 'link',
       label: doc.title,
-      href: `/${doc.id}/`,
+      href: pathWithBase(`/${doc.id}/`),
       isCurrent: currentSlug === doc.id,
       badge: undefined,
       attrs: {},

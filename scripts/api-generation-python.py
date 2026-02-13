@@ -14,17 +14,19 @@ Usage:
     python scripts/api-generation-python.py   # fallback, auto-installs deps
 """
 
+import importlib.util
 import subprocess
 import sys
 
 
 def ensure_dependencies():
     """Install required dependencies if not already available."""
-    try:
-        import pydoc_markdown  # noqa: F401
-    except ImportError:
+    if importlib.util.find_spec("pydoc_markdown") is None:
         print("Installing pydoc-markdown...")
-        subprocess.check_call([sys.executable, "-m", "pip", "install", "pydoc-markdown>=4.8.2", "-q"])
+        subprocess.check_call([sys.executable, "-m", "pip", "install", "pydoc-markdown>=4.8.2"])
+        # Re-exec the script so Python sees the newly installed package
+        import os
+        os.execv(sys.executable, [sys.executable] + sys.argv)
 
 
 ensure_dependencies()

@@ -662,3 +662,140 @@ The `src/util/links.ts` module was extended:
 ```
 
 Type declarations in `src/types/turndown-plugin-gfm.d.ts` (no @types package available).
+
+
+## Blog
+
+The blog is a standalone section at `/blog/` with its own content collection, layouts, components, and routes — outside of Starlight's docs collection. It follows the same pattern as the custom landing page: reuses the Starlight header via `BlogLayout.astro` while opting out of the docs chrome (sidebar, table of contents, etc.).
+
+### Content Collections
+
+**Authors** (`src/content/authors/*.json`):
+```json
+{
+  "name": "Strands Agents Team",
+  "role": "Core Team",
+  "bio": "The team behind the Strands Agents SDK."
+}
+```
+
+Schema: `{ name, role, bio, avatar? }` — all strings. Referenced by filename (without extension) from blog post frontmatter.
+
+**Blog Posts** (`src/content/blog/*.mdx`):
+```yaml
+---
+title: "Post Title"
+date: 2026-02-20T00:00:00.000Z
+description: "Short description for cards and meta tags."
+authors: ["strands-team"]     # References author file IDs
+tags: ["Open Source"]
+draft: false                  # Excluded from production builds
+coverImage: "/path/to/image"  # Optional
+---
+```
+
+The `readingTime` field is injected automatically by the remark plugin (see below).
+
+Both collections are registered in `src/content.config.ts` using glob loaders, following the same pattern as testimonials.
+
+### Reading Time Remark Plugin (`src/plugins/remark-reading-time.ts`)
+
+Extracts text from the markdown AST and injects a `readingTime` string (e.g., "3 min read") into `file.data.astro.frontmatter`. Registered in `astro.config.mjs` under `markdown.remarkPlugins`.
+
+Dependencies: `reading-time`, `mdast-util-to-string`.
+
+### Blog Utilities (`src/util/blog.ts`)
+
+Helper functions used across all blog pages:
+
+| Function | Purpose |
+|----------|---------|
+| `getPublishedPosts()` | All posts sorted by date desc, excludes drafts in prod |
+| `getAllTags()` | Unique tags across all published posts |
+| `getPostsByTag(tag)` | Posts filtered by tag |
+| `getPostsByAuthor(authorId)` | Posts filtered by author ID |
+| `resolveAuthors(ids)` | Looks up author collection entries by ID |
+| `tagToSlug(tag)` / `slugToTag(slug)` | Bidirectional tag↔URL conversion |
+| `formatDate(date)` | Human-readable date (e.g., "February 20, 2026") |
+
+### Layouts
+
+**`BlogLayout.astro`** — Base layout for all blog pages. Follows `LandingLayout.astro` exactly: imports Starlight CSS, mocks `starlightRoute` and `t`, renders Header. Adds: canonical URL, OG/Twitter meta tags, RSS autodiscovery `<link>`, named `<slot name="head" />` for JSON-LD.
+
+**`BlogPostLayout.astro`** — Wraps `BlogLayout` with article-specific chrome: title, date, reading time, description, author byline, tags, cover image. Content area at `max-width: 680px` with Figtree font. Injects JSON-LD Article schema via the head slot. OG image URL: `/blog/og/{slug}.png`.
+
+### Components (`src/components/blog/`)
+
+| Component | Purpose |
+|-----------|---------|
+| `BlogCard.astro` | Card for listing pages (cover, title, description, meta, tags). Glassmorphism styling matching landing page. |
+| `BlogAuthorByline.astro` | Author avatar + name + role, links to `/blog/authors/[id]/` |
+| `BlogTagList.astro` | Tag chips linking to `/blog/tags/[tagSlug]/` |
+| `BlogPostGrid.astro` | Reusable card grid (auto-fill, 320px min, 1200px max). Resolves authors for all posts. |
+
+### Pages
+
+| Route | File | Description |
+|-------|------|-------------|
+| `/blog/` | `src/pages/blog/index.astro` | Index with tag filter bar + post grid |
+| `/blog/[slug]` | `src/pages/blog/[slug].astro` | Individual post (via `getStaticPaths`) |
+| `/blog/tags/[tag]/` | `src/pages/blog/tags/[tag].astro` | Posts filtered by tag |
+| `/blog/authors/[author]/` | `src/pages/blog/authors/[author].astro` | Author page with bio + their posts |
+
+### Navigation
+
+Blog is added to the header nav in `src/config/navbar.ts`:
+```typescript
+{ label: 'Blog', href: '/blog/', basePath: '/blog/' }
+```
+Active state is handled by the existing `findCurrentNavSection()` longest-match logic.
+
+### RSS Feeds
+
+| Endpoint | File |
+|----------|------|
+| `/blog/feed.xml` | `src/pages/blog/feed.xml.ts` — Main feed (all posts) |
+| `/blog/feed/[tag].xml` | `src/pages/blog/feed/[tag].xml.ts` — Per-tag feeds |
+
+Uses `@astrojs/rss`. Currently includes description only (not full rendered content).
+
+### AEO (Agentic Engine Optimization)
+
+The blog extends the existing llms.txt system:
+
+- **`/blog/[slug]/index.md`** — Raw markdown endpoint for each post (mirrors the `[...slug]/index.md.ts` pattern for docs). Uses `renderEntryToMarkdown()` with `basePath: /blog/${post.id}/`.
+- **`/llms.txt`** — Extended with a `## Blog` section listing links to blog markdown endpoints.
+- **`/llms-full.txt`** — Extended to render blog posts inline after docs content.
+- **`src/util/render-to-markdown.ts`** — Generalized from `CollectionEntry<'docs'>` to `CollectionEntry<'docs'> | CollectionEntry<'blog'>` with an optional `basePath` parameter.
+
+### OG Images
+
+Build-time OG image generation at `/blog/og/[slug].png` using `astro-og-canvas`:
+- 1200×630px images from post title + description
+- Strands branding: dark background (#0E0E0E), Strands green (#00CC5F) left border
+
+Implementation: `src/pages/blog/og/[slug].png.ts`
+
+### robots.txt
+
+`public/robots.txt` — Allows all crawlers including GPTBot, ClaudeBot, PerplexityBot. References sitemap.
+
+### Blog Dependencies Added
+
+```json
+{
+  "@astrojs/rss": "^4.0.11",
+  "astro-og-canvas": "^0.6.1",
+  "reading-time": "^1.5.0",
+  "mdast-util-to-string": "^4.0.0",
+  "sanitize-html": "^2.14.0",
+  "markdown-it": "^14.1.0",
+  "@types/sanitize-html": "^2.13.0",
+  "@types/markdown-it": "^14.1.2"
+}
+```
+
+### Tests
+
+- `test/blog.test.ts` — Tests for `tagToSlug`, `slugToTag`, `formatDate`
+- `test/remark-reading-time.test.ts` — Tests for reading time injection

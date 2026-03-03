@@ -39,6 +39,8 @@ export const collections = {
         "examples/**/[!index]*.mdx",
         "api/python/**/*.mdx",
         "api/typescript/**/*.(md|mdx)",
+        "labs/**/*.mdx",
+        "contribute/**/*.mdx",
       ],
       generateId: generateDocsId,
     }),

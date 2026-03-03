@@ -1,0 +1,1407 @@
+
+> docs@1.0.0 cms:build
+> npm run sdk:clone && npm run sdk:generate && npm run docs:revert && npm run docs:update && npm run build
+
+
+> docs@1.0.0 sdk:clone
+> tsx scripts/clone-sdks.ts
+
+🔄 SDK Clone/Pull Script
+
+📦 sdk-typescript: Repository exists, pulling latest changes...
+Running: git fetch origin (in /home/runner/work/docs/docs/.build/sdk-typescript)
+Running: git reset --hard origin/main (in /home/runner/work/docs/docs/.build/sdk-typescript)
+HEAD is now at 1e7fa9d feat: add rebased telemetry implementation (#579)
+
+📦 sdk-python: Repository exists, pulling latest changes...
+Running: git fetch origin (in /home/runner/work/docs/docs/.build/sdk-python)
+Running: git reset --hard origin/main (in /home/runner/work/docs/docs/.build/sdk-python)
+HEAD is now at 1a3b429 feat(conversation-manager): improve tool result truncation strategy (#1756)
+
+✅ Done!
+
+> docs@1.0.0 sdk:generate
+> npm run sdk:generate:py && npm run sdk:generate:ts
+
+
+> docs@1.0.0 sdk:generate:py
+> command -v uv >/dev/null 2>&1 && uv run scripts/api-generation-python.py || (pip install pydoc-markdown>=4.8.2 && python scripts/api-generation-python.py)
+
+2 cross-reference(s) could not be resolved:
+  strands.tools.decorator: Args, Returns
+Deleted existing output directory: .build/api-docs/python
+Generated: .build/api-docs/python/strands.event_loop.event_loop.mdx
+Generated: .build/api-docs/python/strands.event_loop.streaming.mdx
+Skipping private module: strands.event_loop._retry
+Skipping private module: strands.event_loop._recover_message_on_max_tokens_reached
+Generated: .build/api-docs/python/strands.telemetry.metrics.mdx
+Generated: .build/api-docs/python/strands.telemetry.config.mdx
+Generated: .build/api-docs/python/strands.telemetry.tracer.mdx
+Skipping private module: strands._exception_notes
+Generated: .build/api-docs/python/strands.agent.conversation_manager.summarizing_conversation_manager.mdx
+Generated: .build/api-docs/python/strands.agent.conversation_manager.null_conversation_manager.mdx
+Generated: .build/api-docs/python/strands.agent.conversation_manager.conversation_manager.mdx
+Generated: .build/api-docs/python/strands.agent.conversation_manager.sliding_window_conversation_manager.mdx
+Generated: .build/api-docs/python/strands.agent.a2a_agent.mdx
+Generated: .build/api-docs/python/strands.agent.base.mdx
+Skipping excluded module: strands.agent
+Generated: .build/api-docs/python/strands.agent.agent_result.mdx
+Generated: .build/api-docs/python/strands.agent.agent.mdx
+Skipping private module: strands._async
+Generated: .build/api-docs/python/strands.experimental.agent_config.mdx
+Generated: .build/api-docs/python/strands.experimental.bidi.agent.agent.mdx
+Generated: .build/api-docs/python/strands.experimental.bidi.agent.loop.mdx
+Skipping private module: strands.experimental.bidi._async
+Skipping private module: strands.experimental.bidi._async._task_group
+Skipping private module: strands.experimental.bidi._async._task_pool
+Generated: .build/api-docs/python/strands.experimental.bidi.mdx
+Generated: .build/api-docs/python/strands.experimental.bidi.io.audio.mdx
+Generated: .build/api-docs/python/strands.experimental.bidi.io.text.mdx
+Generated: .build/api-docs/python/strands.experimental.bidi.types.events.mdx
+Generated: .build/api-docs/python/strands.experimental.bidi.types.io.mdx
+Generated: .build/api-docs/python/strands.experimental.bidi.types.model.mdx
+Generated: .build/api-docs/python/strands.experimental.bidi.models.gemini_live.mdx
+Generated: .build/api-docs/python/strands.experimental.bidi.models.nova_sonic.mdx
+Generated: .build/api-docs/python/strands.experimental.bidi.models.mdx
+Generated: .build/api-docs/python/strands.experimental.bidi.models.model.mdx
+Generated: .build/api-docs/python/strands.experimental.bidi.models.openai_realtime.mdx
+Generated: .build/api-docs/python/strands.experimental.bidi.tools.stop_conversation.mdx
+Generated: .build/api-docs/python/strands.experimental.hooks.events.mdx
+Generated: .build/api-docs/python/strands.experimental.steering.context_providers.ledger_provider.mdx
+Generated: .build/api-docs/python/strands.experimental.steering.handlers.llm.mappers.mdx
+Generated: .build/api-docs/python/strands.experimental.steering.handlers.llm.llm_handler.mdx
+Generated: .build/api-docs/python/strands.experimental.steering.core.handler.mdx
+Generated: .build/api-docs/python/strands.experimental.steering.core.context.mdx
+Generated: .build/api-docs/python/strands.experimental.steering.core.action.mdx
+Generated: .build/api-docs/python/strands.multiagent.graph.mdx
+Generated: .build/api-docs/python/strands.multiagent.base.mdx
+Generated: .build/api-docs/python/strands.multiagent.swarm.mdx
+Skipping private module: strands.multiagent.a2a._converters
+Generated: .build/api-docs/python/strands.multiagent.a2a.server.mdx
+Generated: .build/api-docs/python/strands.multiagent.a2a.executor.mdx
+Generated: .build/api-docs/python/strands.handlers.callback_handler.mdx
+Generated: .build/api-docs/python/strands.session.session_manager.mdx
+Generated: .build/api-docs/python/strands.session.session_repository.mdx
+Generated: .build/api-docs/python/strands.session.repository_session_manager.mdx
+Generated: .build/api-docs/python/strands.session.file_session_manager.mdx
+Generated: .build/api-docs/python/strands.session.s3_session_manager.mdx
+Generated: .build/api-docs/python/strands.types.media.mdx
+Generated: .build/api-docs/python/strands.types.content.mdx
+Generated: .build/api-docs/python/strands.types.event_loop.mdx
+Generated: .build/api-docs/python/strands.types.collections.mdx
+Generated: .build/api-docs/python/strands.types.citations.mdx
+Generated: .build/api-docs/python/strands.types.a2a.mdx
+Generated: .build/api-docs/python/strands.types.exceptions.mdx
+Generated: .build/api-docs/python/strands.types.json_dict.mdx
+Generated: .build/api-docs/python/strands.types.guardrails.mdx
+Generated: .build/api-docs/python/strands.types.session.mdx
+Generated: .build/api-docs/python/strands.types.streaming.mdx
+Generated: .build/api-docs/python/strands.types.agent.mdx
+Generated: .build/api-docs/python/strands.types.tools.mdx
+Generated: .build/api-docs/python/strands.types.interrupt.mdx
+Skipping private module: strands.types._events
+Generated: .build/api-docs/python/strands.hooks.events.mdx
+Generated: .build/api-docs/python/strands.hooks.registry.mdx
+Generated: .build/api-docs/python/strands.plugins.plugin.mdx
+Generated: .build/api-docs/python/strands.plugins.registry.mdx
+Generated: .build/api-docs/python/strands.interrupt.mdx
+Generated: .build/api-docs/python/strands.models.writer.mdx
+Generated: .build/api-docs/python/strands.models.gemini.mdx
+Generated: .build/api-docs/python/strands.models.mistral.mdx
+Generated: .build/api-docs/python/strands.models.llamacpp.mdx
+Generated: .build/api-docs/python/strands.models.litellm.mdx
+Skipping private module: strands.models._validation
+Generated: .build/api-docs/python/strands.models.ollama.mdx
+Generated: .build/api-docs/python/strands.models.mdx
+Generated: .build/api-docs/python/strands.models.model.mdx
+Generated: .build/api-docs/python/strands.models.openai.mdx
+Generated: .build/api-docs/python/strands.models.llamaapi.mdx
+Generated: .build/api-docs/python/strands.models.bedrock.mdx
+Generated: .build/api-docs/python/strands.models.sagemaker.mdx
+Generated: .build/api-docs/python/strands.models.anthropic.mdx
+Skipping private module: strands._identifier
+Generated: .build/api-docs/python/strands.tools.mcp.mcp_types.mdx
+Generated: .build/api-docs/python/strands.tools.mcp.mcp_instrumentation.mdx
+Generated: .build/api-docs/python/strands.tools.mcp.mcp_tasks.mdx
+Generated: .build/api-docs/python/strands.tools.mcp.mcp_agent_tool.mdx
+Generated: .build/api-docs/python/strands.tools.mcp.mcp_client.mdx
+Generated: .build/api-docs/python/strands.tools.watcher.mdx
+Generated: .build/api-docs/python/strands.tools.tool_provider.mdx
+Generated: .build/api-docs/python/strands.tools.loader.mdx
+Generated: .build/api-docs/python/strands.tools.structured_output.structured_output_utils.mdx
+Generated: .build/api-docs/python/strands.tools.structured_output.structured_output_tool.mdx
+Skipping private module: strands.tools.structured_output._structured_output_context
+Skipping private module: strands.tools._validator
+Skipping private module: strands.tools._caller
+Skipping private module: strands.tools._tool_helpers
+Generated: .build/api-docs/python/strands.tools.decorator.mdx
+Generated: .build/api-docs/python/strands.tools.registry.mdx
+Generated: .build/api-docs/python/strands.tools.tools.mdx
+Generated: .build/api-docs/python/strands.tools.executors.sequential.mdx
+Generated: .build/api-docs/python/strands.tools.executors.concurrent.mdx
+Skipping private module: strands.tools.executors._executor
+
+Total modules documented: 93
+
+> docs@1.0.0 sdk:generate:ts
+> tsx scripts/api-generation-typescript.ts
+
+🔧 TypeScript API Documentation Generator
+
+Cleaning output directory: .build/api-docs/typescript
+
+📚 Running typedoc...
+
+[96m[info][0m Loaded plugin typedoc-plugin-markdown
+[93m[warning][0m StateSerializable, defined in @strands-agents/sdk/src/types/serializable.ts, is referenced by AgentState but not included in the documentation
+[93m[warning][0m HookRegistry, defined in @strands-agents/sdk/src/hooks/registry.ts, is referenced by HookRegistry but not included in the documentation
+[93m[warning][0m RuntimeConfig, defined in @strands-agents/sdk/src/mcp.ts, is referenced by McpClientConfig but not included in the documentation
+[93m[warning][0m ModelContentBlockStopEventData, defined in @strands-agents/sdk/src/models/streaming.ts, is referenced by ModelStreamEvent but not included in the documentation
+[93m[warning][0m JSONSerializable, defined in @strands-agents/sdk/src/types/json.ts, is referenced by S3Location but not included in the documentation
+[93m[warning][0m JsonBlockData, defined in @strands-agents/sdk/src/types/messages.ts, is referenced by JsonBlock but not included in the documentation
+[93m[warning][0m SystemContentBlockData, defined in @strands-agents/sdk/src/types/messages.ts, is referenced by SystemPromptData but not included in the documentation
+[93m[warning][0m ZodInferred, defined in @strands-agents/sdk/src/tools/zod-tool.ts, is referenced by tool but not included in the documentation
+[93m[warning][0m ToolResultContentData, defined in @strands-agents/sdk/src/types/messages.ts, is referenced by ToolResultBlockData.content but not included in the documentation
+[93m[warning][0m ToolRegistry, defined in @strands-agents/sdk/src/registry/tool-registry.ts, is referenced by Agent.toolRegistry but not included in the documentation
+[93m[warning][0m HookCleanup, defined in @strands-agents/sdk/src/hooks/types.ts, is referenced by HookRegistry.addCallback but not included in the documentation
+[93m[warning][0m McpTool, defined in @strands-agents/sdk/src/tools/mcp-tool.ts, is referenced by McpClient.listTools but not included in the documentation
+[93m[warning][0m StreamAggregatedResult, defined in @strands-agents/sdk/src/models/model.ts, is referenced by BedrockModel.streamAggregated but not included in the documentation
+[93m[warning][0m ToolConfig, defined in @strands-agents/sdk/src/tools/zod-tool.ts, is referenced by tool.config but not included in the documentation
+[93m[warning][0m Serialized, defined in @strands-agents/sdk/src/types/json.ts, is referenced by ImageBlock.__type.image but not included in the documentation
+[93m[warning][0m InvokeArgs, defined in @strands-agents/sdk/src/agent/agent.ts, is referenced by Agent.invoke.args but not included in the documentation
+[93m[warning][0m FunctionToolConfig, defined in @strands-agents/sdk/src/tools/function-tool.ts, is referenced by FunctionTool.constructor.config but not included in the documentation
+[96m[info][0m markdown generated at ./.build/api-docs/typescript
+[93m[warning][0m Found 0 errors and 17 warnings
+
+📝 Post-processing files...
+
+Processed: .build/api-docs/typescript/Strands-Agents-TypeScript-SDK/namespaces/telemetry/functions/setupTracer.md
+Processed: .build/api-docs/typescript/Strands-Agents-TypeScript-SDK/namespaces/telemetry/index.md
+Processed: .build/api-docs/typescript/Strands-Agents-TypeScript-SDK/namespaces/telemetry/interfaces/TracerConfig.md
+Processed: .build/api-docs/typescript/classes/AfterInvocationEvent.md
+Processed: .build/api-docs/typescript/classes/AfterModelCallEvent.md
+Processed: .build/api-docs/typescript/classes/AfterToolCallEvent.md
+Processed: .build/api-docs/typescript/classes/AfterToolsEvent.md
+Processed: .build/api-docs/typescript/classes/Agent.md
+Processed: .build/api-docs/typescript/classes/AgentResult.md
+Processed: .build/api-docs/typescript/classes/AgentResultEvent.md
+Processed: .build/api-docs/typescript/classes/BedrockModel.md
+Processed: .build/api-docs/typescript/classes/BeforeInvocationEvent.md
+Processed: .build/api-docs/typescript/classes/BeforeModelCallEvent.md
+Processed: .build/api-docs/typescript/classes/BeforeToolCallEvent.md
+Processed: .build/api-docs/typescript/classes/BeforeToolsEvent.md
+Processed: .build/api-docs/typescript/classes/CachePointBlock.md
+Processed: .build/api-docs/typescript/classes/ConcurrentInvocationError.md
+Processed: .build/api-docs/typescript/classes/ContentBlockEvent.md
+Processed: .build/api-docs/typescript/classes/ContextWindowOverflowError.md
+Processed: .build/api-docs/typescript/classes/DocumentBlock.md
+Processed: .build/api-docs/typescript/classes/FunctionTool.md
+Processed: .build/api-docs/typescript/classes/GuardContentBlock.md
+Processed: .build/api-docs/typescript/classes/HookRegistry.md
+Processed: .build/api-docs/typescript/classes/HookableEvent.md
+Processed: .build/api-docs/typescript/classes/ImageBlock.md
+Processed: .build/api-docs/typescript/classes/InitializedEvent.md
+Processed: .build/api-docs/typescript/classes/JsonBlock.md
+Processed: .build/api-docs/typescript/classes/JsonValidationError.md
+Processed: .build/api-docs/typescript/classes/MaxTokensError.md
+Processed: .build/api-docs/typescript/classes/McpClient.md
+Processed: .build/api-docs/typescript/classes/Message.md
+Processed: .build/api-docs/typescript/classes/MessageAddedEvent.md
+Processed: .build/api-docs/typescript/classes/Model.md
+Processed: .build/api-docs/typescript/classes/ModelError.md
+Processed: .build/api-docs/typescript/classes/ModelMessageEvent.md
+Processed: .build/api-docs/typescript/classes/ModelStreamUpdateEvent.md
+Processed: .build/api-docs/typescript/classes/ModelThrottledError.md
+Processed: .build/api-docs/typescript/classes/NullConversationManager.md
+Processed: .build/api-docs/typescript/classes/ReasoningBlock.md
+Processed: .build/api-docs/typescript/classes/S3Location.md
+Processed: .build/api-docs/typescript/classes/SlidingWindowConversationManager.md
+Processed: .build/api-docs/typescript/classes/StreamEvent.md
+Processed: .build/api-docs/typescript/classes/StructuredOutputException.md
+Processed: .build/api-docs/typescript/classes/TextBlock.md
+Processed: .build/api-docs/typescript/classes/Tool.md
+Processed: .build/api-docs/typescript/classes/ToolResultBlock.md
+Processed: .build/api-docs/typescript/classes/ToolResultEvent.md
+Processed: .build/api-docs/typescript/classes/ToolStreamUpdateEvent.md
+Processed: .build/api-docs/typescript/classes/ToolUseBlock.md
+Processed: .build/api-docs/typescript/classes/VideoBlock.md
+Processed: .build/api-docs/typescript/functions/configureLogging.md
+Processed: .build/api-docs/typescript/functions/contentBlockFromData.md
+Processed: .build/api-docs/typescript/functions/isModelStreamEvent.md
+Processed: .build/api-docs/typescript/functions/tool.md
+Deleted: .build/api-docs/typescript/index.md (using custom index)
+Processed: .build/api-docs/typescript/interfaces/AgentData.md
+Processed: .build/api-docs/typescript/interfaces/AgentState.md
+Processed: .build/api-docs/typescript/interfaces/BaseModelConfig.md
+Processed: .build/api-docs/typescript/interfaces/BedrockModelConfig.md
+Processed: .build/api-docs/typescript/interfaces/BedrockModelOptions.md
+Processed: .build/api-docs/typescript/interfaces/CachePointBlockData.md
+Processed: .build/api-docs/typescript/interfaces/DocumentBlockData.md
+Processed: .build/api-docs/typescript/interfaces/GuardContentBlockData.md
+Processed: .build/api-docs/typescript/interfaces/GuardContentImage.md
+Processed: .build/api-docs/typescript/interfaces/GuardContentText.md
+Processed: .build/api-docs/typescript/interfaces/HookProvider.md
+Processed: .build/api-docs/typescript/interfaces/ImageBlockData.md
+Processed: .build/api-docs/typescript/interfaces/InvokableTool.md
+Processed: .build/api-docs/typescript/interfaces/Logger.md
+Processed: .build/api-docs/typescript/interfaces/MessageData.md
+Processed: .build/api-docs/typescript/interfaces/Metrics.md
+Processed: .build/api-docs/typescript/interfaces/ModelContentBlockDeltaEvent.md
+Processed: .build/api-docs/typescript/interfaces/ModelContentBlockDeltaEventData.md
+Processed: .build/api-docs/typescript/interfaces/ModelContentBlockStartEvent.md
+Processed: .build/api-docs/typescript/interfaces/ModelContentBlockStartEventData.md
+Processed: .build/api-docs/typescript/interfaces/ModelContentBlockStopEvent.md
+Processed: .build/api-docs/typescript/interfaces/ModelMessageStartEvent.md
+Processed: .build/api-docs/typescript/interfaces/ModelMessageStartEventData.md
+Processed: .build/api-docs/typescript/interfaces/ModelMessageStopEvent.md
+Processed: .build/api-docs/typescript/interfaces/ModelMessageStopEventData.md
+Processed: .build/api-docs/typescript/interfaces/ModelMetadataEvent.md
+Processed: .build/api-docs/typescript/interfaces/ModelMetadataEventData.md
+Processed: .build/api-docs/typescript/interfaces/ModelStopResponse.md
+Processed: .build/api-docs/typescript/interfaces/ReasoningBlockData.md
+Processed: .build/api-docs/typescript/interfaces/ReasoningContentDelta.md
+Processed: .build/api-docs/typescript/interfaces/S3LocationData.md
+Processed: .build/api-docs/typescript/interfaces/StreamOptions.md
+Processed: .build/api-docs/typescript/interfaces/TextBlockData.md
+Processed: .build/api-docs/typescript/interfaces/TextDelta.md
+Processed: .build/api-docs/typescript/interfaces/ToolContext.md
+Processed: .build/api-docs/typescript/interfaces/ToolResultBlockData.md
+Processed: .build/api-docs/typescript/interfaces/ToolSpec.md
+Processed: .build/api-docs/typescript/interfaces/ToolStreamEvent.md
+Processed: .build/api-docs/typescript/interfaces/ToolStreamEventData.md
+Processed: .build/api-docs/typescript/interfaces/ToolUse.md
+Processed: .build/api-docs/typescript/interfaces/ToolUseBlockData.md
+Processed: .build/api-docs/typescript/interfaces/ToolUseInputDelta.md
+Processed: .build/api-docs/typescript/interfaces/ToolUseStart.md
+Processed: .build/api-docs/typescript/interfaces/Usage.md
+Processed: .build/api-docs/typescript/interfaces/VideoBlockData.md
+Processed: .build/api-docs/typescript/type-aliases/AgentConfig.md
+Processed: .build/api-docs/typescript/type-aliases/AgentStreamEvent.md
+Processed: .build/api-docs/typescript/type-aliases/ContentBlock.md
+Processed: .build/api-docs/typescript/type-aliases/ContentBlockData.md
+Processed: .build/api-docs/typescript/type-aliases/ContentBlockDelta.md
+Processed: .build/api-docs/typescript/type-aliases/ContentBlockStart.md
+Processed: .build/api-docs/typescript/type-aliases/DocumentContentBlock.md
+Processed: .build/api-docs/typescript/type-aliases/DocumentContentBlockData.md
+Processed: .build/api-docs/typescript/type-aliases/DocumentFormat.md
+Processed: .build/api-docs/typescript/type-aliases/DocumentSource.md
+Processed: .build/api-docs/typescript/type-aliases/DocumentSourceData.md
+Processed: .build/api-docs/typescript/type-aliases/GuardImageFormat.md
+Processed: .build/api-docs/typescript/type-aliases/GuardImageSource.md
+Processed: .build/api-docs/typescript/type-aliases/GuardQualifier.md
+Processed: .build/api-docs/typescript/type-aliases/HookCallback.md
+Processed: .build/api-docs/typescript/type-aliases/HookableEventConstructor.md
+Processed: .build/api-docs/typescript/type-aliases/ImageFormat.md
+Processed: .build/api-docs/typescript/type-aliases/ImageSource.md
+Processed: .build/api-docs/typescript/type-aliases/ImageSourceData.md
+Processed: .build/api-docs/typescript/type-aliases/JSONSchema.md
+Processed: .build/api-docs/typescript/type-aliases/JSONValue.md
+Processed: .build/api-docs/typescript/type-aliases/McpClientConfig.md
+Processed: .build/api-docs/typescript/type-aliases/ModelStreamEvent.md
+Processed: .build/api-docs/typescript/type-aliases/Role.md
+Processed: .build/api-docs/typescript/type-aliases/SlidingWindowConversationManagerConfig.md
+Processed: .build/api-docs/typescript/type-aliases/StopReason.md
+Processed: .build/api-docs/typescript/type-aliases/SystemContentBlock.md
+Processed: .build/api-docs/typescript/type-aliases/SystemPrompt.md
+Processed: .build/api-docs/typescript/type-aliases/SystemPromptData.md
+Processed: .build/api-docs/typescript/type-aliases/ToolChoice.md
+Processed: .build/api-docs/typescript/type-aliases/ToolList.md
+Processed: .build/api-docs/typescript/type-aliases/ToolResultContent.md
+Processed: .build/api-docs/typescript/type-aliases/ToolResultStatus.md
+Processed: .build/api-docs/typescript/type-aliases/ToolStreamGenerator.md
+Processed: .build/api-docs/typescript/type-aliases/VideoFormat.md
+Processed: .build/api-docs/typescript/type-aliases/VideoSource.md
+Processed: .build/api-docs/typescript/type-aliases/VideoSourceData.md
+
+✅ Done! Generated 136 API doc files.
+
+> docs@1.0.0 docs:revert
+> git checkout HEAD -- docs/ && git clean -d -f src/content/docs
+
+Removing src/content/docs/README.mdx
+Removing src/content/docs/assets/
+Removing src/content/docs/community/
+Removing src/content/docs/contribute/
+Removing src/content/docs/examples/
+Removing src/content/docs/labs/
+Removing src/content/docs/readme.ts
+Removing src/content/docs/stylesheets/
+Removing src/content/docs/user-guide/
+
+> docs@1.0.0 docs:update
+> tsx scripts/update-docs.ts
+
+Scanning docs for markdown files...
+Output directory: src/content/docs
+Found 5 community-labeled files in nav
+Found 140 sidebar labels in nav
+✓ README.md → README.mdx
+✓ community/community-packages.md → community/community-packages.mdx
+✓ community/get-featured.md → community/get-featured.mdx
+✓ community/integrations/ag-ui.md → community/integrations/ag-ui.mdx
+✓ community/model-providers/clova-studio.md → community/model-providers/clova-studio.mdx
+✓ community/model-providers/cohere.md → community/model-providers/cohere.mdx
+✓ community/model-providers/fireworksai.md → community/model-providers/fireworksai.mdx
+✓ community/model-providers/mlx.md → community/model-providers/mlx.mdx
+✓ community/model-providers/nebius-token-factory.md → community/model-providers/nebius-token-factory.mdx
+✓ community/model-providers/nvidia-nim.md → community/model-providers/nvidia-nim.mdx
+✓ community/model-providers/sglang.md → community/model-providers/sglang.mdx
+✓ community/model-providers/vllm.md → community/model-providers/vllm.mdx
+✓ community/model-providers/xai.md → community/model-providers/xai.mdx
+✓ community/session-managers/agentcore-memory.md → community/session-managers/agentcore-memory.mdx
+✓ community/session-managers/strands-valkey-session-manager.md → community/session-managers/strands-valkey-session-manager.mdx
+✓ community/tools/strands-deepgram.md → community/tools/strands-deepgram.mdx
+✓ community/tools/strands-hubspot.md → community/tools/strands-hubspot.mdx
+✓ community/tools/strands-teams.md → community/tools/strands-teams.mdx
+✓ community/tools/strands-telegram-listener.md → community/tools/strands-telegram-listener.mdx
+✓ community/tools/strands-telegram.md → community/tools/strands-telegram.mdx
+✓ community/tools/utcp.md → community/tools/utcp.mdx
+✓ contribute/contributing/core-sdk.md → contribute/contributing/core-sdk.mdx
+✓ contribute/contributing/documentation.md → contribute/contributing/documentation.mdx
+✓ contribute/contributing/extensions.md → contribute/contributing/extensions.mdx
+✓ contribute/contributing/feature-proposals.md → contribute/contributing/feature-proposals.mdx
+✓ contribute/index.md → contribute/index.mdx
+✓ examples/README.md → examples/README.mdx
+✓ examples/cdk/deploy_to_apprunner/README.md → examples/cdk/deploy_to_apprunner/README.mdx
+✓ examples/cdk/deploy_to_ec2/README.md → examples/cdk/deploy_to_ec2/README.mdx
+✓ examples/cdk/deploy_to_fargate/README.md → examples/cdk/deploy_to_fargate/README.mdx
+✓ examples/cdk/deploy_to_lambda/README.md → examples/cdk/deploy_to_lambda/README.mdx
+✓ examples/deploy_to_eks/README.md → examples/deploy_to_eks/README.mdx
+✓ examples/python/agents_workflows.md → examples/python/agents_workflows.mdx
+✓ examples/python/cli-reference-agent.md → examples/python/cli-reference-agent.mdx
+✓ examples/python/file_operations.md → examples/python/file_operations.mdx
+✓ examples/python/graph_loops_example.md → examples/python/graph_loops_example.mdx
+✓ examples/python/knowledge_base_agent.md → examples/python/knowledge_base_agent.mdx
+✓ examples/python/mcp_calculator.md → examples/python/mcp_calculator.mdx
+✓ examples/python/memory_agent.md → examples/python/memory_agent.mdx
+✓ examples/python/meta_tooling.md → examples/python/meta_tooling.mdx
+⊘ Skipped (pattern): docs/examples/python/multi_agent_example/index.md
+✓ examples/python/multi_agent_example/multi_agent_example.md → examples/python/multi_agent_example/multi_agent_example.mdx
+✓ examples/python/multimodal.md → examples/python/multimodal.mdx
+✓ examples/python/structured_output.md → examples/python/structured_output.mdx
+✓ examples/python/weather_forecaster.md → examples/python/weather_forecaster.mdx
+✓ examples/typescript/deploy_to_bedrock_agentcore/README.md → examples/typescript/deploy_to_bedrock_agentcore/README.mdx
+✓ labs/ai-functions.md → labs/ai-functions.mdx
+✓ labs/index.md → labs/index.mdx
+✓ labs/robots-sim.md → labs/robots-sim.mdx
+✓ labs/robots.md → labs/robots.mdx
+✓ user-guide/concepts/agents/agent-loop.md → user-guide/concepts/agents/agent-loop.mdx
+✓ user-guide/concepts/agents/conversation-management.md → user-guide/concepts/agents/conversation-management.mdx
+✓ user-guide/concepts/agents/hooks.md → user-guide/concepts/agents/hooks.mdx
+✓ user-guide/concepts/agents/prompts.md → user-guide/concepts/agents/prompts.mdx
+✓ user-guide/concepts/agents/retry-strategies.md → user-guide/concepts/agents/retry-strategies.mdx
+✓ user-guide/concepts/agents/session-management.md → user-guide/concepts/agents/session-management.mdx
+✓ user-guide/concepts/agents/state.md → user-guide/concepts/agents/state.mdx
+✓ user-guide/concepts/agents/structured-output.md → user-guide/concepts/agents/structured-output.mdx
+✓ user-guide/concepts/bidirectional-streaming/agent.md → user-guide/concepts/bidirectional-streaming/agent.mdx
+✓ user-guide/concepts/bidirectional-streaming/events.md → user-guide/concepts/bidirectional-streaming/events.mdx
+✓ user-guide/concepts/bidirectional-streaming/hooks.md → user-guide/concepts/bidirectional-streaming/hooks.mdx
+✓ user-guide/concepts/bidirectional-streaming/interruption.md → user-guide/concepts/bidirectional-streaming/interruption.mdx
+✓ user-guide/concepts/bidirectional-streaming/io.md → user-guide/concepts/bidirectional-streaming/io.mdx
+✓ user-guide/concepts/bidirectional-streaming/models/gemini_live.md → user-guide/concepts/bidirectional-streaming/models/gemini_live.mdx
+✓ user-guide/concepts/bidirectional-streaming/models/nova_sonic.md → user-guide/concepts/bidirectional-streaming/models/nova_sonic.mdx
+✓ user-guide/concepts/bidirectional-streaming/models/openai_realtime.md → user-guide/concepts/bidirectional-streaming/models/openai_realtime.mdx
+✓ user-guide/concepts/bidirectional-streaming/quickstart.md → user-guide/concepts/bidirectional-streaming/quickstart.mdx
+✓ user-guide/concepts/bidirectional-streaming/session-management.md → user-guide/concepts/bidirectional-streaming/session-management.mdx
+✓ user-guide/concepts/experimental/agent-config.md → user-guide/concepts/experimental/agent-config.mdx
+✓ user-guide/concepts/experimental/steering.md → user-guide/concepts/experimental/steering.mdx
+✓ user-guide/concepts/interrupts.md → user-guide/concepts/interrupts.mdx
+✓ user-guide/concepts/model-providers/amazon-bedrock.md → user-guide/concepts/model-providers/amazon-bedrock.mdx
+✓ user-guide/concepts/model-providers/amazon-nova.md → user-guide/concepts/model-providers/amazon-nova.mdx
+✓ user-guide/concepts/model-providers/anthropic.md → user-guide/concepts/model-providers/anthropic.mdx
+✓ user-guide/concepts/model-providers/clova-studio.md → user-guide/concepts/model-providers/clova-studio.mdx
+✓ user-guide/concepts/model-providers/cohere.md → user-guide/concepts/model-providers/cohere.mdx
+✓ user-guide/concepts/model-providers/custom_model_provider.md → user-guide/concepts/model-providers/custom_model_provider.mdx
+✓ user-guide/concepts/model-providers/fireworksai.md → user-guide/concepts/model-providers/fireworksai.mdx
+✓ user-guide/concepts/model-providers/gemini.md → user-guide/concepts/model-providers/gemini.mdx
+✓ user-guide/concepts/model-providers/index.md → user-guide/concepts/model-providers/index.mdx
+✓ user-guide/concepts/model-providers/litellm.md → user-guide/concepts/model-providers/litellm.mdx
+✓ user-guide/concepts/model-providers/llamaapi.md → user-guide/concepts/model-providers/llamaapi.mdx
+✓ user-guide/concepts/model-providers/llamacpp.md → user-guide/concepts/model-providers/llamacpp.mdx
+✓ user-guide/concepts/model-providers/mistral.md → user-guide/concepts/model-providers/mistral.mdx
+✓ user-guide/concepts/model-providers/nebius-token-factory.md → user-guide/concepts/model-providers/nebius-token-factory.mdx
+✓ user-guide/concepts/model-providers/ollama.md → user-guide/concepts/model-providers/ollama.mdx
+✓ user-guide/concepts/model-providers/openai.md → user-guide/concepts/model-providers/openai.mdx
+✓ user-guide/concepts/model-providers/sagemaker.md → user-guide/concepts/model-providers/sagemaker.mdx
+✓ user-guide/concepts/model-providers/writer.md → user-guide/concepts/model-providers/writer.mdx
+✓ user-guide/concepts/model-providers/xai.md → user-guide/concepts/model-providers/xai.mdx
+✓ user-guide/concepts/multi-agent/agent-to-agent.md → user-guide/concepts/multi-agent/agent-to-agent.mdx
+✓ user-guide/concepts/multi-agent/agents-as-tools.md → user-guide/concepts/multi-agent/agents-as-tools.mdx
+✓ user-guide/concepts/multi-agent/graph.md → user-guide/concepts/multi-agent/graph.mdx
+✓ user-guide/concepts/multi-agent/multi-agent-patterns.md → user-guide/concepts/multi-agent/multi-agent-patterns.mdx
+✓ user-guide/concepts/multi-agent/swarm.md → user-guide/concepts/multi-agent/swarm.mdx
+✓ user-guide/concepts/multi-agent/workflow.md → user-guide/concepts/multi-agent/workflow.mdx
+✓ user-guide/concepts/streaming/async-iterators.md → user-guide/concepts/streaming/async-iterators.mdx
+✓ user-guide/concepts/streaming/callback-handlers.md → user-guide/concepts/streaming/callback-handlers.mdx
+✓ user-guide/concepts/streaming/index.md → user-guide/concepts/streaming/index.mdx
+✓ user-guide/concepts/tools/community-tools-package.md → user-guide/concepts/tools/community-tools-package.mdx
+✓ user-guide/concepts/tools/custom-tools.md → user-guide/concepts/tools/custom-tools.mdx
+✓ user-guide/concepts/tools/executors.md → user-guide/concepts/tools/executors.mdx
+✓ user-guide/concepts/tools/index.md → user-guide/concepts/tools/index.mdx
+✓ user-guide/concepts/tools/mcp-tools.md → user-guide/concepts/tools/mcp-tools.mdx
+✓ user-guide/deploy/deploy_to_amazon_ec2.md → user-guide/deploy/deploy_to_amazon_ec2.mdx
+✓ user-guide/deploy/deploy_to_amazon_eks.md → user-guide/deploy/deploy_to_amazon_eks.mdx
+✓ user-guide/deploy/deploy_to_aws_apprunner.md → user-guide/deploy/deploy_to_aws_apprunner.mdx
+✓ user-guide/deploy/deploy_to_aws_fargate.md → user-guide/deploy/deploy_to_aws_fargate.mdx
+✓ user-guide/deploy/deploy_to_aws_lambda.md → user-guide/deploy/deploy_to_aws_lambda.mdx
+✓ user-guide/deploy/deploy_to_bedrock_agentcore/index.md → user-guide/deploy/deploy_to_bedrock_agentcore/index.mdx
+✓ user-guide/deploy/deploy_to_bedrock_agentcore/python.md → user-guide/deploy/deploy_to_bedrock_agentcore/python.mdx
+✓ user-guide/deploy/deploy_to_bedrock_agentcore/typescript.md → user-guide/deploy/deploy_to_bedrock_agentcore/typescript.mdx
+✓ user-guide/deploy/deploy_to_docker/index.md → user-guide/deploy/deploy_to_docker/index.mdx
+✓ user-guide/deploy/deploy_to_docker/python.md → user-guide/deploy/deploy_to_docker/python.mdx
+✓ user-guide/deploy/deploy_to_docker/typescript.md → user-guide/deploy/deploy_to_docker/typescript.mdx
+✓ user-guide/deploy/deploy_to_kubernetes.md → user-guide/deploy/deploy_to_kubernetes.mdx
+✓ user-guide/deploy/deploy_to_terraform.md → user-guide/deploy/deploy_to_terraform.mdx
+✓ user-guide/deploy/operating-agents-in-production.md → user-guide/deploy/operating-agents-in-production.mdx
+✓ user-guide/evals-sdk/eval-sop.md → user-guide/evals-sdk/eval-sop.mdx
+✓ user-guide/evals-sdk/evaluators/custom_evaluator.md → user-guide/evals-sdk/evaluators/custom_evaluator.mdx
+✓ user-guide/evals-sdk/evaluators/faithfulness_evaluator.md → user-guide/evals-sdk/evaluators/faithfulness_evaluator.mdx
+✓ user-guide/evals-sdk/evaluators/goal_success_rate_evaluator.md → user-guide/evals-sdk/evaluators/goal_success_rate_evaluator.mdx
+✓ user-guide/evals-sdk/evaluators/helpfulness_evaluator.md → user-guide/evals-sdk/evaluators/helpfulness_evaluator.mdx
+✓ user-guide/evals-sdk/evaluators/index.md → user-guide/evals-sdk/evaluators/index.mdx
+✓ user-guide/evals-sdk/evaluators/interactions_evaluator.md → user-guide/evals-sdk/evaluators/interactions_evaluator.mdx
+✓ user-guide/evals-sdk/evaluators/output_evaluator.md → user-guide/evals-sdk/evaluators/output_evaluator.mdx
+✓ user-guide/evals-sdk/evaluators/tool_parameter_evaluator.md → user-guide/evals-sdk/evaluators/tool_parameter_evaluator.mdx
+✓ user-guide/evals-sdk/evaluators/tool_selection_evaluator.md → user-guide/evals-sdk/evaluators/tool_selection_evaluator.mdx
+✓ user-guide/evals-sdk/evaluators/trajectory_evaluator.md → user-guide/evals-sdk/evaluators/trajectory_evaluator.mdx
+✓ user-guide/evals-sdk/experiment_generator.md → user-guide/evals-sdk/experiment_generator.mdx
+✓ user-guide/evals-sdk/how-to/agentcore_evaluation_dashboard.md → user-guide/evals-sdk/how-to/agentcore_evaluation_dashboard.mdx
+✓ user-guide/evals-sdk/how-to/experiment_management.md → user-guide/evals-sdk/how-to/experiment_management.mdx
+✓ user-guide/evals-sdk/how-to/serialization.md → user-guide/evals-sdk/how-to/serialization.mdx
+✓ user-guide/evals-sdk/quickstart.md → user-guide/evals-sdk/quickstart.mdx
+✓ user-guide/evals-sdk/simulators/index.md → user-guide/evals-sdk/simulators/index.mdx
+✓ user-guide/evals-sdk/simulators/user_simulation.md → user-guide/evals-sdk/simulators/user_simulation.mdx
+✓ user-guide/observability-evaluation/evaluation.md → user-guide/observability-evaluation/evaluation.mdx
+✓ user-guide/observability-evaluation/logs.md → user-guide/observability-evaluation/logs.mdx
+✓ user-guide/observability-evaluation/metrics.md → user-guide/observability-evaluation/metrics.mdx
+✓ user-guide/observability-evaluation/observability.md → user-guide/observability-evaluation/observability.mdx
+✓ user-guide/observability-evaluation/traces.md → user-guide/observability-evaluation/traces.mdx
+✓ user-guide/quickstart/overview.md → user-guide/quickstart/overview.mdx
+✓ user-guide/quickstart/python.md → user-guide/quickstart/python.mdx
+✓ user-guide/quickstart/typescript.md → user-guide/quickstart/typescript.mdx
+✓ user-guide/quickstart.md → user-guide/quickstart.mdx
+✓ user-guide/safety-security/guardrails.md → user-guide/safety-security/guardrails.mdx
+✓ user-guide/safety-security/pii-redaction.md → user-guide/safety-security/pii-redaction.mdx
+✓ user-guide/safety-security/prompt-engineering.md → user-guide/safety-security/prompt-engineering.mdx
+✓ user-guide/safety-security/responsible-ai.md → user-guide/safety-security/responsible-ai.mdx
+✓ user-guide/versioning-and-support.md → user-guide/versioning-and-support.mdx
+
+Done! Processed 149 markdown file(s) to src/content/docs.
+✓ Copied: examples/cdk/deploy_to_apprunner/bin/cdk-app.ts
+✓ Copied: examples/cdk/deploy_to_apprunner/lib/agent-apprunner-stack.ts
+✓ Copied: examples/cdk/deploy_to_ec2/bin/cdk-app.ts
+✓ Copied: examples/cdk/deploy_to_ec2/lib/agent-ec2-stack.ts
+✓ Copied: examples/cdk/deploy_to_fargate/bin/cdk-app.ts
+✓ Copied: examples/cdk/deploy_to_fargate/lib/agent-fargate-stack.ts
+✓ Copied: examples/cdk/deploy_to_lambda/bin/cdk-app.ts
+✓ Copied: examples/cdk/deploy_to_lambda/lib/agent-lambda-stack.ts
+✓ Copied: examples/typescript/deploy_to_bedrock_agentcore/index.ts
+✓ Copied: examples/typescript/deploy_to_bedrock_agentcore/invoke.ts
+✓ Copied: readme.ts
+✓ Copied: user-guide/concepts/agents/conversation-management.ts
+✓ Copied: user-guide/concepts/agents/conversation-management_imports.ts
+✓ Copied: user-guide/concepts/agents/hooks.ts
+✓ Copied: user-guide/concepts/agents/prompts.ts
+✓ Copied: user-guide/concepts/agents/state.ts
+✓ Copied: user-guide/concepts/model-providers/amazon-bedrock.ts
+✓ Copied: user-guide/concepts/model-providers/amazon-bedrock_imports.ts
+✓ Copied: user-guide/concepts/model-providers/custom_model_provider.ts
+✓ Copied: user-guide/concepts/model-providers/index.ts
+✓ Copied: user-guide/concepts/model-providers/index_imports.ts
+✓ Copied: user-guide/concepts/model-providers/openai.ts
+✓ Copied: user-guide/concepts/model-providers/openai_imports.ts
+✓ Copied: user-guide/concepts/streaming/async-iterators.ts
+✓ Copied: user-guide/concepts/streaming/overview.ts
+✓ Copied: user-guide/concepts/tools/mcp-tools.ts
+✓ Copied: user-guide/concepts/tools/tools.ts
+✓ Copied: user-guide/concepts/tools/tools_imports.ts
+✓ Copied: user-guide/deploy/deploy_to_docker/imports.ts
+✓ Copied: user-guide/deploy/deploy_to_docker/index.ts
+✓ Copied: user-guide/observability-evaluation/logs.ts
+✓ Copied: user-guide/observability-evaluation/metrics.ts
+✓ Copied: user-guide/quickstart/typescript.ts
+Copied 33 TypeScript file(s).
+✓ Copied: examples/cdk/deploy_to_apprunner/docker/app/app.py
+✓ Copied: examples/cdk/deploy_to_ec2/app/app.py
+✓ Copied: examples/cdk/deploy_to_fargate/docker/app/app.py
+✓ Copied: examples/cdk/deploy_to_lambda/bin/package_for_lambda.py
+✓ Copied: examples/cdk/deploy_to_lambda/lambda/agent_handler.py
+✓ Copied: examples/deploy_to_eks/docker/app/app.py
+✓ Copied: examples/evals-sdk/actor_simulator.py
+✓ Copied: examples/evals-sdk/custom_evaluator.py
+✓ Copied: examples/evals-sdk/evaluate_async.py
+✓ Copied: examples/evals-sdk/evaluate_graph.py
+✓ Copied: examples/evals-sdk/evaluate_swarm.py
+✓ Copied: examples/evals-sdk/experiment_generator/simple_dataset.py
+✓ Copied: examples/evals-sdk/experiment_generator/topic_planning_dataset.py
+✓ Copied: examples/evals-sdk/experiment_generator/trajectory_dataset.py
+✓ Copied: examples/evals-sdk/faithfulness_evaluator.py
+✓ Copied: examples/evals-sdk/goal_success_rate_evaluator.py
+✓ Copied: examples/evals-sdk/harmfulness_evaluator.py
+✓ Copied: examples/evals-sdk/helpfulness_evaluator.py
+✓ Copied: examples/evals-sdk/output_evaluator.py
+✓ Copied: examples/evals-sdk/tool_parameter_accuracy_evaluator.py
+✓ Copied: examples/evals-sdk/tool_selection_accuracy_evaluator.py
+✓ Copied: examples/evals-sdk/trajectory_evaluator.py
+✓ Copied: examples/python/agents_workflow.py
+✓ Copied: examples/python/file_operations.py
+✓ Copied: examples/python/graph_loops_example.py
+✓ Copied: examples/python/knowledge_base_agent.py
+✓ Copied: examples/python/mcp_calculator.py
+✓ Copied: examples/python/memory_agent.py
+✓ Copied: examples/python/meta_tooling.py
+✓ Copied: examples/python/multi_agent_example/computer_science_assistant.py
+✓ Copied: examples/python/multi_agent_example/english_assistant.py
+✓ Copied: examples/python/multi_agent_example/language_assistant.py
+✓ Copied: examples/python/multi_agent_example/math_assistant.py
+✓ Copied: examples/python/multi_agent_example/no_expertise.py
+✓ Copied: examples/python/multi_agent_example/teachers_assistant.py
+✓ Copied: examples/python/multimodal.py
+✓ Copied: examples/python/structured_output.py
+✓ Copied: examples/python/weather_forecaster.py
+✓ Copied: user-guide/deploy/deploy_to_docker/agent.py
+✓ Copied: user-guide/deploy/deploy_to_docker/imports.py
+Copied 40 Python file(s).
+✓ Copied asset: assets/auto-redirect.js
+✓ Copied asset: assets/logo-auto.svg
+✓ Copied asset: assets/logo-dark.svg
+✓ Copied asset: assets/logo-light.png
+✓ Copied asset: assets/logo-light.svg
+✓ Copied asset: assets/multimodal/whale_1.png
+✓ Copied asset: assets/multimodal/whale_2.png
+✓ Copied asset: assets/multimodal/whale_2_large.png
+✓ Copied asset: assets/multimodal/whale_3.png
+✓ Copied asset: assets/trace_visualization.png
+✓ Copied asset: stylesheets/extra.css
+Copied 11 asset file(s).
+✓ Converted quickstart to Starlight cards: src/content/docs/user-guide/quickstart/overview.mdx
+✓ Converted language index cards: src/content/docs/user-guide/deploy/deploy_to_bedrock_agentcore/index.mdx
+✓ Converted language index cards: src/content/docs/user-guide/deploy/deploy_to_docker/index.mdx
+
+> docs@1.0.0 build
+> astro build
+
+[auto-import] ⚠️ @astrojs/mdx initialized BEFORE astro-auto-import.
+              Auto imports in .mdx files won’t work!
+              Move the MDX integration after auto-import in your integrations array in astro.config.
+[2m01:47:41[22m [34m[content][39m Syncing content
+[2m01:47:41[22m [34m[content][39m Content config changed
+[2m01:47:41[22m [34m[content][39m Clearing content store
+[2m01:47:43[22m [34m[content][39m Synced content
+[2m01:47:43[22m [34m[types][39m Generated [2m3.48s[22m
+[2m01:47:43[22m [34m[build][39m output: [34m"static"[39m
+[2m01:47:43[22m [34m[build][39m mode: [34m"static"[39m
+[2m01:47:43[22m [34m[build][39m directory: [34m/home/runner/work/docs/docs/dist/[39m
+[2m01:47:43[22m [34m[build][39m Collecting build info...
+[2m01:47:43[22m [34m[build][39m [32m✓ Completed in 3.65s.[39m
+[2m01:47:44[22m [34m[build][39m Building static entrypoints...
+[33m[1m01:47:51[22m [WARN] [astro-expressive-code][39m Error while highlighting code block using language "Python" in document "/home/runner/work/docs/docs/.build/api-docs/python/strands.types.interrupt.mdx". The language could not be found. Using "txt" instead. Ensure that all required languages are either part of the bundle or custom languages provided in the "langs" config option.
+[2m01:48:15[22m [34m[vite][39m [32m✓ built in 31.66s[39m
+[2m01:48:15[22m [34m[build][39m [32m✓ Completed in 31.70s.[39m
+
+[42m[30m building client (vite) [39m[49m
+[2m01:48:15[22m [34m[vite][39m transforming...
+[2m01:48:15[22m [34m[vite][39m [32m✓[39m 20 modules transformed.
+[2m01:48:15[22m [34m[vite][39m rendering chunks...
+[2m01:48:15[22m [34m[vite][39m computing gzip size...
+[2m01:48:15[22m [34m[vite][39m [2mdist/[22m[2m_astro/[22m[32mec.0vx5m.js                                                             [39m[1m[2m 2.52 kB[22m[1m[22m
+[2m01:48:15[22m [34m[vite][39m [2mdist/[22m[2m_astro/[22m[35mec.lgrc4.css                                                            [39m[1m[2m18.28 kB[22m[1m[22m[2m │ gzip:  4.11 kB[22m
+[2m01:48:15[22m [34m[vite][39m [2mdist/[22m[2m_astro/[22m[36mHead.astro_astro_type_script_index_0_lang.D2emO6ou.js                   [39m[1m[2m 0.44 kB[22m[1m[22m[2m │ gzip:  0.31 kB[22m
+[2m01:48:15[22m [34m[vite][39m [2mdist/[22m[2m_astro/[22m[36mMobileTableOfContents.astro_astro_type_script_index_0_lang.hwBsy0Mo.js  [39m[1m[2m 0.67 kB[22m[1m[22m[2m │ gzip:  0.40 kB[22m
+[2m01:48:15[22m [34m[vite][39m [2mdist/[22m[2m_astro/[22m[36mTableOfContents.astro_astro_type_script_index_0_lang.FuRcXuRY.js        [39m[1m[2m 2.06 kB[22m[1m[22m[2m │ gzip:  0.97 kB[22m
+[2m01:48:15[22m [34m[vite][39m [2mdist/[22m[2m_astro/[22m[36mpage.B1D-nYk3.js                                                        [39m[1m[2m 2.24 kB[22m[1m[22m[2m │ gzip:  1.01 kB[22m
+[2m01:48:15[22m [34m[vite][39m [2mdist/[22m[2m_astro/[22m[36mSearch.astro_astro_type_script_index_0_lang.cjYDvRdi.js                 [39m[1m[2m 2.69 kB[22m[1m[22m[2m │ gzip:  1.38 kB[22m
+[2m01:48:15[22m [34m[vite][39m [2mdist/[22m[2m_astro/[22m[36mui-core.D_Lfcn_I.js                                                     [39m[1m[2m72.93 kB[22m[1m[22m[2m │ gzip: 22.86 kB[22m
+[2m01:48:15[22m [34m[vite][39m [32m✓ built in 260ms[39m
+
+[42m[30m generating static routes [39m[49m
+[2m01:48:16[22m [32m▶[39m @astrojs/starlight/routes/static/404.astro
+[2m01:48:16[22m   [34m└─[39m [2m/404.html[22mEntry docs → 404 was not found.
+ [2m(+28ms)[22m 
+[2m01:48:16[22m [35mλ[39m src/pages/llms-full.txt.ts
+[2m01:48:16[22m   [34m└─[39m [2m/llms-full.txt[22m [31m(+16.13s)[39m 
+[2m01:48:32[22m [35mλ[39m src/pages/llms.txt.ts
+[2m01:48:32[22m   [34m└─[39m [2m/llms.txt[22m [2m(+30ms)[22m 
+[2m01:48:32[22m [35mλ[39m src/pages/[...slug]/index.md.ts
+[2m01:48:32[22m   [34m├─[39m [2m/llms/index.md[22m [2m(+21ms)[22m 
+[2m01:48:32[22m   [34m├─[39m [2m/index/index.md[22m [2m(+69ms)[22m 
+[2m01:48:32[22m   [34m├─[39m [2m/community/community-packages/index.md[22m [2m(+71ms)[22m 
+[2m01:48:32[22m   [34m├─[39m [2m/community/get-featured/index.md[22m [2m(+48ms)[22m 
+[2m01:48:32[22m   [34m├─[39m [2m/contribute/index.md[22m [2m(+47ms)[22m 
+[2m01:48:32[22m   [34m├─[39m [2m/examples/index.md[22m [2m(+80ms)[22m 
+[2m01:48:32[22m   [34m├─[39m [2m/labs/ai-functions/index.md[22m [2m(+87ms)[22m 
+[2m01:48:32[22m   [34m├─[39m [2m/labs/index.md[22m [2m(+37ms)[22m 
+[2m01:48:32[22m   [34m├─[39m [2m/labs/robots-sim/index.md[22m [2m(+95ms)[22m 
+[2m01:48:32[22m   [34m├─[39m [2m/labs/robots/index.md[22m [2m(+111ms)[22m 
+[2m01:48:33[22m   [34m├─[39m [2m/user-guide/quickstart/index.md[22m [2m(+243ms)[22m 
+[2m01:48:33[22m   [34m├─[39m [2m/api/python/index.md[22m [2m(+12ms)[22m 
+[2m01:48:33[22m   [34m├─[39m [2m/user-guide/versioning-and-support/index.md[22m [2m(+112ms)[22m 
+[2m01:48:33[22m   [34m├─[39m [2m/api/typescript/index.md[22m [2m(+12ms)[22m 
+[2m01:48:33[22m   [34m├─[39m [2m/community/integrations/ag-ui/index.md[22m [2m(+93ms)[22m 
+[2m01:48:33[22m   [34m├─[39m [2m/community/model-providers/clova-studio/index.md[22m [2m(+56ms)[22m 
+[2m01:48:33[22m   [34m├─[39m [2m/community/model-providers/cohere/index.md[22m [2m(+59ms)[22m 
+[2m01:48:33[22m   [34m├─[39m [2m/community/model-providers/fireworksai/index.md[22m [2m(+65ms)[22m 
+[2m01:48:33[22m   [34m├─[39m [2m/community/model-providers/nebius-token-factory/index.md[22m [2m(+63ms)[22m 
+[2m01:48:33[22m   [34m├─[39m [2m/community/model-providers/mlx/index.md[22m [2m(+72ms)[22m 
+[2m01:48:33[22m   [34m├─[39m [2m/community/model-providers/nvidia-nim/index.md[22m [2m(+66ms)[22m 
+[2m01:48:33[22m   [34m├─[39m [2m/community/model-providers/sglang/index.md[22m [2m(+85ms)[22m 
+[2m01:48:34[22m   [34m├─[39m [2m/community/model-providers/vllm/index.md[22m [2m(+111ms)[22m 
+[2m01:48:34[22m   [34m├─[39m [2m/community/model-providers/xai/index.md[22m [2m(+83ms)[22m 
+[2m01:48:34[22m   [34m├─[39m [2m/community/session-managers/agentcore-memory/index.md[22m [2m(+114ms)[22m 
+[2m01:48:34[22m   [34m├─[39m [2m/community/session-managers/strands-valkey-session-manager/index.md[22m [2m(+54ms)[22m 
+[2m01:48:34[22m   [34m├─[39m [2m/community/tools/strands-deepgram/index.md[22m [2m(+45ms)[22m 
+[2m01:48:34[22m   [34m├─[39m [2m/community/tools/strands-hubspot/index.md[22m [2m(+43ms)[22m 
+[2m01:48:34[22m   [34m├─[39m [2m/community/tools/strands-teams/index.md[22m [2m(+42ms)[22m 
+[2m01:48:34[22m   [34m├─[39m [2m/community/tools/strands-telegram-listener/index.md[22m [2m(+45ms)[22m 
+[2m01:48:34[22m   [34m├─[39m [2m/community/tools/strands-telegram/index.md[22m [2m(+44ms)[22m 
+[2m01:48:34[22m   [34m├─[39m [2m/community/tools/utcp/index.md[22m [2m(+34ms)[22m 
+[2m01:48:34[22m   [34m├─[39m [2m/contribute/contributing/core-sdk/index.md[22m [2m(+74ms)[22m 
+[2m01:48:34[22m   [34m├─[39m [2m/contribute/contributing/documentation/index.md[22m [2m(+37ms)[22m 
+[2m01:48:34[22m   [34m├─[39m [2m/contribute/contributing/extensions/index.md[22m [2m(+38ms)[22m 
+[2m01:48:34[22m   [34m├─[39m [2m/contribute/contributing/feature-proposals/index.md[22m [2m(+31ms)[22m 
+[2m01:48:34[22m   [34m├─[39m [2m/examples/deploy_to_eks/index.md[22m [2m(+89ms)[22m 
+[2m01:48:34[22m   [34m├─[39m [2m/examples/python/agents_workflows/index.md[22m [2m(+51ms)[22m 
+[2m01:48:34[22m   [34m├─[39m [2m/examples/python/file_operations/index.md[22m [2m(+69ms)[22m 
+[2m01:48:35[22m   [34m├─[39m [2m/examples/python/cli-reference-agent/index.md[22m [2m(+137ms)[22m 
+[2m01:48:35[22m   [34m├─[39m [2m/examples/python/graph_loops_example/index.md[22m [2m(+78ms)[22m 
+[2m01:48:35[22m   [34m├─[39m [2m/examples/python/knowledge_base_agent/index.md[22m [2m(+58ms)[22m 
+[2m01:48:35[22m   [34m├─[39m [2m/examples/python/mcp_calculator/index.md[22m [2m(+58ms)[22m 
+[2m01:48:35[22m   [34m├─[39m [2m/examples/python/meta_tooling/index.md[22m [2m(+59ms)[22m 
+[2m01:48:35[22m   [34m├─[39m [2m/examples/python/memory_agent/index.md[22m [2m(+70ms)[22m 
+[2m01:48:35[22m   [34m├─[39m [2m/examples/python/multimodal/index.md[22m [2m(+64ms)[22m 
+[2m01:48:35[22m   [34m├─[39m [2m/examples/python/structured_output/index.md[22m [2m(+51ms)[22m 
+[2m01:48:35[22m   [34m├─[39m [2m/examples/python/weather_forecaster/index.md[22m [2m(+61ms)[22m 
+[2m01:48:35[22m   [34m├─[39m [2m/user-guide/concepts/interrupts/index.md[22m [2m(+130ms)[22m 
+[2m01:48:35[22m   [34m├─[39m [2m/user-guide/deploy/deploy_to_amazon_ec2/index.md[22m [2m(+82ms)[22m 
+[2m01:48:35[22m   [34m├─[39m [2m/user-guide/deploy/deploy_to_amazon_eks/index.md[22m [2m(+81ms)[22m 
+[2m01:48:35[22m   [34m├─[39m [2m/user-guide/deploy/deploy_to_aws_apprunner/index.md[22m [2m(+93ms)[22m 
+[2m01:48:36[22m   [34m├─[39m [2m/user-guide/deploy/deploy_to_aws_fargate/index.md[22m [2m(+94ms)[22m 
+[2m01:48:36[22m   [34m├─[39m [2m/user-guide/deploy/deploy_to_aws_lambda/index.md[22m [2m(+107ms)[22m 
+[2m01:48:36[22m   [34m├─[39m [2m/user-guide/deploy/deploy_to_kubernetes/index.md[22m [2m(+93ms)[22m 
+[2m01:48:36[22m   [34m├─[39m [2m/user-guide/deploy/deploy_to_terraform/index.md[22m [2m(+270ms)[22m 
+[2m01:48:36[22m   [34m├─[39m [2m/user-guide/deploy/operating-agents-in-production/index.md[22m [2m(+105ms)[22m 
+[2m01:48:36[22m   [34m├─[39m [2m/user-guide/observability-evaluation/metrics/index.md[22m [2m(+86ms)[22m 
+[2m01:48:36[22m   [34m├─[39m [2m/user-guide/observability-evaluation/logs/index.md[22m [2m(+74ms)[22m 
+[2m01:48:36[22m   [34m├─[39m [2m/user-guide/observability-evaluation/evaluation/index.md[22m [2m(+79ms)[22m 
+[2m01:48:36[22m   [34m├─[39m [2m/user-guide/observability-evaluation/observability/index.md[22m [2m(+53ms)[22m 
+[2m01:48:37[22m   [34m├─[39m [2m/user-guide/observability-evaluation/traces/index.md[22m [2m(+110ms)[22m 
+[2m01:48:37[22m   [34m├─[39m [2m/user-guide/evals-sdk/eval-sop/index.md[22m [2m(+157ms)[22m 
+[2m01:48:37[22m   [34m├─[39m [2m/user-guide/evals-sdk/experiment_generator/index.md[22m [2m(+168ms)[22m 
+[2m01:48:37[22m   [34m├─[39m [2m/user-guide/evals-sdk/quickstart/index.md[22m [2m(+118ms)[22m 
+[2m01:48:37[22m   [34m├─[39m [2m/user-guide/quickstart/overview/index.md[22m [2m(+13ms)[22m 
+[2m01:48:37[22m   [34m├─[39m [2m/user-guide/quickstart/python/index.md[22m [2m(+227ms)[22m 
+[2m01:48:37[22m   [34m├─[39m [2m/user-guide/quickstart/typescript/index.md[22m [2m(+99ms)[22m 
+[2m01:48:37[22m   [34m├─[39m [2m/user-guide/safety-security/guardrails/index.md[22m [2m(+49ms)[22m 
+[2m01:48:37[22m   [34m├─[39m [2m/user-guide/safety-security/pii-redaction/index.md[22m [2m(+83ms)[22m 
+[2m01:48:38[22m   [34m├─[39m [2m/user-guide/safety-security/prompt-engineering/index.md[22m [2m(+43ms)[22m 
+[2m01:48:38[22m   [34m├─[39m [2m/user-guide/safety-security/responsible-ai/index.md[22m [2m(+37ms)[22m 
+[2m01:48:38[22m   [34m├─[39m [2m/examples/cdk/deploy_to_apprunner/index.md[22m [2m(+72ms)[22m 
+[2m01:48:38[22m   [34m├─[39m [2m/examples/cdk/deploy_to_fargate/index.md[22m [2m(+67ms)[22m 
+[2m01:48:38[22m   [34m├─[39m [2m/examples/cdk/deploy_to_ec2/index.md[22m [2m(+59ms)[22m 
+[2m01:48:38[22m   [34m├─[39m [2m/examples/cdk/deploy_to_lambda/index.md[22m [2m(+48ms)[22m 
+[2m01:48:38[22m   [34m├─[39m [2m/examples/typescript/deploy_to_bedrock_agentcore/index.md[22m [2m(+120ms)[22m 
+[2m01:48:38[22m   [34m├─[39m [2m/user-guide/concepts/agents/conversation-management/index.md[22m [2m(+92ms)[22m 
+[2m01:48:38[22m   [34m├─[39m [2m/examples/python/multi_agent_example/multi_agent_example/index.md[22m [2m(+69ms)[22m 
+[2m01:48:38[22m   [34m├─[39m [2m/user-guide/concepts/agents/agent-loop/index.md[22m [2m(+62ms)[22m 
+[2m01:48:38[22m   [34m├─[39m [2m/user-guide/concepts/agents/hooks/index.md[22m [2m(+257ms)[22m 
+[2m01:48:38[22m   [34m├─[39m [2m/user-guide/concepts/agents/prompts/index.md[22m [2m(+59ms)[22m 
+[2m01:48:39[22m   [34m├─[39m [2m/user-guide/concepts/agents/retry-strategies/index.md[22m [2m(+39ms)[22m 
+[2m01:48:39[22m   [34m├─[39m [2m/user-guide/concepts/agents/state/index.md[22m [2m(+106ms)[22m 
+[2m01:48:39[22m   [34m├─[39m [2m/user-guide/concepts/agents/session-management/index.md[22m [2m(+117ms)[22m 
+[2m01:48:39[22m   [34m├─[39m [2m/user-guide/concepts/agents/structured-output/index.md[22m [2m(+140ms)[22m 
+[2m01:48:39[22m   [34m├─[39m [2m/user-guide/concepts/bidirectional-streaming/agent/index.md[22m [2m(+160ms)[22m 
+[2m01:48:39[22m   [34m├─[39m [2m/user-guide/concepts/bidirectional-streaming/events/index.md[22m [2m(+161ms)[22m 
+[2m01:48:39[22m   [34m├─[39m [2m/user-guide/concepts/bidirectional-streaming/hooks/index.md[22m [2m(+97ms)[22m 
+[2m01:48:39[22m   [34m├─[39m [2m/user-guide/concepts/bidirectional-streaming/interruption/index.md[22m [2m(+52ms)[22m 
+[2m01:48:39[22m   [34m├─[39m [2m/user-guide/concepts/bidirectional-streaming/io/index.md[22m [2m(+52ms)[22m 
+[2m01:48:39[22m   [34m├─[39m [2m/user-guide/concepts/bidirectional-streaming/quickstart/index.md[22m [2m(+147ms)[22m 
+[2m01:48:40[22m   [34m├─[39m [2m/user-guide/concepts/bidirectional-streaming/session-management/index.md[22m [2m(+80ms)[22m 
+[2m01:48:40[22m   [34m├─[39m [2m/user-guide/concepts/experimental/agent-config/index.md[22m [2m(+67ms)[22m 
+[2m01:48:40[22m   [34m├─[39m [2m/user-guide/concepts/experimental/steering/index.md[22m [2m(+51ms)[22m 
+[2m01:48:40[22m   [34m├─[39m [2m/user-guide/concepts/model-providers/amazon-bedrock/index.md[22m [2m(+326ms)[22m 
+[2m01:48:40[22m   [34m├─[39m [2m/user-guide/concepts/model-providers/amazon-nova/index.md[22m [2m(+48ms)[22m 
+[2m01:48:40[22m   [34m├─[39m [2m/user-guide/concepts/model-providers/anthropic/index.md[22m [2m(+66ms)[22m 
+[2m01:48:40[22m   [34m├─[39m [2m/user-guide/concepts/model-providers/clova-studio/index.md[22m [2m(+5ms)[22m 
+[2m01:48:40[22m   [34m├─[39m [2m/user-guide/concepts/model-providers/cohere/index.md[22m [2m(+7ms)[22m 
+[2m01:48:40[22m   [34m├─[39m [2m/user-guide/concepts/model-providers/custom_model_provider/index.md[22m [2m(+250ms)[22m 
+[2m01:48:41[22m   [34m├─[39m [2m/user-guide/concepts/model-providers/gemini/index.md[22m [2m(+178ms)[22m 
+[2m01:48:41[22m   [34m├─[39m [2m/user-guide/concepts/model-providers/fireworksai/index.md[22m [2m(+7ms)[22m 
+[2m01:48:41[22m   [34m├─[39m [2m/user-guide/concepts/model-providers/index.md[22m [2m(+105ms)[22m 
+[2m01:48:41[22m   [34m├─[39m [2m/user-guide/concepts/model-providers/litellm/index.md[22m [2m(+85ms)[22m 
+[2m01:48:41[22m   [34m├─[39m [2m/user-guide/concepts/model-providers/llamaapi/index.md[22m [2m(+75ms)[22m 
+[2m01:48:41[22m   [34m├─[39m [2m/user-guide/concepts/model-providers/llamacpp/index.md[22m [2m(+85ms)[22m 
+[2m01:48:41[22m   [34m├─[39m [2m/user-guide/concepts/model-providers/mistral/index.md[22m [2m(+52ms)[22m 
+[2m01:48:41[22m   [34m├─[39m [2m/user-guide/concepts/model-providers/nebius-token-factory/index.md[22m [2m(+7ms)[22m 
+[2m01:48:41[22m   [34m├─[39m [2m/user-guide/concepts/model-providers/ollama/index.md[22m [2m(+99ms)[22m 
+[2m01:48:41[22m   [34m├─[39m [2m/user-guide/concepts/model-providers/openai/index.md[22m [2m(+109ms)[22m 
+[2m01:48:41[22m   [34m├─[39m [2m/user-guide/concepts/model-providers/sagemaker/index.md[22m [2m(+73ms)[22m 
+[2m01:48:41[22m   [34m├─[39m [2m/user-guide/concepts/model-providers/writer/index.md[22m [2m(+136ms)[22m 
+[2m01:48:42[22m   [34m├─[39m [2m/user-guide/concepts/model-providers/xai/index.md[22m [2m(+6ms)[22m 
+[2m01:48:42[22m   [34m├─[39m [2m/user-guide/concepts/multi-agent/agent-to-agent/index.md[22m [2m(+176ms)[22m 
+[2m01:48:42[22m   [34m├─[39m [2m/user-guide/concepts/multi-agent/agents-as-tools/index.md[22m [2m(+61ms)[22m 
+[2m01:48:42[22m   [34m├─[39m [2m/user-guide/concepts/multi-agent/graph/index.md[22m [2m(+187ms)[22m 
+[2m01:48:42[22m   [34m├─[39m [2m/user-guide/concepts/multi-agent/swarm/index.md[22m [2m(+92ms)[22m 
+[2m01:48:42[22m   [34m├─[39m [2m/user-guide/concepts/multi-agent/workflow/index.md[22m [2m(+78ms)[22m 
+[2m01:48:42[22m   [34m├─[39m [2m/user-guide/concepts/multi-agent/multi-agent-patterns/index.md[22m [2m(+80ms)[22m 
+[2m01:48:42[22m   [34m├─[39m [2m/user-guide/concepts/streaming/async-iterators/index.md[22m [2m(+74ms)[22m 
+[2m01:48:42[22m   [34m├─[39m [2m/user-guide/concepts/streaming/callback-handlers/index.md[22m [2m(+56ms)[22m 
+[2m01:48:42[22m   [34m├─[39m [2m/user-guide/concepts/streaming/index.md[22m [2m(+139ms)[22m 
+[2m01:48:42[22m   [34m├─[39m [2m/user-guide/concepts/tools/community-tools-package/index.md[22m [2m(+178ms)[22m 
+[2m01:48:43[22m   [34m├─[39m [2m/user-guide/concepts/tools/executors/index.md[22m [2m(+26ms)[22m 
+[2m01:48:43[22m   [34m├─[39m [2m/user-guide/concepts/tools/custom-tools/index.md[22m [2m(+286ms)[22m 
+[2m01:48:43[22m   [34m├─[39m [2m/user-guide/concepts/tools/mcp-tools/index.md[22m [2m(+300ms)[22m 
+[2m01:48:43[22m   [34m├─[39m [2m/user-guide/concepts/tools/index.md[22m [2m(+162ms)[22m 
+[2m01:48:43[22m   [34m├─[39m [2m/user-guide/deploy/deploy_to_bedrock_agentcore/index.md[22m [2m(+34ms)[22m 
+[2m01:48:43[22m   [34m├─[39m [2m/user-guide/deploy/deploy_to_bedrock_agentcore/python/index.md[22m [2m(+180ms)[22m 
+[2m01:48:44[22m   [34m├─[39m [2m/user-guide/deploy/deploy_to_bedrock_agentcore/typescript/index.md[22m [2m(+177ms)[22m 
+[2m01:48:44[22m   [34m├─[39m [2m/user-guide/deploy/deploy_to_docker/index.md[22m [2m(+20ms)[22m 
+[2m01:48:44[22m   [34m├─[39m [2m/user-guide/deploy/deploy_to_docker/python/index.md[22m [2m(+101ms)[22m 
+[2m01:48:44[22m   [34m├─[39m [2m/user-guide/deploy/deploy_to_docker/typescript/index.md[22m [2m(+116ms)[22m 
+[2m01:48:44[22m   [34m├─[39m [2m/user-guide/evals-sdk/how-to/agentcore_evaluation_dashboard/index.md[22m [2m(+145ms)[22m 
+[2m01:48:44[22m   [34m├─[39m [2m/user-guide/evals-sdk/how-to/experiment_management/index.md[22m [2m(+73ms)[22m 
+[2m01:48:44[22m   [34m├─[39m [2m/user-guide/evals-sdk/how-to/serialization/index.md[22m [2m(+90ms)[22m 
+[2m01:48:44[22m   [34m├─[39m [2m/user-guide/evals-sdk/evaluators/faithfulness_evaluator/index.md[22m [2m(+103ms)[22m 
+[2m01:48:44[22m   [34m├─[39m [2m/user-guide/evals-sdk/evaluators/custom_evaluator/index.md[22m [2m(+91ms)[22m 
+[2m01:48:45[22m   [34m├─[39m [2m/user-guide/evals-sdk/evaluators/goal_success_rate_evaluator/index.md[22m [2m(+122ms)[22m 
+[2m01:48:45[22m   [34m├─[39m [2m/user-guide/evals-sdk/evaluators/helpfulness_evaluator/index.md[22m [2m(+113ms)[22m 
+[2m01:48:45[22m   [34m├─[39m [2m/user-guide/evals-sdk/evaluators/index.md[22m [2m(+139ms)[22m 
+[2m01:48:45[22m   [34m├─[39m [2m/user-guide/evals-sdk/evaluators/interactions_evaluator/index.md[22m [2m(+131ms)[22m 
+[2m01:48:45[22m   [34m├─[39m [2m/user-guide/evals-sdk/evaluators/output_evaluator/index.md[22m [2m(+61ms)[22m 
+[2m01:48:45[22m   [34m├─[39m [2m/user-guide/evals-sdk/evaluators/tool_parameter_evaluator/index.md[22m [2m(+75ms)[22m 
+[2m01:48:45[22m   [34m├─[39m [2m/user-guide/evals-sdk/evaluators/tool_selection_evaluator/index.md[22m [2m(+88ms)[22m 
+[2m01:48:45[22m   [34m├─[39m [2m/user-guide/evals-sdk/evaluators/trajectory_evaluator/index.md[22m [2m(+108ms)[22m 
+[2m01:48:45[22m   [34m├─[39m [2m/user-guide/evals-sdk/simulators/index.md[22m [2m(+106ms)[22m 
+[2m01:48:46[22m   [34m├─[39m [2m/user-guide/evals-sdk/simulators/user_simulation/index.md[22m [2m(+170ms)[22m 
+[2m01:48:46[22m   [34m├─[39m [2m/user-guide/concepts/bidirectional-streaming/models/gemini_live/index.md[22m [2m(+77ms)[22m 
+[2m01:48:46[22m   [34m├─[39m [2m/user-guide/concepts/bidirectional-streaming/models/nova_sonic/index.md[22m [2m(+65ms)[22m 
+[2m01:48:46[22m   [34m├─[39m [2m/user-guide/concepts/bidirectional-streaming/models/openai_realtime/index.md[22m [2m(+68ms)[22m 
+[2m01:48:46[22m   [34m├─[39m [2m/api/python/strands.agent.a2a_agent/index.md[22m [2m(+48ms)[22m 
+[2m01:48:46[22m   [34m├─[39m [2m/api/python/strands.agent.agent/index.md[22m [2m(+125ms)[22m 
+[2m01:48:46[22m   [34m├─[39m [2m/api/python/strands.agent.agent_result/index.md[22m [2m(+32ms)[22m 
+[2m01:48:46[22m   [34m├─[39m [2m/api/python/strands.agent.base/index.md[22m [2m(+34ms)[22m 
+[2m01:48:46[22m   [34m├─[39m [2m/api/python/strands.agent.conversation_manager.conversation_manager/index.md[22m [2m(+53ms)[22m 
+[2m01:48:46[22m   [34m├─[39m [2m/api/python/strands.agent.conversation_manager.sliding_window_conversation_manager/index.md[22m [2m(+51ms)[22m 
+[2m01:48:46[22m   [34m├─[39m [2m/api/python/strands.agent.conversation_manager.null_conversation_manager/index.md[22m [2m(+28ms)[22m 
+[2m01:48:46[22m   [34m├─[39m [2m/api/python/strands.agent.conversation_manager.summarizing_conversation_manager/index.md[22m [2m(+47ms)[22m 
+[2m01:48:46[22m   [34m├─[39m [2m/api/python/strands.event_loop.event_loop/index.md[22m [2m(+26ms)[22m 
+[2m01:48:46[22m   [34m├─[39m [2m/api/python/strands.event_loop.streaming/index.md[22m [2m(+75ms)[22m 
+[2m01:48:46[22m   [34m├─[39m [2m/api/python/strands.experimental.bidi.agent.agent/index.md[22m [2m(+86ms)[22m 
+[2m01:48:46[22m   [34m├─[39m [2m/api/python/strands.experimental.agent_config/index.md[22m [2m(+17ms)[22m 
+[2m01:48:47[22m   [34m├─[39m [2m/api/python/strands.experimental.bidi.agent.loop/index.md[22m [2m(+46ms)[22m 
+[2m01:48:47[22m   [34m├─[39m [2m/api/python/strands.experimental.bidi.io.audio/index.md[22m [2m(+137ms)[22m 
+[2m01:48:47[22m   [34m├─[39m [2m/api/python/strands.experimental.bidi.io.text/index.md[22m [2m(+62ms)[22m 
+[2m01:48:47[22m   [34m├─[39m [2m/api/python/strands.experimental.bidi/index.md[22m [2m(+12ms)[22m 
+[2m01:48:47[22m   [34m├─[39m [2m/api/python/strands.experimental.bidi.models.gemini_live/index.md[22m [2m(+46ms)[22m 
+[2m01:48:47[22m   [34m├─[39m [2m/api/python/strands.experimental.bidi.models/index.md[22m [2m(+12ms)[22m 
+[2m01:48:47[22m   [34m├─[39m [2m/api/python/strands.experimental.bidi.models.model/index.md[22m [2m(+54ms)[22m 
+[2m01:48:47[22m   [34m├─[39m [2m/api/python/strands.experimental.bidi.models.nova_sonic/index.md[22m [2m(+46ms)[22m 
+[2m01:48:47[22m   [34m├─[39m [2m/api/python/strands.experimental.bidi.models.openai_realtime/index.md[22m [2m(+53ms)[22m 
+[2m01:48:47[22m   [34m├─[39m [2m/api/python/strands.experimental.bidi.tools.stop_conversation/index.md[22m [2m(+12ms)[22m 
+[2m01:48:47[22m   [34m├─[39m [2m/api/python/strands.experimental.bidi.types.events/index.md[22m [2m(+421ms)[22m 
+[2m01:48:47[22m   [34m├─[39m [2m/api/python/strands.experimental.bidi.types.io/index.md[22m [2m(+59ms)[22m 
+[2m01:48:47[22m   [34m├─[39m [2m/api/python/strands.experimental.bidi.types.model/index.md[22m [2m(+12ms)[22m 
+[2m01:48:47[22m   [34m├─[39m [2m/api/python/strands.experimental.hooks.events/index.md[22m [2m(+81ms)[22m 
+[2m01:48:48[22m   [34m├─[39m [2m/api/python/strands.experimental.steering.context_providers.ledger_provider/index.md[22m [2m(+49ms)[22m 
+[2m01:48:48[22m   [34m├─[39m [2m/api/python/strands.experimental.steering.core.action/index.md[22m [2m(+32ms)[22m 
+[2m01:48:48[22m   [34m├─[39m [2m/api/python/strands.experimental.steering.core.context/index.md[22m [2m(+43ms)[22m 
+[2m01:48:48[22m   [34m├─[39m [2m/api/python/strands.experimental.steering.core.handler/index.md[22m [2m(+40ms)[22m 
+[2m01:48:48[22m   [34m├─[39m [2m/api/python/strands.experimental.steering.handlers.llm.llm_handler/index.md[22m [2m(+27ms)[22m 
+[2m01:48:48[22m   [34m├─[39m [2m/api/python/strands.experimental.steering.handlers.llm.mappers/index.md[22m [2m(+36ms)[22m 
+[2m01:48:48[22m   [34m├─[39m [2m/api/python/strands.handlers.callback_handler/index.md[22m [2m(+50ms)[22m 
+[2m01:48:48[22m   [34m├─[39m [2m/api/python/strands.hooks.events/index.md[22m [2m(+128ms)[22m 
+[2m01:48:48[22m   [34m├─[39m [2m/api/python/strands.interrupt/index.md[22m [2m(+71ms)[22m 
+[2m01:48:48[22m   [34m├─[39m [2m/api/python/strands.hooks.registry/index.md[22m [2m(+131ms)[22m 
+[2m01:48:48[22m   [34m├─[39m [2m/api/python/strands.models.anthropic/index.md[22m [2m(+79ms)[22m 
+[2m01:48:48[22m   [34m├─[39m [2m/api/python/strands.models.bedrock/index.md[22m [2m(+61ms)[22m 
+[2m01:48:48[22m   [34m├─[39m [2m/api/python/strands.models.gemini/index.md[22m [2m(+73ms)[22m 
+[2m01:48:48[22m   [34m├─[39m [2m/api/python/strands.models.litellm/index.md[22m [2m(+85ms)[22m 
+[2m01:48:48[22m   [34m├─[39m [2m/api/python/strands.models.llamacpp/index.md[22m [2m(+81ms)[22m 
+[2m01:48:49[22m   [34m├─[39m [2m/api/python/strands.models/index.md[22m [2m(+12ms)[22m 
+[2m01:48:49[22m   [34m├─[39m [2m/api/python/strands.models.llamaapi/index.md[22m [2m(+70ms)[22m 
+[2m01:48:49[22m   [34m├─[39m [2m/api/python/strands.models.mistral/index.md[22m [2m(+75ms)[22m 
+[2m01:48:49[22m   [34m├─[39m [2m/api/python/strands.models.model/index.md[22m [2m(+51ms)[22m 
+[2m01:48:49[22m   [34m├─[39m [2m/api/python/strands.models.openai/index.md[22m [2m(+123ms)[22m 
+[2m01:48:49[22m   [34m├─[39m [2m/api/python/strands.models.ollama/index.md[22m [2m(+75ms)[22m 
+[2m01:48:49[22m   [34m├─[39m [2m/api/python/strands.models.sagemaker/index.md[22m [2m(+127ms)[22m 
+[2m01:48:49[22m   [34m├─[39m [2m/api/python/strands.models.writer/index.md[22m [2m(+73ms)[22m 
+[2m01:48:49[22m   [34m├─[39m [2m/api/python/strands.multiagent.a2a.executor/index.md[22m [2m(+34ms)[22m 
+[2m01:48:49[22m   [34m├─[39m [2m/api/python/strands.multiagent.a2a.server/index.md[22m [2m(+67ms)[22m 
+[2m01:48:49[22m   [34m├─[39m [2m/api/python/strands.multiagent.base/index.md[22m [2m(+97ms)[22m 
+[2m01:48:49[22m   [34m├─[39m [2m/api/python/strands.multiagent.graph/index.md[22m [2m(+217ms)[22m 
+[2m01:48:50[22m   [34m├─[39m [2m/api/python/strands.multiagent.swarm/index.md[22m [2m(+174ms)[22m 
+[2m01:48:50[22m   [34m├─[39m [2m/api/python/strands.plugins.plugin/index.md[22m [2m(+28ms)[22m 
+[2m01:48:50[22m   [34m├─[39m [2m/api/python/strands.plugins.registry/index.md[22m [2m(+28ms)[22m 
+[2m01:48:50[22m   [34m├─[39m [2m/api/python/strands.session.file_session_manager/index.md[22m [2m(+110ms)[22m 
+[2m01:48:50[22m   [34m├─[39m [2m/api/python/strands.session.repository_session_manager/index.md[22m [2m(+84ms)[22m 
+[2m01:48:50[22m   [34m├─[39m [2m/api/python/strands.session.s3_session_manager/index.md[22m [2m(+115ms)[22m 
+[2m01:48:50[22m   [34m├─[39m [2m/api/python/strands.session.session_repository/index.md[22m [2m(+93ms)[22m 
+[2m01:48:50[22m   [34m├─[39m [2m/api/python/strands.session.session_manager/index.md[22m [2m(+82ms)[22m 
+[2m01:48:50[22m   [34m├─[39m [2m/api/python/strands.telemetry.config/index.md[22m [2m(+52ms)[22m 
+[2m01:48:50[22m   [34m├─[39m [2m/api/python/strands.telemetry.metrics/index.md[22m [2m(+172ms)[22m 
+[2m01:48:51[22m   [34m├─[39m [2m/api/python/strands.tools.decorator/index.md[22m [2m(+140ms)[22m 
+[2m01:48:51[22m   [34m├─[39m [2m/api/python/strands.tools.executors.concurrent/index.md[22m [2m(+14ms)[22m 
+[2m01:48:51[22m   [34m├─[39m [2m/api/python/strands.telemetry.tracer/index.md[22m [2m(+135ms)[22m 
+[2m01:48:51[22m   [34m├─[39m [2m/api/python/strands.tools.executors.sequential/index.md[22m [2m(+12ms)[22m 
+[2m01:48:51[22m   [34m├─[39m [2m/api/python/strands.tools.loader/index.md[22m [2m(+65ms)[22m 
+[2m01:48:51[22m   [34m├─[39m [2m/api/python/strands.tools.mcp.mcp_agent_tool/index.md[22m [2m(+47ms)[22m 
+[2m01:48:51[22m   [34m├─[39m [2m/api/python/strands.tools.mcp.mcp_client/index.md[22m [2m(+133ms)[22m 
+[2m01:48:51[22m   [34m├─[39m [2m/api/python/strands.tools.mcp.mcp_instrumentation/index.md[22m [2m(+127ms)[22m 
+[2m01:48:51[22m   [34m├─[39m [2m/api/python/strands.tools.mcp.mcp_tasks/index.md[22m [2m(+13ms)[22m 
+[2m01:48:51[22m   [34m├─[39m [2m/api/python/strands.tools.mcp.mcp_types/index.md[22m [2m(+12ms)[22m 
+[2m01:48:51[22m   [34m├─[39m [2m/api/python/strands.tools.registry/index.md[22m [2m(+118ms)[22m 
+[2m01:48:51[22m   [34m├─[39m [2m/api/python/strands.tools.structured_output.structured_output_tool/index.md[22m [2m(+167ms)[22m 
+[2m01:48:51[22m   [34m├─[39m [2m/api/python/strands.tools.structured_output.structured_output_utils/index.md[22m [2m(+14ms)[22m 
+[2m01:48:52[22m   [34m├─[39m [2m/api/python/strands.tools.tool_provider/index.md[22m [2m(+35ms)[22m 
+[2m01:48:52[22m   [34m├─[39m [2m/api/python/strands.tools.tools/index.md[22m [2m(+95ms)[22m 
+[2m01:48:52[22m   [34m├─[39m [2m/api/python/strands.tools.watcher/index.md[22m [2m(+78ms)[22m 
+[2m01:48:52[22m   [34m├─[39m [2m/api/python/strands.types.a2a/index.md[22m [2m(+22ms)[22m 
+[2m01:48:52[22m   [34m├─[39m [2m/api/python/strands.types.citations/index.md[22m [2m(+79ms)[22m 
+[2m01:48:52[22m   [34m├─[39m [2m/api/python/strands.types.agent/index.md[22m [2m(+12ms)[22m 
+[2m01:48:52[22m   [34m├─[39m [2m/api/python/strands.types.collections/index.md[22m [2m(+19ms)[22m 
+[2m01:48:52[22m   [34m├─[39m [2m/api/python/strands.types.content/index.md[22m [2m(+100ms)[22m 
+[2m01:48:52[22m   [34m├─[39m [2m/api/python/strands.types.event_loop/index.md[22m [2m(+23ms)[22m 
+[2m01:48:52[22m   [34m├─[39m [2m/api/python/strands.types.exceptions/index.md[22m [2m(+92ms)[22m 
+[2m01:48:52[22m   [34m├─[39m [2m/api/python/strands.types.guardrails/index.md[22m [2m(+111ms)[22m 
+[2m01:48:52[22m   [34m├─[39m [2m/api/python/strands.types.interrupt/index.md[22m [2m(+41ms)[22m 
+[2m01:48:52[22m   [34m├─[39m [2m/api/python/strands.types.json_dict/index.md[22m [2m(+40ms)[22m 
+[2m01:48:52[22m   [34m├─[39m [2m/api/python/strands.types.media/index.md[22m [2m(+78ms)[22m 
+[2m01:48:52[22m   [34m├─[39m [2m/api/python/strands.types.session/index.md[22m [2m(+125ms)[22m 
+[2m01:48:52[22m   [34m├─[39m [2m/api/python/strands.types.streaming/index.md[22m [2m(+112ms)[22m 
+[2m01:48:53[22m   [34m├─[39m [2m/api/python/strands.types.tools/index.md[22m [2m(+164ms)[22m 
+[2m01:48:53[22m   [34m├─[39m [2m/api/typescript/contentBlockFromData/index.md[22m [2m(+7ms)[22m 
+[2m01:48:53[22m   [34m├─[39m [2m/api/typescript/isModelStreamEvent/index.md[22m [2m(+4ms)[22m 
+[2m01:48:53[22m   [34m├─[39m [2m/api/typescript/configureLogging/index.md[22m [2m(+4ms)[22m 
+[2m01:48:53[22m   [34m├─[39m [2m/api/typescript/tool/index.md[22m [2m(+7ms)[22m 
+[2m01:48:53[22m   [34m├─[39m [2m/api/typescript/AfterInvocationEvent/index.md[22m [2m(+5ms)[22m 
+[2m01:48:53[22m   [34m├─[39m [2m/api/typescript/AfterToolsEvent/index.md[22m [2m(+5ms)[22m 
+[2m01:48:53[22m   [34m├─[39m [2m/api/typescript/AfterModelCallEvent/index.md[22m [2m(+11ms)[22m 
+[2m01:48:53[22m   [34m├─[39m [2m/api/typescript/AgentResult/index.md[22m [2m(+6ms)[22m 
+[2m01:48:53[22m   [34m├─[39m [2m/api/typescript/AfterToolCallEvent/index.md[22m [2m(+11ms)[22m 
+[2m01:48:53[22m   [34m├─[39m [2m/api/typescript/Agent/index.md[22m [2m(+17ms)[22m 
+[2m01:48:53[22m   [34m├─[39m [2m/api/typescript/AgentResultEvent/index.md[22m [2m(+5ms)[22m 
+[2m01:48:53[22m   [34m├─[39m [2m/api/typescript/BedrockModel/index.md[22m [2m(+16ms)[22m 
+[2m01:48:53[22m   [34m├─[39m [2m/api/typescript/BeforeInvocationEvent/index.md[22m [2m(+8ms)[22m 
+[2m01:48:53[22m   [34m├─[39m [2m/api/typescript/BeforeModelCallEvent/index.md[22m [2m(+5ms)[22m 
+[2m01:48:53[22m   [34m├─[39m [2m/api/typescript/BeforeToolCallEvent/index.md[22m [2m(+7ms)[22m 
+[2m01:48:53[22m   [34m├─[39m [2m/api/typescript/CachePointBlock/index.md[22m [2m(+7ms)[22m 
+[2m01:48:53[22m   [34m├─[39m [2m/api/typescript/BeforeToolsEvent/index.md[22m [2m(+6ms)[22m 
+[2m01:48:53[22m   [34m├─[39m [2m/api/typescript/ConcurrentInvocationError/index.md[22m [2m(+4ms)[22m 
+[2m01:48:53[22m   [34m├─[39m [2m/api/typescript/ContentBlockEvent/index.md[22m [2m(+9ms)[22m 
+[2m01:48:53[22m   [34m├─[39m [2m/api/typescript/ContextWindowOverflowError/index.md[22m [2m(+4ms)[22m 
+[2m01:48:53[22m   [34m├─[39m [2m/api/typescript/DocumentBlock/index.md[22m [2m(+15ms)[22m 
+[2m01:48:53[22m   [34m├─[39m [2m/api/typescript/FunctionTool/index.md[22m [2m(+14ms)[22m 
+[2m01:48:53[22m   [34m├─[39m [2m/api/typescript/HookRegistry/index.md[22m [2m(+9ms)[22m 
+[2m01:48:53[22m   [34m├─[39m [2m/api/typescript/HookableEvent/index.md[22m [2m(+4ms)[22m 
+[2m01:48:53[22m   [34m├─[39m [2m/api/typescript/ImageBlock/index.md[22m [2m(+14ms)[22m 
+[2m01:48:53[22m   [34m├─[39m [2m/api/typescript/InitializedEvent/index.md[22m [2m(+5ms)[22m 
+[2m01:48:53[22m   [34m├─[39m [2m/api/typescript/GuardContentBlock/index.md[22m [2m(+11ms)[22m 
+[2m01:48:53[22m   [34m├─[39m [2m/api/typescript/JsonBlock/index.md[22m [2m(+7ms)[22m 
+[2m01:48:53[22m   [34m├─[39m [2m/api/typescript/JsonValidationError/index.md[22m [2m(+4ms)[22m 
+[2m01:48:53[22m   [34m├─[39m [2m/api/typescript/MaxTokensError/index.md[22m [2m(+7ms)[22m 
+[2m01:48:53[22m   [34m├─[39m [2m/api/typescript/McpClient/index.md[22m [2m(+7ms)[22m 
+[2m01:48:53[22m   [34m├─[39m [2m/api/typescript/Message/index.md[22m [2m(+7ms)[22m 
+[2m01:48:53[22m   [34m├─[39m [2m/api/typescript/MessageAddedEvent/index.md[22m [2m(+5ms)[22m 
+[2m01:48:53[22m   [34m├─[39m [2m/api/typescript/Model/index.md[22m [2m(+12ms)[22m 
+[2m01:48:53[22m   [34m├─[39m [2m/api/typescript/ModelError/index.md[22m [2m(+4ms)[22m 
+[2m01:48:53[22m   [34m├─[39m [2m/api/typescript/ModelMessageEvent/index.md[22m [2m(+5ms)[22m 
+[2m01:48:53[22m   [34m├─[39m [2m/api/typescript/ModelStreamUpdateEvent/index.md[22m [2m(+5ms)[22m 
+[2m01:48:53[22m   [34m├─[39m [2m/api/typescript/ModelThrottledError/index.md[22m [2m(+4ms)[22m 
+[2m01:48:53[22m   [34m├─[39m [2m/api/typescript/NullConversationManager/index.md[22m [2m(+4ms)[22m 
+[2m01:48:53[22m   [34m├─[39m [2m/api/typescript/ReasoningBlock/index.md[22m [2m(+17ms)[22m 
+[2m01:48:53[22m   [34m├─[39m [2m/api/typescript/S3Location/index.md[22m [2m(+7ms)[22m 
+[2m01:48:53[22m   [34m├─[39m [2m/api/typescript/SlidingWindowConversationManager/index.md[22m [2m(+5ms)[22m 
+[2m01:48:53[22m   [34m├─[39m [2m/api/typescript/StreamEvent/index.md[22m [2m(+3ms)[22m 
+[2m01:48:53[22m   [34m├─[39m [2m/api/typescript/StructuredOutputException/index.md[22m [2m(+4ms)[22m 
+[2m01:48:53[22m   [34m├─[39m [2m/api/typescript/ToolResultBlock/index.md[22m [2m(+12ms)[22m 
+[2m01:48:53[22m   [34m├─[39m [2m/api/typescript/TextBlock/index.md[22m [2m(+6ms)[22m 
+[2m01:48:53[22m   [34m├─[39m [2m/api/typescript/Tool/index.md[22m [2m(+7ms)[22m 
+[2m01:48:53[22m   [34m├─[39m [2m/api/typescript/ToolResultEvent/index.md[22m [2m(+5ms)[22m 
+[2m01:48:53[22m   [34m├─[39m [2m/api/typescript/ToolStreamUpdateEvent/index.md[22m [2m(+5ms)[22m 
+[2m01:48:53[22m   [34m├─[39m [2m/api/typescript/ToolUseBlock/index.md[22m [2m(+12ms)[22m 
+[2m01:48:53[22m   [34m├─[39m [2m/api/typescript/VideoBlock/index.md[22m [2m(+10ms)[22m 
+[2m01:48:53[22m   [34m├─[39m [2m/api/typescript/AgentData/index.md[22m [2m(+3ms)[22m 
+[2m01:48:53[22m   [34m├─[39m [2m/api/typescript/AgentState/index.md[22m [2m(+22ms)[22m 
+[2m01:48:53[22m   [34m├─[39m [2m/api/typescript/BaseModelConfig/index.md[22m [2m(+5ms)[22m 
+[2m01:48:53[22m   [34m├─[39m [2m/api/typescript/BedrockModelConfig/index.md[22m [2m(+10ms)[22m 
+[2m01:48:53[22m   [34m├─[39m [2m/api/typescript/BedrockModelOptions/index.md[22m [2m(+15ms)[22m 
+[2m01:48:53[22m   [34m├─[39m [2m/api/typescript/CachePointBlockData/index.md[22m [2m(+3ms)[22m 
+[2m01:48:53[22m   [34m├─[39m [2m/api/typescript/DocumentBlockData/index.md[22m [2m(+5ms)[22m 
+[2m01:48:53[22m   [34m├─[39m [2m/api/typescript/GuardContentBlockData/index.md[22m [2m(+3ms)[22m 
+[2m01:48:53[22m   [34m├─[39m [2m/api/typescript/GuardContentImage/index.md[22m [2m(+3ms)[22m 
+[2m01:48:53[22m   [34m├─[39m [2m/api/typescript/GuardContentText/index.md[22m [2m(+3ms)[22m 
+[2m01:48:53[22m   [34m├─[39m [2m/api/typescript/HookProvider/index.md[22m [2m(+6ms)[22m 
+[2m01:48:53[22m   [34m├─[39m [2m/api/typescript/ImageBlockData/index.md[22m [2m(+3ms)[22m 
+[2m01:48:53[22m   [34m├─[39m [2m/api/typescript/InvokableTool/index.md[22m [2m(+13ms)[22m 
+[2m01:48:53[22m   [34m├─[39m [2m/api/typescript/Logger/index.md[22m [2m(+6ms)[22m 
+[2m01:48:53[22m   [34m├─[39m [2m/api/typescript/MessageData/index.md[22m [2m(+3ms)[22m 
+[2m01:48:53[22m   [34m├─[39m [2m/api/typescript/Metrics/index.md[22m [2m(+3ms)[22m 
+[2m01:48:53[22m   [34m├─[39m [2m/api/typescript/ModelContentBlockDeltaEvent/index.md[22m [2m(+4ms)[22m 
+[2m01:48:53[22m   [34m├─[39m [2m/api/typescript/ModelContentBlockStartEvent/index.md[22m [2m(+4ms)[22m 
+[2m01:48:53[22m   [34m├─[39m [2m/api/typescript/ModelContentBlockDeltaEventData/index.md[22m [2m(+3ms)[22m 
+[2m01:48:53[22m   [34m├─[39m [2m/api/typescript/ModelContentBlockStartEventData/index.md[22m [2m(+7ms)[22m 
+[2m01:48:53[22m   [34m├─[39m [2m/api/typescript/ModelContentBlockStopEvent/index.md[22m [2m(+3ms)[22m 
+[2m01:48:53[22m   [34m├─[39m [2m/api/typescript/ModelMessageStartEvent/index.md[22m [2m(+4ms)[22m 
+[2m01:48:53[22m   [34m├─[39m [2m/api/typescript/ModelMessageStartEventData/index.md[22m [2m(+3ms)[22m 
+[2m01:48:53[22m   [34m├─[39m [2m/api/typescript/ModelMessageStopEvent/index.md[22m [2m(+5ms)[22m 
+[2m01:48:53[22m   [34m├─[39m [2m/api/typescript/ModelMessageStopEventData/index.md[22m [2m(+5ms)[22m 
+[2m01:48:53[22m   [34m├─[39m [2m/api/typescript/ModelMetadataEvent/index.md[22m [2m(+6ms)[22m 
+[2m01:48:53[22m   [34m├─[39m [2m/api/typescript/ModelMetadataEventData/index.md[22m [2m(+6ms)[22m 
+[2m01:48:53[22m   [34m├─[39m [2m/api/typescript/ModelStopResponse/index.md[22m [2m(+7ms)[22m 
+[2m01:48:53[22m   [34m├─[39m [2m/api/typescript/ReasoningBlockData/index.md[22m [2m(+3ms)[22m 
+[2m01:48:53[22m   [34m├─[39m [2m/api/typescript/ReasoningContentDelta/index.md[22m [2m(+4ms)[22m 
+[2m01:48:53[22m   [34m├─[39m [2m/api/typescript/S3LocationData/index.md[22m [2m(+3ms)[22m 
+[2m01:48:53[22m   [34m├─[39m [2m/api/typescript/StreamOptions/index.md[22m [2m(+3ms)[22m 
+[2m01:48:53[22m   [34m├─[39m [2m/api/typescript/TextBlockData/index.md[22m [2m(+3ms)[22m 
+[2m01:48:53[22m   [34m├─[39m [2m/api/typescript/TextDelta/index.md[22m [2m(+3ms)[22m 
+[2m01:48:53[22m   [34m├─[39m [2m/api/typescript/ToolResultBlockData/index.md[22m [2m(+4ms)[22m 
+[2m01:48:53[22m   [34m├─[39m [2m/api/typescript/ToolSpec/index.md[22m [2m(+3ms)[22m 
+[2m01:48:53[22m   [34m├─[39m [2m/api/typescript/ToolContext/index.md[22m [2m(+7ms)[22m 
+[2m01:48:53[22m   [34m├─[39m [2m/api/typescript/ToolStreamEvent/index.md[22m [2m(+5ms)[22m 
+[2m01:48:53[22m   [34m├─[39m [2m/api/typescript/ToolStreamEventData/index.md[22m [2m(+3ms)[22m 
+[2m01:48:53[22m   [34m├─[39m [2m/api/typescript/ToolUse/index.md[22m [2m(+3ms)[22m 
+[2m01:48:53[22m   [34m├─[39m [2m/api/typescript/ToolUseBlockData/index.md[22m [2m(+4ms)[22m 
+[2m01:48:53[22m   [34m├─[39m [2m/api/typescript/ToolUseStart/index.md[22m [2m(+4ms)[22m 
+[2m01:48:53[22m   [34m├─[39m [2m/api/typescript/Usage/index.md[22m [2m(+4ms)[22m 
+[2m01:48:53[22m   [34m├─[39m [2m/api/typescript/ToolUseInputDelta/index.md[22m [2m(+7ms)[22m 
+[2m01:48:53[22m   [34m├─[39m [2m/api/typescript/AgentConfig/index.md[22m [2m(+13ms)[22m 
+[2m01:48:53[22m   [34m├─[39m [2m/api/typescript/VideoBlockData/index.md[22m [2m(+5ms)[22m 
+[2m01:48:53[22m   [34m├─[39m [2m/api/typescript/ContentBlockData/index.md[22m [2m(+5ms)[22m 
+[2m01:48:53[22m   [34m├─[39m [2m/api/typescript/AgentStreamEvent/index.md[22m [2m(+4ms)[22m 
+[2m01:48:53[22m   [34m├─[39m [2m/api/typescript/ContentBlock/index.md[22m [2m(+6ms)[22m 
+[2m01:48:53[22m   [34m├─[39m [2m/api/typescript/ContentBlockDelta/index.md[22m [2m(+3ms)[22m 
+[2m01:48:53[22m   [34m├─[39m [2m/api/typescript/DocumentContentBlock/index.md[22m [2m(+2ms)[22m 
+[2m01:48:53[22m   [34m├─[39m [2m/api/typescript/ContentBlockStart/index.md[22m [2m(+2ms)[22m 
+[2m01:48:53[22m   [34m├─[39m [2m/api/typescript/DocumentContentBlockData/index.md[22m [2m(+3ms)[22m 
+[2m01:48:53[22m   [34m├─[39m [2m/api/typescript/DocumentFormat/index.md[22m [2m(+3ms)[22m 
+[2m01:48:53[22m   [34m├─[39m [2m/api/typescript/DocumentSource/index.md[22m [2m(+3ms)[22m 
+[2m01:48:53[22m   [34m├─[39m [2m/api/typescript/DocumentSourceData/index.md[22m [2m(+3ms)[22m 
+[2m01:48:53[22m   [34m├─[39m [2m/api/typescript/GuardImageSource/index.md[22m [2m(+3ms)[22m 
+[2m01:48:53[22m   [34m├─[39m [2m/api/typescript/GuardQualifier/index.md[22m [2m(+3ms)[22m 
+[2m01:48:53[22m   [34m├─[39m [2m/api/typescript/GuardImageFormat/index.md[22m [2m(+3ms)[22m 
+[2m01:48:53[22m   [34m├─[39m [2m/api/typescript/HookCallback/index.md[22m [2m(+8ms)[22m 
+[2m01:48:53[22m   [34m├─[39m [2m/api/typescript/ImageFormat/index.md[22m [2m(+3ms)[22m 
+[2m01:48:53[22m   [34m├─[39m [2m/api/typescript/HookableEventConstructor/index.md[22m [2m(+3ms)[22m 
+[2m01:48:53[22m   [34m├─[39m [2m/api/typescript/ImageSource/index.md[22m [2m(+3ms)[22m 
+[2m01:48:53[22m   [34m├─[39m [2m/api/typescript/ImageSourceData/index.md[22m [2m(+3ms)[22m 
+[2m01:48:53[22m   [34m├─[39m [2m/api/typescript/JSONSchema/index.md[22m [2m(+3ms)[22m 
+[2m01:48:53[22m   [34m├─[39m [2m/api/typescript/JSONValue/index.md[22m [2m(+4ms)[22m 
+[2m01:48:53[22m   [34m├─[39m [2m/api/typescript/ModelStreamEvent/index.md[22m [2m(+3ms)[22m 
+[2m01:48:53[22m   [34m├─[39m [2m/api/typescript/McpClientConfig/index.md[22m [2m(+7ms)[22m 
+[2m01:48:53[22m   [34m├─[39m [2m/api/typescript/Role/index.md[22m [2m(+2ms)[22m 
+[2m01:48:53[22m   [34m├─[39m [2m/api/typescript/SlidingWindowConversationManagerConfig/index.md[22m [2m(+4ms)[22m 
+[2m01:48:53[22m   [34m├─[39m [2m/api/typescript/StopReason/index.md[22m [2m(+3ms)[22m 
+[2m01:48:53[22m   [34m├─[39m [2m/api/typescript/SystemContentBlock/index.md[22m [2m(+3ms)[22m 
+[2m01:48:53[22m   [34m├─[39m [2m/api/typescript/SystemPrompt/index.md[22m [2m(+4ms)[22m 
+[2m01:48:53[22m   [34m├─[39m [2m/api/typescript/SystemPromptData/index.md[22m [2m(+3ms)[22m 
+[2m01:48:53[22m   [34m├─[39m [2m/api/typescript/ToolChoice/index.md[22m [2m(+3ms)[22m 
+[2m01:48:53[22m   [34m├─[39m [2m/api/typescript/ToolList/index.md[22m [2m(+2ms)[22m 
+[2m01:48:53[22m   [34m├─[39m [2m/api/typescript/ToolResultContent/index.md[22m [2m(+2ms)[22m 
+[2m01:48:53[22m   [34m├─[39m [2m/api/typescript/ToolResultStatus/index.md[22m [2m(+6ms)[22m 
+[2m01:48:53[22m   [34m├─[39m [2m/api/typescript/ToolStreamGenerator/index.md[22m [2m(+2ms)[22m 
+[2m01:48:53[22m   [34m├─[39m [2m/api/typescript/VideoFormat/index.md[22m [2m(+3ms)[22m 
+[2m01:48:53[22m   [34m├─[39m [2m/api/typescript/VideoSource/index.md[22m [2m(+3ms)[22m 
+[2m01:48:53[22m   [34m├─[39m [2m/api/typescript/VideoSourceData/index.md[22m [2m(+3ms)[22m 
+[2m01:48:53[22m   [34m├─[39m [2m/api/typescript/index/index.md[22m [2m(+2ms)[22m 
+[2m01:48:53[22m   [34m├─[39m [2m/api/typescript/setupTracer/index.md[22m [2m(+4ms)[22m 
+[2m01:48:53[22m   [34m└─[39m [2m/api/typescript/TracerConfig/index.md[22m [2m(+4ms)[22m 
+[2m01:48:53[22m [32m▶[39m src/pages/index.astro
+[2m01:48:53[22m   [34m└─[39m [2m/index.html[22m [2m(+3ms)[22m 
+[2m01:48:53[22m [32m▶[39m @astrojs/starlight/routes/static/index.astro
+[33m[1m01:48:53[22m [WARN] [build][39m Could not render `` from route `/[...slug]` as it conflicts with higher priority route `/`.
+[2m01:48:53[22m   [34m├─[39m [2m/llms/index.html[22m [2m(+29ms)[22m 
+[2m01:48:54[22m   [34m├─[39m [2m/community/community-packages/index.html[22m [2m(+73ms)[22m 
+[2m01:48:54[22m   [34m├─[39m [2m/community/get-featured/index.html[22m [2m(+48ms)[22m 
+[2m01:48:54[22m   [34m├─[39m [2m/contribute/index.html[22m [2m(+47ms)[22m 
+[2m01:48:54[22m   [34m├─[39m [2m/examples/index.html[22m [2m(+80ms)[22m 
+[2m01:48:54[22m   [34m├─[39m [2m/labs/ai-functions/index.html[22m [2m(+66ms)[22m 
+[2m01:48:54[22m   [34m├─[39m [2m/labs/index.html[22m [2m(+35ms)[22m 
+[2m01:48:54[22m   [34m├─[39m [2m/labs/robots-sim/index.html[22m [2m(+78ms)[22m 
+[2m01:48:54[22m   [34m├─[39m [2m/labs/robots/index.html[22m [2m(+86ms)[22m 
+[2m01:48:54[22m   [34m├─[39m [2m/user-guide/quickstart/index.html[22m [2m(+211ms)[22m 
+[2m01:48:54[22m   [34m├─[39m [2m/api/python/index.html[22m [2m(+17ms)[22m 
+[2m01:48:54[22m   [34m├─[39m [2m/user-guide/versioning-and-support/index.html[22m [2m(+109ms)[22m 
+[2m01:48:54[22m   [34m├─[39m [2m/api/typescript/index.html[22m [2m(+12ms)[22m 
+[2m01:48:54[22m   [34m├─[39m [2m/community/integrations/ag-ui/index.html[22m [2m(+84ms)[22m 
+[2m01:48:54[22m   [34m├─[39m [2m/community/model-providers/clova-studio/index.html[22m [2m(+57ms)[22m 
+[2m01:48:55[22m   [34m├─[39m [2m/community/model-providers/cohere/index.html[22m [2m(+61ms)[22m 
+[2m01:48:55[22m   [34m├─[39m [2m/community/model-providers/fireworksai/index.html[22m [2m(+64ms)[22m 
+[2m01:48:55[22m   [34m├─[39m [2m/community/model-providers/nebius-token-factory/index.html[22m [2m(+62ms)[22m 
+[2m01:48:55[22m   [34m├─[39m [2m/community/model-providers/mlx/index.html[22m [2m(+65ms)[22m 
+[2m01:48:55[22m   [34m├─[39m [2m/community/model-providers/nvidia-nim/index.html[22m [2m(+63ms)[22m 
+[2m01:48:55[22m   [34m├─[39m [2m/community/model-providers/sglang/index.html[22m [2m(+72ms)[22m 
+[2m01:48:55[22m   [34m├─[39m [2m/community/model-providers/vllm/index.html[22m [2m(+93ms)[22m 
+[2m01:48:55[22m   [34m├─[39m [2m/community/model-providers/xai/index.html[22m [2m(+67ms)[22m 
+[2m01:48:55[22m   [34m├─[39m [2m/community/session-managers/agentcore-memory/index.html[22m [2m(+94ms)[22m 
+[2m01:48:55[22m   [34m├─[39m [2m/community/session-managers/strands-valkey-session-manager/index.html[22m [2m(+49ms)[22m 
+[2m01:48:55[22m   [34m├─[39m [2m/community/tools/strands-deepgram/index.html[22m [2m(+43ms)[22m 
+[2m01:48:55[22m   [34m├─[39m [2m/community/tools/strands-hubspot/index.html[22m [2m(+40ms)[22m 
+[2m01:48:55[22m   [34m├─[39m [2m/community/tools/strands-teams/index.html[22m [2m(+38ms)[22m 
+[2m01:48:55[22m   [34m├─[39m [2m/community/tools/strands-telegram-listener/index.html[22m [2m(+41ms)[22m 
+[2m01:48:55[22m   [34m├─[39m [2m/community/tools/strands-telegram/index.html[22m [2m(+42ms)[22m 
+[2m01:48:55[22m   [34m├─[39m [2m/community/tools/utcp/index.html[22m [2m(+34ms)[22m 
+[2m01:48:55[22m   [34m├─[39m [2m/contribute/contributing/core-sdk/index.html[22m [2m(+61ms)[22m 
+[2m01:48:56[22m   [34m├─[39m [2m/contribute/contributing/documentation/index.html[22m [2m(+34ms)[22m 
+[2m01:48:56[22m   [34m├─[39m [2m/contribute/contributing/extensions/index.html[22m [2m(+33ms)[22m 
+[2m01:48:56[22m   [34m├─[39m [2m/contribute/contributing/feature-proposals/index.html[22m [2m(+26ms)[22m 
+[2m01:48:56[22m   [34m├─[39m [2m/examples/deploy_to_eks/index.html[22m [2m(+68ms)[22m 
+[2m01:48:56[22m   [34m├─[39m [2m/examples/python/agents_workflows/index.html[22m [2m(+46ms)[22m 
+[2m01:48:56[22m   [34m├─[39m [2m/examples/python/file_operations/index.html[22m [2m(+50ms)[22m 
+[2m01:48:56[22m   [34m├─[39m [2m/examples/python/cli-reference-agent/index.html[22m [2m(+56ms)[22m 
+[2m01:48:56[22m   [34m├─[39m [2m/examples/python/graph_loops_example/index.html[22m [2m(+54ms)[22m 
+[2m01:48:56[22m   [34m├─[39m [2m/examples/python/knowledge_base_agent/index.html[22m [2m(+43ms)[22m 
+[2m01:48:56[22m   [34m├─[39m [2m/examples/python/mcp_calculator/index.html[22m [2m(+43ms)[22m 
+[2m01:48:56[22m   [34m├─[39m [2m/examples/python/meta_tooling/index.html[22m [2m(+47ms)[22m 
+[2m01:48:56[22m   [34m├─[39m [2m/examples/python/memory_agent/index.html[22m [2m(+53ms)[22m 
+[2m01:48:56[22m   [34m├─[39m [2m/examples/python/multimodal/index.html[22m [2m(+56ms)[22m 
+[2m01:48:56[22m   [34m├─[39m [2m/examples/python/structured_output/index.html[22m [2m(+35ms)[22m 
+[2m01:48:56[22m   [34m├─[39m [2m/examples/python/weather_forecaster/index.html[22m [2m(+51ms)[22m 
+[2m01:48:56[22m   [34m├─[39m [2m/user-guide/concepts/interrupts/index.html[22m [2m(+93ms)[22m 
+[2m01:48:56[22m   [34m├─[39m [2m/user-guide/deploy/deploy_to_amazon_ec2/index.html[22m [2m(+61ms)[22m 
+[2m01:48:56[22m   [34m├─[39m [2m/user-guide/deploy/deploy_to_amazon_eks/index.html[22m [2m(+65ms)[22m 
+[2m01:48:56[22m   [34m├─[39m [2m/user-guide/deploy/deploy_to_aws_apprunner/index.html[22m [2m(+70ms)[22m 
+[2m01:48:57[22m   [34m├─[39m [2m/user-guide/deploy/deploy_to_aws_fargate/index.html[22m [2m(+72ms)[22m 
+[2m01:48:57[22m   [34m├─[39m [2m/user-guide/deploy/deploy_to_aws_lambda/index.html[22m [2m(+84ms)[22m 
+[2m01:48:57[22m   [34m├─[39m [2m/user-guide/deploy/deploy_to_kubernetes/index.html[22m [2m(+78ms)[22m 
+[2m01:48:57[22m   [34m├─[39m [2m/user-guide/deploy/deploy_to_terraform/index.html[22m [2m(+181ms)[22m 
+[2m01:48:57[22m   [34m├─[39m [2m/user-guide/deploy/operating-agents-in-production/index.html[22m [2m(+100ms)[22m 
+[2m01:48:57[22m   [34m├─[39m [2m/user-guide/observability-evaluation/metrics/index.html[22m [2m(+71ms)[22m 
+[2m01:48:57[22m   [34m├─[39m [2m/user-guide/observability-evaluation/logs/index.html[22m [2m(+60ms)[22m 
+[2m01:48:57[22m   [34m├─[39m [2m/user-guide/observability-evaluation/evaluation/index.html[22m [2m(+58ms)[22m 
+[2m01:48:57[22m   [34m├─[39m [2m/user-guide/observability-evaluation/observability/index.html[22m [2m(+52ms)[22m 
+[2m01:48:57[22m   [34m├─[39m [2m/user-guide/observability-evaluation/traces/index.html[22m [2m(+96ms)[22m 
+[2m01:48:57[22m   [34m├─[39m [2m/user-guide/evals-sdk/eval-sop/index.html[22m [2m(+138ms)[22m 
+[2m01:48:58[22m   [34m├─[39m [2m/user-guide/evals-sdk/experiment_generator/index.html[22m [2m(+149ms)[22m 
+[2m01:48:58[22m   [34m├─[39m [2m/user-guide/evals-sdk/quickstart/index.html[22m [2m(+96ms)[22m 
+[2m01:48:58[22m   [34m├─[39m [2m/user-guide/quickstart/overview/index.html[22m [2m(+15ms)[22m 
+[2m01:48:58[22m   [34m├─[39m [2m/user-guide/quickstart/python/index.html[22m [2m(+204ms)[22m 
+[2m01:48:58[22m   [34m├─[39m [2m/user-guide/quickstart/typescript/index.html[22m [2m(+93ms)[22m 
+[2m01:48:58[22m   [34m├─[39m [2m/user-guide/safety-security/guardrails/index.html[22m [2m(+42ms)[22m 
+[2m01:48:58[22m   [34m├─[39m [2m/user-guide/safety-security/pii-redaction/index.html[22m [2m(+74ms)[22m 
+[2m01:48:58[22m   [34m├─[39m [2m/user-guide/safety-security/prompt-engineering/index.html[22m [2m(+37ms)[22m 
+[2m01:48:58[22m   [34m├─[39m [2m/user-guide/safety-security/responsible-ai/index.html[22m [2m(+38ms)[22m 
+[2m01:48:58[22m   [34m├─[39m [2m/examples/cdk/deploy_to_apprunner/index.html[22m [2m(+63ms)[22m 
+[2m01:48:58[22m   [34m├─[39m [2m/examples/cdk/deploy_to_fargate/index.html[22m [2m(+62ms)[22m 
+[2m01:48:58[22m   [34m├─[39m [2m/examples/cdk/deploy_to_ec2/index.html[22m [2m(+57ms)[22m 
+[2m01:48:58[22m   [34m├─[39m [2m/examples/cdk/deploy_to_lambda/index.html[22m [2m(+45ms)[22m 
+[2m01:48:58[22m   [34m├─[39m [2m/examples/typescript/deploy_to_bedrock_agentcore/index.html[22m [2m(+113ms)[22m 
+[2m01:48:59[22m   [34m├─[39m [2m/user-guide/concepts/agents/conversation-management/index.html[22m [2m(+84ms)[22m 
+[2m01:48:59[22m   [34m├─[39m [2m/examples/python/multi_agent_example/multi_agent_example/index.html[22m [2m(+61ms)[22m 
+[2m01:48:59[22m   [34m├─[39m [2m/user-guide/concepts/agents/agent-loop/index.html[22m [2m(+71ms)[22m 
+[2m01:48:59[22m   [34m├─[39m [2m/user-guide/concepts/agents/hooks/index.html[22m [2m(+190ms)[22m 
+[2m01:48:59[22m   [34m├─[39m [2m/user-guide/concepts/agents/prompts/index.html[22m [2m(+57ms)[22m 
+[2m01:48:59[22m   [34m├─[39m [2m/user-guide/concepts/agents/retry-strategies/index.html[22m [2m(+37ms)[22m 
+[2m01:48:59[22m   [34m├─[39m [2m/user-guide/concepts/agents/state/index.html[22m [2m(+85ms)[22m 
+[2m01:48:59[22m   [34m├─[39m [2m/user-guide/concepts/agents/session-management/index.html[22m [2m(+116ms)[22m 
+[2m01:48:59[22m   [34m├─[39m [2m/user-guide/concepts/agents/structured-output/index.html[22m [2m(+122ms)[22m 
+[2m01:48:59[22m   [34m├─[39m [2m/user-guide/concepts/bidirectional-streaming/agent/index.html[22m [2m(+148ms)[22m 
+[2m01:49:00[22m   [34m├─[39m [2m/user-guide/concepts/bidirectional-streaming/events/index.html[22m [2m(+144ms)[22m 
+[2m01:49:00[22m   [34m├─[39m [2m/user-guide/concepts/bidirectional-streaming/hooks/index.html[22m [2m(+83ms)[22m 
+[2m01:49:00[22m   [34m├─[39m [2m/user-guide/concepts/bidirectional-streaming/interruption/index.html[22m [2m(+48ms)[22m 
+[2m01:49:00[22m   [34m├─[39m [2m/user-guide/concepts/bidirectional-streaming/io/index.html[22m [2m(+44ms)[22m 
+[2m01:49:00[22m   [34m├─[39m [2m/user-guide/concepts/bidirectional-streaming/quickstart/index.html[22m [2m(+133ms)[22m 
+[2m01:49:00[22m   [34m├─[39m [2m/user-guide/concepts/bidirectional-streaming/session-management/index.html[22m [2m(+81ms)[22m 
+[2m01:49:00[22m   [34m├─[39m [2m/user-guide/concepts/experimental/agent-config/index.html[22m [2m(+60ms)[22m 
+[2m01:49:00[22m   [34m├─[39m [2m/user-guide/concepts/experimental/steering/index.html[22m [2m(+51ms)[22m 
+[2m01:49:00[22m   [34m├─[39m [2m/user-guide/concepts/model-providers/amazon-bedrock/index.html[22m [2m(+268ms)[22m 
+[2m01:49:00[22m   [34m├─[39m [2m/user-guide/concepts/model-providers/amazon-nova/index.html[22m [2m(+72ms)[22m 
+[2m01:49:01[22m   [34m├─[39m [2m/user-guide/concepts/model-providers/anthropic/index.html[22m [2m(+164ms)[22m 
+[2m01:49:01[22m   [34m├─[39m [2m/user-guide/concepts/model-providers/clova-studio/index.html[22m [2m(+13ms)[22m 
+[2m01:49:01[22m   [34m├─[39m [2m/user-guide/concepts/model-providers/cohere/index.html[22m [2m(+11ms)[22m 
+[2m01:49:01[22m   [34m├─[39m [2m/user-guide/concepts/model-providers/custom_model_provider/index.html[22m [2m(+190ms)[22m 
+[2m01:49:01[22m   [34m├─[39m [2m/user-guide/concepts/model-providers/gemini/index.html[22m [2m(+151ms)[22m 
+[2m01:49:01[22m   [34m├─[39m [2m/user-guide/concepts/model-providers/fireworksai/index.html[22m [2m(+13ms)[22m 
+[2m01:49:01[22m   [34m├─[39m [2m/user-guide/concepts/model-providers/index.html[22m [2m(+102ms)[22m 
+[2m01:49:01[22m   [34m├─[39m [2m/user-guide/concepts/model-providers/litellm/index.html[22m [2m(+77ms)[22m 
+[2m01:49:01[22m   [34m├─[39m [2m/user-guide/concepts/model-providers/llamaapi/index.html[22m [2m(+71ms)[22m 
+[2m01:49:01[22m   [34m├─[39m [2m/user-guide/concepts/model-providers/llamacpp/index.html[22m [2m(+79ms)[22m 
+[2m01:49:01[22m   [34m├─[39m [2m/user-guide/concepts/model-providers/mistral/index.html[22m [2m(+55ms)[22m 
+[2m01:49:01[22m   [34m├─[39m [2m/user-guide/concepts/model-providers/nebius-token-factory/index.html[22m [2m(+12ms)[22m 
+[2m01:49:01[22m   [34m├─[39m [2m/user-guide/concepts/model-providers/ollama/index.html[22m [2m(+96ms)[22m 
+[2m01:49:02[22m   [34m├─[39m [2m/user-guide/concepts/model-providers/openai/index.html[22m [2m(+102ms)[22m 
+[2m01:49:02[22m   [34m├─[39m [2m/user-guide/concepts/model-providers/sagemaker/index.html[22m [2m(+74ms)[22m 
+[2m01:49:02[22m   [34m├─[39m [2m/user-guide/concepts/model-providers/writer/index.html[22m [2m(+139ms)[22m 
+[2m01:49:02[22m   [34m├─[39m [2m/user-guide/concepts/model-providers/xai/index.html[22m [2m(+12ms)[22m 
+[2m01:49:02[22m   [34m├─[39m [2m/user-guide/concepts/multi-agent/agent-to-agent/index.html[22m [2m(+140ms)[22m 
+[2m01:49:02[22m   [34m├─[39m [2m/user-guide/concepts/multi-agent/agents-as-tools/index.html[22m [2m(+51ms)[22m 
+[2m01:49:02[22m   [34m├─[39m [2m/user-guide/concepts/multi-agent/graph/index.html[22m [2m(+151ms)[22m 
+[2m01:49:02[22m   [34m├─[39m [2m/user-guide/concepts/multi-agent/swarm/index.html[22m [2m(+82ms)[22m 
+[2m01:49:02[22m   [34m├─[39m [2m/user-guide/concepts/multi-agent/workflow/index.html[22m [2m(+71ms)[22m 
+[2m01:49:02[22m   [34m├─[39m [2m/user-guide/concepts/multi-agent/multi-agent-patterns/index.html[22m [2m(+76ms)[22m 
+[2m01:49:02[22m   [34m├─[39m [2m/user-guide/concepts/streaming/async-iterators/index.html[22m [2m(+54ms)[22m 
+[2m01:49:03[22m   [34m├─[39m [2m/user-guide/concepts/streaming/callback-handlers/index.html[22m [2m(+51ms)[22m 
+[2m01:49:03[22m   [34m├─[39m [2m/user-guide/concepts/streaming/index.html[22m [2m(+116ms)[22m 
+[2m01:49:03[22m   [34m├─[39m [2m/user-guide/concepts/tools/community-tools-package/index.html[22m [2m(+172ms)[22m 
+[2m01:49:03[22m   [34m├─[39m [2m/user-guide/concepts/tools/executors/index.html[22m [2m(+27ms)[22m 
+[2m01:49:03[22m   [34m├─[39m [2m/user-guide/concepts/tools/custom-tools/index.html[22m [2m(+195ms)[22m 
+[2m01:49:03[22m   [34m├─[39m [2m/user-guide/concepts/tools/mcp-tools/index.html[22m [2m(+134ms)[22m 
+[2m01:49:03[22m   [34m├─[39m [2m/user-guide/concepts/tools/index.html[22m [2m(+134ms)[22m 
+[2m01:49:03[22m   [34m├─[39m [2m/user-guide/deploy/deploy_to_bedrock_agentcore/index.html[22m [2m(+43ms)[22m 
+[2m01:49:03[22m   [34m├─[39m [2m/user-guide/deploy/deploy_to_bedrock_agentcore/python/index.html[22m [2m(+147ms)[22m 
+[2m01:49:04[22m   [34m├─[39m [2m/user-guide/deploy/deploy_to_bedrock_agentcore/typescript/index.html[22m [2m(+123ms)[22m 
+[2m01:49:04[22m   [34m├─[39m [2m/user-guide/deploy/deploy_to_docker/index.html[22m [2m(+20ms)[22m 
+[2m01:49:04[22m   [34m├─[39m [2m/user-guide/deploy/deploy_to_docker/python/index.html[22m [2m(+89ms)[22m 
+[2m01:49:04[22m   [34m├─[39m [2m/user-guide/deploy/deploy_to_docker/typescript/index.html[22m [2m(+85ms)[22m 
+[2m01:49:04[22m   [34m├─[39m [2m/user-guide/evals-sdk/how-to/agentcore_evaluation_dashboard/index.html[22m [2m(+119ms)[22m 
+[2m01:49:04[22m   [34m├─[39m [2m/user-guide/evals-sdk/how-to/experiment_management/index.html[22m [2m(+65ms)[22m 
+[2m01:49:04[22m   [34m├─[39m [2m/user-guide/evals-sdk/how-to/serialization/index.html[22m [2m(+77ms)[22m 
+[2m01:49:04[22m   [34m├─[39m [2m/user-guide/evals-sdk/evaluators/faithfulness_evaluator/index.html[22m [2m(+94ms)[22m 
+[2m01:49:04[22m   [34m├─[39m [2m/user-guide/evals-sdk/evaluators/custom_evaluator/index.html[22m [2m(+69ms)[22m 
+[2m01:49:04[22m   [34m├─[39m [2m/user-guide/evals-sdk/evaluators/goal_success_rate_evaluator/index.html[22m [2m(+119ms)[22m 
+[2m01:49:04[22m   [34m├─[39m [2m/user-guide/evals-sdk/evaluators/helpfulness_evaluator/index.html[22m [2m(+108ms)[22m 
+[2m01:49:05[22m   [34m├─[39m [2m/user-guide/evals-sdk/evaluators/index.html[22m [2m(+129ms)[22m 
+[2m01:49:05[22m   [34m├─[39m [2m/user-guide/evals-sdk/evaluators/interactions_evaluator/index.html[22m [2m(+113ms)[22m 
+[2m01:49:05[22m   [34m├─[39m [2m/user-guide/evals-sdk/evaluators/output_evaluator/index.html[22m [2m(+59ms)[22m 
+[2m01:49:05[22m   [34m├─[39m [2m/user-guide/evals-sdk/evaluators/tool_parameter_evaluator/index.html[22m [2m(+80ms)[22m 
+[2m01:49:05[22m   [34m├─[39m [2m/user-guide/evals-sdk/evaluators/tool_selection_evaluator/index.html[22m [2m(+86ms)[22m 
+[2m01:49:05[22m   [34m├─[39m [2m/user-guide/evals-sdk/evaluators/trajectory_evaluator/index.html[22m [2m(+97ms)[22m 
+[2m01:49:05[22m   [34m├─[39m [2m/user-guide/evals-sdk/simulators/index.html[22m [2m(+95ms)[22m 
+[2m01:49:05[22m   [34m├─[39m [2m/user-guide/evals-sdk/simulators/user_simulation/index.html[22m [2m(+137ms)[22m 
+[2m01:49:05[22m   [34m├─[39m [2m/user-guide/concepts/bidirectional-streaming/models/gemini_live/index.html[22m [2m(+77ms)[22m 
+[2m01:49:05[22m   [34m├─[39m [2m/user-guide/concepts/bidirectional-streaming/models/nova_sonic/index.html[22m [2m(+64ms)[22m 
+[2m01:49:05[22m   [34m├─[39m [2m/user-guide/concepts/bidirectional-streaming/models/openai_realtime/index.html[22m [2m(+81ms)[22m 
+[2m01:49:06[22m   [34m├─[39m [2m/api/python/strands.agent.a2a_agent/index.html[22m [2m(+48ms)[22m 
+[2m01:49:06[22m   [34m├─[39m [2m/api/python/strands.agent.agent/index.html[22m [2m(+99ms)[22m 
+[2m01:49:06[22m   [34m├─[39m [2m/api/python/strands.agent.agent_result/index.html[22m [2m(+36ms)[22m 
+[2m01:49:06[22m   [34m├─[39m [2m/api/python/strands.agent.base/index.html[22m [2m(+35ms)[22m 
+[2m01:49:06[22m   [34m├─[39m [2m/api/python/strands.agent.conversation_manager.conversation_manager/index.html[22m [2m(+52ms)[22m 
+[2m01:49:06[22m   [34m├─[39m [2m/api/python/strands.agent.conversation_manager.sliding_window_conversation_manager/index.html[22m [2m(+57ms)[22m 
+[2m01:49:06[22m   [34m├─[39m [2m/api/python/strands.agent.conversation_manager.null_conversation_manager/index.html[22m [2m(+28ms)[22m 
+[2m01:49:06[22m   [34m├─[39m [2m/api/python/strands.agent.conversation_manager.summarizing_conversation_manager/index.html[22m [2m(+51ms)[22m 
+[2m01:49:06[22m   [34m├─[39m [2m/api/python/strands.event_loop.event_loop/index.html[22m [2m(+26ms)[22m 
+[2m01:49:06[22m   [34m├─[39m [2m/api/python/strands.event_loop.streaming/index.html[22m [2m(+71ms)[22m 
+[2m01:49:06[22m   [34m├─[39m [2m/api/python/strands.experimental.bidi.agent.agent/index.html[22m [2m(+80ms)[22m 
+[2m01:49:06[22m   [34m├─[39m [2m/api/python/strands.experimental.agent_config/index.html[22m [2m(+21ms)[22m 
+[2m01:49:06[22m   [34m├─[39m [2m/api/python/strands.experimental.bidi.agent.loop/index.html[22m [2m(+44ms)[22m 
+[2m01:49:06[22m   [34m├─[39m [2m/api/python/strands.experimental.bidi.io.audio/index.html[22m [2m(+133ms)[22m 
+[2m01:49:06[22m   [34m├─[39m [2m/api/python/strands.experimental.bidi.io.text/index.html[22m [2m(+62ms)[22m 
+[2m01:49:06[22m   [34m├─[39m [2m/api/python/strands.experimental.bidi/index.html[22m [2m(+17ms)[22m 
+[2m01:49:06[22m   [34m├─[39m [2m/api/python/strands.experimental.bidi.models.gemini_live/index.html[22m [2m(+46ms)[22m 
+[2m01:49:06[22m   [34m├─[39m [2m/api/python/strands.experimental.bidi.models/index.html[22m [2m(+17ms)[22m 
+[2m01:49:06[22m   [34m├─[39m [2m/api/python/strands.experimental.bidi.models.model/index.html[22m [2m(+52ms)[22m 
+[2m01:49:07[22m   [34m├─[39m [2m/api/python/strands.experimental.bidi.models.nova_sonic/index.html[22m [2m(+48ms)[22m 
+[2m01:49:07[22m   [34m├─[39m [2m/api/python/strands.experimental.bidi.models.openai_realtime/index.html[22m [2m(+51ms)[22m 
+[2m01:49:07[22m   [34m├─[39m [2m/api/python/strands.experimental.bidi.tools.stop_conversation/index.html[22m [2m(+17ms)[22m 
+[2m01:49:07[22m   [34m├─[39m [2m/api/python/strands.experimental.bidi.types.events/index.html[22m [2m(+377ms)[22m 
+[2m01:49:07[22m   [34m├─[39m [2m/api/python/strands.experimental.bidi.types.io/index.html[22m [2m(+57ms)[22m 
+[2m01:49:07[22m   [34m├─[39m [2m/api/python/strands.experimental.bidi.types.model/index.html[22m [2m(+18ms)[22m 
+[2m01:49:07[22m   [34m├─[39m [2m/api/python/strands.experimental.hooks.events/index.html[22m [2m(+83ms)[22m 
+[2m01:49:07[22m   [34m├─[39m [2m/api/python/strands.experimental.steering.context_providers.ledger_provider/index.html[22m [2m(+53ms)[22m 
+[2m01:49:07[22m   [34m├─[39m [2m/api/python/strands.experimental.steering.core.action/index.html[22m [2m(+36ms)[22m 
+[2m01:49:07[22m   [34m├─[39m [2m/api/python/strands.experimental.steering.core.context/index.html[22m [2m(+46ms)[22m 
+[2m01:49:07[22m   [34m├─[39m [2m/api/python/strands.experimental.steering.core.handler/index.html[22m [2m(+42ms)[22m 
+[2m01:49:07[22m   [34m├─[39m [2m/api/python/strands.experimental.steering.handlers.llm.llm_handler/index.html[22m [2m(+31ms)[22m 
+[2m01:49:07[22m   [34m├─[39m [2m/api/python/strands.experimental.steering.handlers.llm.mappers/index.html[22m [2m(+39ms)[22m 
+[2m01:49:07[22m   [34m├─[39m [2m/api/python/strands.handlers.callback_handler/index.html[22m [2m(+53ms)[22m 
+[2m01:49:07[22m   [34m├─[39m [2m/api/python/strands.hooks.events/index.html[22m [2m(+128ms)[22m 
+[2m01:49:08[22m   [34m├─[39m [2m/api/python/strands.interrupt/index.html[22m [2m(+72ms)[22m 
+[2m01:49:08[22m   [34m├─[39m [2m/api/python/strands.hooks.registry/index.html[22m [2m(+125ms)[22m 
+[2m01:49:08[22m   [34m├─[39m [2m/api/python/strands.models.anthropic/index.html[22m [2m(+78ms)[22m 
+[2m01:49:08[22m   [34m├─[39m [2m/api/python/strands.models.bedrock/index.html[22m [2m(+57ms)[22m 
+[2m01:49:08[22m   [34m├─[39m [2m/api/python/strands.models.gemini/index.html[22m [2m(+75ms)[22m 
+[2m01:49:08[22m   [34m├─[39m [2m/api/python/strands.models.litellm/index.html[22m [2m(+81ms)[22m 
+[2m01:49:08[22m   [34m├─[39m [2m/api/python/strands.models.llamacpp/index.html[22m [2m(+72ms)[22m 
+[2m01:49:08[22m   [34m├─[39m [2m/api/python/strands.models/index.html[22m [2m(+17ms)[22m 
+[2m01:49:08[22m   [34m├─[39m [2m/api/python/strands.models.llamaapi/index.html[22m [2m(+69ms)[22m 
+[2m01:49:08[22m   [34m├─[39m [2m/api/python/strands.models.mistral/index.html[22m [2m(+70ms)[22m 
+[2m01:49:08[22m   [34m├─[39m [2m/api/python/strands.models.model/index.html[22m [2m(+48ms)[22m 
+[2m01:49:08[22m   [34m├─[39m [2m/api/python/strands.models.openai/index.html[22m [2m(+113ms)[22m 
+[2m01:49:08[22m   [34m├─[39m [2m/api/python/strands.models.ollama/index.html[22m [2m(+71ms)[22m 
+[2m01:49:09[22m   [34m├─[39m [2m/api/python/strands.models.sagemaker/index.html[22m [2m(+116ms)[22m 
+[2m01:49:09[22m   [34m├─[39m [2m/api/python/strands.models.writer/index.html[22m [2m(+67ms)[22m 
+[2m01:49:09[22m   [34m├─[39m [2m/api/python/strands.multiagent.a2a.executor/index.html[22m [2m(+39ms)[22m 
+[2m01:49:09[22m   [34m├─[39m [2m/api/python/strands.multiagent.a2a.server/index.html[22m [2m(+64ms)[22m 
+[2m01:49:09[22m   [34m├─[39m [2m/api/python/strands.multiagent.base/index.html[22m [2m(+96ms)[22m 
+[2m01:49:09[22m   [34m├─[39m [2m/api/python/strands.multiagent.graph/index.html[22m [2m(+194ms)[22m 
+[2m01:49:09[22m   [34m├─[39m [2m/api/python/strands.multiagent.swarm/index.html[22m [2m(+156ms)[22m 
+[2m01:49:09[22m   [34m├─[39m [2m/api/python/strands.plugins.plugin/index.html[22m [2m(+29ms)[22m 
+[2m01:49:09[22m   [34m├─[39m [2m/api/python/strands.plugins.registry/index.html[22m [2m(+30ms)[22m 
+[2m01:49:09[22m   [34m├─[39m [2m/api/python/strands.session.file_session_manager/index.html[22m [2m(+100ms)[22m 
+[2m01:49:09[22m   [34m├─[39m [2m/api/python/strands.session.repository_session_manager/index.html[22m [2m(+82ms)[22m 
+[2m01:49:10[22m   [34m├─[39m [2m/api/python/strands.session.s3_session_manager/index.html[22m [2m(+101ms)[22m 
+[2m01:49:10[22m   [34m├─[39m [2m/api/python/strands.session.session_repository/index.html[22m [2m(+88ms)[22m 
+[2m01:49:10[22m   [34m├─[39m [2m/api/python/strands.session.session_manager/index.html[22m [2m(+78ms)[22m 
+[2m01:49:10[22m   [34m├─[39m [2m/api/python/strands.telemetry.config/index.html[22m [2m(+47ms)[22m 
+[2m01:49:10[22m   [34m├─[39m [2m/api/python/strands.telemetry.metrics/index.html[22m [2m(+165ms)[22m 
+[2m01:49:10[22m   [34m├─[39m [2m/api/python/strands.tools.decorator/index.html[22m [2m(+224ms)[22m 
+[2m01:49:10[22m   [34m├─[39m [2m/api/python/strands.tools.executors.concurrent/index.html[22m [2m(+17ms)[22m 
+[2m01:49:10[22m   [34m├─[39m [2m/api/python/strands.telemetry.tracer/index.html[22m [2m(+114ms)[22m 
+[2m01:49:10[22m   [34m├─[39m [2m/api/python/strands.tools.executors.sequential/index.html[22m [2m(+18ms)[22m 
+[2m01:49:10[22m   [34m├─[39m [2m/api/python/strands.tools.loader/index.html[22m [2m(+62ms)[22m 
+[2m01:49:10[22m   [34m├─[39m [2m/api/python/strands.tools.mcp.mcp_agent_tool/index.html[22m [2m(+46ms)[22m 
+[2m01:49:10[22m   [34m├─[39m [2m/api/python/strands.tools.mcp.mcp_client/index.html[22m [2m(+116ms)[22m 
+[2m01:49:11[22m   [34m├─[39m [2m/api/python/strands.tools.mcp.mcp_instrumentation/index.html[22m [2m(+112ms)[22m 
+[2m01:49:11[22m   [34m├─[39m [2m/api/python/strands.tools.mcp.mcp_tasks/index.html[22m [2m(+17ms)[22m 
+[2m01:49:11[22m   [34m├─[39m [2m/api/python/strands.tools.mcp.mcp_types/index.html[22m [2m(+17ms)[22m 
+[2m01:49:11[22m   [34m├─[39m [2m/api/python/strands.tools.registry/index.html[22m [2m(+101ms)[22m 
+[2m01:49:11[22m   [34m├─[39m [2m/api/python/strands.tools.structured_output.structured_output_tool/index.html[22m [2m(+50ms)[22m 
+[2m01:49:11[22m   [34m├─[39m [2m/api/python/strands.tools.structured_output.structured_output_utils/index.html[22m [2m(+17ms)[22m 
+[2m01:49:11[22m   [34m├─[39m [2m/api/python/strands.tools.tool_provider/index.html[22m [2m(+34ms)[22m 
+[2m01:49:11[22m   [34m├─[39m [2m/api/python/strands.tools.tools/index.html[22m [2m(+79ms)[22m 
+[2m01:49:11[22m   [34m├─[39m [2m/api/python/strands.tools.watcher/index.html[22m [2m(+62ms)[22m 
+[2m01:49:11[22m   [34m├─[39m [2m/api/python/strands.types.a2a/index.html[22m [2m(+22ms)[22m 
+[2m01:49:11[22m   [34m├─[39m [2m/api/python/strands.types.citations/index.html[22m [2m(+70ms)[22m 
+[2m01:49:11[22m   [34m├─[39m [2m/api/python/strands.types.agent/index.html[22m [2m(+17ms)[22m 
+[2m01:49:11[22m   [34m├─[39m [2m/api/python/strands.types.collections/index.html[22m [2m(+23ms)[22m 
+[2m01:49:11[22m   [34m├─[39m [2m/api/python/strands.types.content/index.html[22m [2m(+93ms)[22m 
+[2m01:49:11[22m   [34m├─[39m [2m/api/python/strands.types.event_loop/index.html[22m [2m(+25ms)[22m 
+[2m01:49:11[22m   [34m├─[39m [2m/api/python/strands.types.exceptions/index.html[22m [2m(+83ms)[22m 
+[2m01:49:11[22m   [34m├─[39m [2m/api/python/strands.types.guardrails/index.html[22m [2m(+105ms)[22m 
+[2m01:49:12[22m   [34m├─[39m [2m/api/python/strands.types.interrupt/index.html[22m [2m(+35ms)[22m 
+[2m01:49:12[22m   [34m├─[39m [2m/api/python/strands.types.json_dict/index.html[22m [2m(+40ms)[22m 
+[2m01:49:12[22m   [34m├─[39m [2m/api/python/strands.types.media/index.html[22m [2m(+72ms)[22m 
+[2m01:49:12[22m   [34m├─[39m [2m/api/python/strands.types.session/index.html[22m [2m(+112ms)[22m 
+[2m01:49:12[22m   [34m├─[39m [2m/api/python/strands.types.streaming/index.html[22m [2m(+103ms)[22m 
+[2m01:49:12[22m   [34m├─[39m [2m/api/python/strands.types.tools/index.html[22m [2m(+152ms)[22m 
+[2m01:49:12[22m   [34m├─[39m [2m/api/typescript/contentBlockFromData/index.html[22m [2m(+10ms)[22m 
+[2m01:49:12[22m   [34m├─[39m [2m/api/typescript/isModelStreamEvent/index.html[22m [2m(+9ms)[22m 
+[2m01:49:12[22m   [34m├─[39m [2m/api/typescript/configureLogging/index.html[22m [2m(+10ms)[22m 
+[2m01:49:12[22m   [34m├─[39m [2m/api/typescript/tool/index.html[22m [2m(+11ms)[22m 
+[2m01:49:12[22m   [34m├─[39m [2m/api/typescript/AfterInvocationEvent/index.html[22m [2m(+11ms)[22m 
+[2m01:49:12[22m   [34m├─[39m [2m/api/typescript/AfterToolsEvent/index.html[22m [2m(+11ms)[22m 
+[2m01:49:12[22m   [34m├─[39m [2m/api/typescript/AfterModelCallEvent/index.html[22m [2m(+10ms)[22m 
+[2m01:49:12[22m   [34m├─[39m [2m/api/typescript/AgentResult/index.html[22m [2m(+10ms)[22m 
+[2m01:49:12[22m   [34m├─[39m [2m/api/typescript/AfterToolCallEvent/index.html[22m [2m(+10ms)[22m 
+[2m01:49:12[22m   [34m├─[39m [2m/api/typescript/Agent/index.html[22m [2m(+10ms)[22m 
+[2m01:49:12[22m   [34m├─[39m [2m/api/typescript/AgentResultEvent/index.html[22m [2m(+9ms)[22m 
+[2m01:49:12[22m   [34m├─[39m [2m/api/typescript/BedrockModel/index.html[22m [2m(+10ms)[22m 
+[2m01:49:12[22m   [34m├─[39m [2m/api/typescript/BeforeInvocationEvent/index.html[22m [2m(+10ms)[22m 
+[2m01:49:12[22m   [34m├─[39m [2m/api/typescript/BeforeModelCallEvent/index.html[22m [2m(+10ms)[22m 
+[2m01:49:12[22m   [34m├─[39m [2m/api/typescript/BeforeToolCallEvent/index.html[22m [2m(+10ms)[22m 
+[2m01:49:12[22m   [34m├─[39m [2m/api/typescript/CachePointBlock/index.html[22m [2m(+11ms)[22m 
+[2m01:49:12[22m   [34m├─[39m [2m/api/typescript/BeforeToolsEvent/index.html[22m [2m(+10ms)[22m 
+[2m01:49:12[22m   [34m├─[39m [2m/api/typescript/ConcurrentInvocationError/index.html[22m [2m(+10ms)[22m 
+[2m01:49:12[22m   [34m├─[39m [2m/api/typescript/ContentBlockEvent/index.html[22m [2m(+10ms)[22m 
+[2m01:49:12[22m   [34m├─[39m [2m/api/typescript/ContextWindowOverflowError/index.html[22m [2m(+10ms)[22m 
+[2m01:49:12[22m   [34m├─[39m [2m/api/typescript/DocumentBlock/index.html[22m [2m(+10ms)[22m 
+[2m01:49:12[22m   [34m├─[39m [2m/api/typescript/FunctionTool/index.html[22m [2m(+10ms)[22m 
+[2m01:49:12[22m   [34m├─[39m [2m/api/typescript/HookRegistry/index.html[22m [2m(+12ms)[22m 
+[2m01:49:12[22m   [34m├─[39m [2m/api/typescript/HookableEvent/index.html[22m [2m(+14ms)[22m 
+[2m01:49:12[22m   [34m├─[39m [2m/api/typescript/ImageBlock/index.html[22m [2m(+10ms)[22m 
+[2m01:49:12[22m   [34m├─[39m [2m/api/typescript/InitializedEvent/index.html[22m [2m(+10ms)[22m 
+[2m01:49:12[22m   [34m├─[39m [2m/api/typescript/GuardContentBlock/index.html[22m [2m(+10ms)[22m 
+[2m01:49:12[22m   [34m├─[39m [2m/api/typescript/JsonBlock/index.html[22m [2m(+10ms)[22m 
+[2m01:49:12[22m   [34m├─[39m [2m/api/typescript/JsonValidationError/index.html[22m [2m(+10ms)[22m 
+[2m01:49:12[22m   [34m├─[39m [2m/api/typescript/MaxTokensError/index.html[22m [2m(+10ms)[22m 
+[2m01:49:12[22m   [34m├─[39m [2m/api/typescript/McpClient/index.html[22m [2m(+10ms)[22m 
+[2m01:49:12[22m   [34m├─[39m [2m/api/typescript/Message/index.html[22m [2m(+10ms)[22m 
+[2m01:49:12[22m   [34m├─[39m [2m/api/typescript/MessageAddedEvent/index.html[22m [2m(+10ms)[22m 
+[2m01:49:12[22m   [34m├─[39m [2m/api/typescript/Model/index.html[22m [2m(+10ms)[22m 
+[2m01:49:12[22m   [34m├─[39m [2m/api/typescript/ModelError/index.html[22m [2m(+10ms)[22m 
+[2m01:49:12[22m   [34m├─[39m [2m/api/typescript/ModelMessageEvent/index.html[22m [2m(+10ms)[22m 
+[2m01:49:12[22m   [34m├─[39m [2m/api/typescript/ModelStreamUpdateEvent/index.html[22m [2m(+10ms)[22m 
+[2m01:49:12[22m   [34m├─[39m [2m/api/typescript/ModelThrottledError/index.html[22m [2m(+10ms)[22m 
+[2m01:49:12[22m   [34m├─[39m [2m/api/typescript/NullConversationManager/index.html[22m [2m(+10ms)[22m 
+[2m01:49:12[22m   [34m├─[39m [2m/api/typescript/ReasoningBlock/index.html[22m [2m(+10ms)[22m 
+[2m01:49:12[22m   [34m├─[39m [2m/api/typescript/S3Location/index.html[22m [2m(+11ms)[22m 
+[2m01:49:12[22m   [34m├─[39m [2m/api/typescript/SlidingWindowConversationManager/index.html[22m [2m(+10ms)[22m 
+[2m01:49:12[22m   [34m├─[39m [2m/api/typescript/StreamEvent/index.html[22m [2m(+10ms)[22m 
+[2m01:49:12[22m   [34m├─[39m [2m/api/typescript/StructuredOutputException/index.html[22m [2m(+10ms)[22m 
+[2m01:49:12[22m   [34m├─[39m [2m/api/typescript/ToolResultBlock/index.html[22m [2m(+10ms)[22m 
+[2m01:49:12[22m   [34m├─[39m [2m/api/typescript/TextBlock/index.html[22m [2m(+16ms)[22m 
+[2m01:49:13[22m   [34m├─[39m [2m/api/typescript/Tool/index.html[22m [2m(+10ms)[22m 
+[2m01:49:13[22m   [34m├─[39m [2m/api/typescript/ToolResultEvent/index.html[22m [2m(+11ms)[22m 
+[2m01:49:13[22m   [34m├─[39m [2m/api/typescript/ToolStreamUpdateEvent/index.html[22m [2m(+11ms)[22m 
+[2m01:49:13[22m   [34m├─[39m [2m/api/typescript/ToolUseBlock/index.html[22m [2m(+10ms)[22m 
+[2m01:49:13[22m   [34m├─[39m [2m/api/typescript/VideoBlock/index.html[22m [2m(+10ms)[22m 
+[2m01:49:13[22m   [34m├─[39m [2m/api/typescript/AgentData/index.html[22m [2m(+10ms)[22m 
+[2m01:49:13[22m   [34m├─[39m [2m/api/typescript/AgentState/index.html[22m [2m(+10ms)[22m 
+[2m01:49:13[22m   [34m├─[39m [2m/api/typescript/BaseModelConfig/index.html[22m [2m(+10ms)[22m 
+[2m01:49:13[22m   [34m├─[39m [2m/api/typescript/BedrockModelConfig/index.html[22m [2m(+10ms)[22m 
+[2m01:49:13[22m   [34m├─[39m [2m/api/typescript/BedrockModelOptions/index.html[22m [2m(+10ms)[22m 
+[2m01:49:13[22m   [34m├─[39m [2m/api/typescript/CachePointBlockData/index.html[22m [2m(+10ms)[22m 
+[2m01:49:13[22m   [34m├─[39m [2m/api/typescript/DocumentBlockData/index.html[22m [2m(+10ms)[22m 
+[2m01:49:13[22m   [34m├─[39m [2m/api/typescript/GuardContentBlockData/index.html[22m [2m(+10ms)[22m 
+[2m01:49:13[22m   [34m├─[39m [2m/api/typescript/GuardContentImage/index.html[22m [2m(+10ms)[22m 
+[2m01:49:13[22m   [34m├─[39m [2m/api/typescript/GuardContentText/index.html[22m [2m(+10ms)[22m 
+[2m01:49:13[22m   [34m├─[39m [2m/api/typescript/HookProvider/index.html[22m [2m(+10ms)[22m 
+[2m01:49:13[22m   [34m├─[39m [2m/api/typescript/ImageBlockData/index.html[22m [2m(+10ms)[22m 
+[2m01:49:13[22m   [34m├─[39m [2m/api/typescript/InvokableTool/index.html[22m [2m(+10ms)[22m 
+[2m01:49:13[22m   [34m├─[39m [2m/api/typescript/Logger/index.html[22m [2m(+10ms)[22m 
+[2m01:49:13[22m   [34m├─[39m [2m/api/typescript/MessageData/index.html[22m [2m(+10ms)[22m 
+[2m01:49:13[22m   [34m├─[39m [2m/api/typescript/Metrics/index.html[22m [2m(+10ms)[22m 
+[2m01:49:13[22m   [34m├─[39m [2m/api/typescript/ModelContentBlockDeltaEvent/index.html[22m [2m(+10ms)[22m 
+[2m01:49:13[22m   [34m├─[39m [2m/api/typescript/ModelContentBlockStartEvent/index.html[22m [2m(+10ms)[22m 
+[2m01:49:13[22m   [34m├─[39m [2m/api/typescript/ModelContentBlockDeltaEventData/index.html[22m [2m(+11ms)[22m 
+[2m01:49:13[22m   [34m├─[39m [2m/api/typescript/ModelContentBlockStartEventData/index.html[22m [2m(+12ms)[22m 
+[2m01:49:13[22m   [34m├─[39m [2m/api/typescript/ModelContentBlockStopEvent/index.html[22m [2m(+11ms)[22m 
+[2m01:49:13[22m   [34m├─[39m [2m/api/typescript/ModelMessageStartEvent/index.html[22m [2m(+10ms)[22m 
+[2m01:49:13[22m   [34m├─[39m [2m/api/typescript/ModelMessageStartEventData/index.html[22m [2m(+10ms)[22m 
+[2m01:49:13[22m   [34m├─[39m [2m/api/typescript/ModelMessageStopEvent/index.html[22m [2m(+10ms)[22m 
+[2m01:49:13[22m   [34m├─[39m [2m/api/typescript/ModelMessageStopEventData/index.html[22m [2m(+10ms)[22m 
+[2m01:49:13[22m   [34m├─[39m [2m/api/typescript/ModelMetadataEvent/index.html[22m [2m(+10ms)[22m 
+[2m01:49:13[22m   [34m├─[39m [2m/api/typescript/ModelMetadataEventData/index.html[22m [2m(+10ms)[22m 
+[2m01:49:13[22m   [34m├─[39m [2m/api/typescript/ModelStopResponse/index.html[22m [2m(+10ms)[22m 
+[2m01:49:13[22m   [34m├─[39m [2m/api/typescript/ReasoningBlockData/index.html[22m [2m(+10ms)[22m 
+[2m01:49:13[22m   [34m├─[39m [2m/api/typescript/ReasoningContentDelta/index.html[22m [2m(+10ms)[22m 
+[2m01:49:13[22m   [34m├─[39m [2m/api/typescript/S3LocationData/index.html[22m [2m(+10ms)[22m 
+[2m01:49:13[22m   [34m├─[39m [2m/api/typescript/StreamOptions/index.html[22m [2m(+10ms)[22m 
+[2m01:49:13[22m   [34m├─[39m [2m/api/typescript/TextBlockData/index.html[22m [2m(+10ms)[22m 
+[2m01:49:13[22m   [34m├─[39m [2m/api/typescript/TextDelta/index.html[22m [2m(+11ms)[22m 
+[2m01:49:13[22m   [34m├─[39m [2m/api/typescript/ToolResultBlockData/index.html[22m [2m(+10ms)[22m 
+[2m01:49:13[22m   [34m├─[39m [2m/api/typescript/ToolSpec/index.html[22m [2m(+10ms)[22m 
+[2m01:49:13[22m   [34m├─[39m [2m/api/typescript/ToolContext/index.html[22m [2m(+10ms)[22m 
+[2m01:49:13[22m   [34m├─[39m [2m/api/typescript/ToolStreamEvent/index.html[22m [2m(+10ms)[22m 
+[2m01:49:13[22m   [34m├─[39m [2m/api/typescript/ToolStreamEventData/index.html[22m [2m(+10ms)[22m 
+[2m01:49:13[22m   [34m├─[39m [2m/api/typescript/ToolUse/index.html[22m [2m(+10ms)[22m 
+[2m01:49:13[22m   [34m├─[39m [2m/api/typescript/ToolUseBlockData/index.html[22m [2m(+10ms)[22m 
+[2m01:49:13[22m   [34m├─[39m [2m/api/typescript/ToolUseStart/index.html[22m [2m(+10ms)[22m 
+[2m01:49:13[22m   [34m├─[39m [2m/api/typescript/Usage/index.html[22m [2m(+10ms)[22m 
+[2m01:49:13[22m   [34m├─[39m [2m/api/typescript/ToolUseInputDelta/index.html[22m [2m(+10ms)[22m 
+[2m01:49:13[22m   [34m├─[39m [2m/api/typescript/AgentConfig/index.html[22m [2m(+10ms)[22m 
+[2m01:49:13[22m   [34m├─[39m [2m/api/typescript/VideoBlockData/index.html[22m [2m(+10ms)[22m 
+[2m01:49:13[22m   [34m├─[39m [2m/api/typescript/ContentBlockData/index.html[22m [2m(+10ms)[22m 
+[2m01:49:13[22m   [34m├─[39m [2m/api/typescript/AgentStreamEvent/index.html[22m [2m(+10ms)[22m 
+[2m01:49:13[22m   [34m├─[39m [2m/api/typescript/ContentBlock/index.html[22m [2m(+10ms)[22m 
+[2m01:49:13[22m   [34m├─[39m [2m/api/typescript/ContentBlockDelta/index.html[22m [2m(+10ms)[22m 
+[2m01:49:13[22m   [34m├─[39m [2m/api/typescript/DocumentContentBlock/index.html[22m [2m(+10ms)[22m 
+[2m01:49:13[22m   [34m├─[39m [2m/api/typescript/ContentBlockStart/index.html[22m [2m(+10ms)[22m 
+[2m01:49:13[22m   [34m├─[39m [2m/api/typescript/DocumentContentBlockData/index.html[22m [2m(+10ms)[22m 
+[2m01:49:13[22m   [34m├─[39m [2m/api/typescript/DocumentFormat/index.html[22m [2m(+9ms)[22m 
+[2m01:49:13[22m   [34m├─[39m [2m/api/typescript/DocumentSource/index.html[22m [2m(+9ms)[22m 
+[2m01:49:13[22m   [34m├─[39m [2m/api/typescript/DocumentSourceData/index.html[22m [2m(+9ms)[22m 
+[2m01:49:13[22m   [34m├─[39m [2m/api/typescript/GuardImageSource/index.html[22m [2m(+9ms)[22m 
+[2m01:49:13[22m   [34m├─[39m [2m/api/typescript/GuardQualifier/index.html[22m [2m(+9ms)[22m 
+[2m01:49:13[22m   [34m├─[39m [2m/api/typescript/GuardImageFormat/index.html[22m [2m(+9ms)[22m 
+[2m01:49:13[22m   [34m├─[39m [2m/api/typescript/HookCallback/index.html[22m [2m(+9ms)[22m 
+[2m01:49:13[22m   [34m├─[39m [2m/api/typescript/ImageFormat/index.html[22m [2m(+9ms)[22m 
+[2m01:49:13[22m   [34m├─[39m [2m/api/typescript/HookableEventConstructor/index.html[22m [2m(+9ms)[22m 
+[2m01:49:13[22m   [34m├─[39m [2m/api/typescript/ImageSource/index.html[22m [2m(+9ms)[22m 
+[2m01:49:13[22m   [34m├─[39m [2m/api/typescript/ImageSourceData/index.html[22m [2m(+9ms)[22m 
+[2m01:49:13[22m   [34m├─[39m [2m/api/typescript/JSONSchema/index.html[22m [2m(+9ms)[22m 
+[2m01:49:13[22m   [34m├─[39m [2m/api/typescript/JSONValue/index.html[22m [2m(+9ms)[22m 
+[2m01:49:13[22m   [34m├─[39m [2m/api/typescript/ModelStreamEvent/index.html[22m [2m(+9ms)[22m 
+[2m01:49:13[22m   [34m├─[39m [2m/api/typescript/McpClientConfig/index.html[22m [2m(+9ms)[22m 
+[2m01:49:13[22m   [34m├─[39m [2m/api/typescript/Role/index.html[22m [2m(+10ms)[22m 
+[2m01:49:13[22m   [34m├─[39m [2m/api/typescript/SlidingWindowConversationManagerConfig/index.html[22m [2m(+9ms)[22m 
+[2m01:49:13[22m   [34m├─[39m [2m/api/typescript/StopReason/index.html[22m [2m(+9ms)[22m 
+[2m01:49:13[22m   [34m├─[39m [2m/api/typescript/SystemContentBlock/index.html[22m [2m(+9ms)[22m 
+[2m01:49:13[22m   [34m├─[39m [2m/api/typescript/SystemPrompt/index.html[22m [2m(+9ms)[22m 
+[2m01:49:13[22m   [34m├─[39m [2m/api/typescript/SystemPromptData/index.html[22m [2m(+9ms)[22m 
+[2m01:49:13[22m   [34m├─[39m [2m/api/typescript/ToolChoice/index.html[22m [2m(+9ms)[22m 
+[2m01:49:13[22m   [34m├─[39m [2m/api/typescript/ToolList/index.html[22m [2m(+9ms)[22m 
+[2m01:49:13[22m   [34m├─[39m [2m/api/typescript/ToolResultContent/index.html[22m [2m(+9ms)[22m 
+[2m01:49:13[22m   [34m├─[39m [2m/api/typescript/ToolResultStatus/index.html[22m [2m(+9ms)[22m 
+[2m01:49:13[22m   [34m├─[39m [2m/api/typescript/ToolStreamGenerator/index.html[22m [2m(+9ms)[22m 
+[2m01:49:13[22m   [34m├─[39m [2m/api/typescript/VideoFormat/index.html[22m [2m(+9ms)[22m 
+[2m01:49:13[22m   [34m├─[39m [2m/api/typescript/VideoSource/index.html[22m [2m(+9ms)[22m 
+[2m01:49:13[22m   [34m├─[39m [2m/api/typescript/VideoSourceData/index.html[22m [2m(+9ms)[22m 
+[2m01:49:13[22m   [34m├─[39m [2m/api/typescript/index.html[22m [2m(+10ms)[22m 
+[2m01:49:13[22m   [34m├─[39m [2m/api/typescript/setupTracer/index.html[22m [2m(+10ms)[22m 
+[2m01:49:13[22m   [34m└─[39m [2m/api/typescript/TracerConfig/index.html[22m [2m(+9ms)[22m 
+[2m01:49:13[22m [32m✓ Completed in 57.81s.
+[39m
+[42m[30m generating optimized images [39m[49m
+[2m01:49:13[22m   [32m▶[39m /_astro/whale_2.D8UUil-J_mkbbj.webp [2m(before: 136kB, after: 11kB)[22m [2m(+49ms)[22m [2m(1/5)[22m
+[2m01:49:13[22m   [32m▶[39m /_astro/whale_1.BbWHgxOK_10Bx4x.webp [2m(before: 131kB, after: 8kB)[22m [2m(+50ms)[22m [2m(2/5)[22m
+[2m01:49:13[22m   [32m▶[39m /_astro/whale_3.CBbgjVUn_1ANSGd.webp [2m(before: 143kB, after: 12kB)[22m [2m(+50ms)[22m [2m(3/5)[22m
+[2m01:49:14[22m   [32m▶[39m /_astro/whale_2_large.DjeT7M9T_Z2ewWVS.webp [2m(before: 1476kB, after: 74kB)[22m [2m(+160ms)[22m [2m(4/5)[22m
+[2m01:49:14[22m   [32m▶[39m /_astro/trace_visualization.DpHaJCpW_1m5Vq7.webp [2m(before: 788kB, after: 222kB)[22m [2m(+524ms)[22m [2m(5/5)[22m
+[2m01:49:14[22m [32m✓ Completed in 574ms.
+[39m
+[2m01:49:14[22m [34m[starlight:pagefind][39m Building search index with Pagefind...
+[2m01:49:17[22m [34m[build][39m Waiting for integration [1m"@astrojs/starlight"[22m, hook [1m"astro:build:done"[22m...
+[2m01:49:17[22m [34m[starlight:pagefind][39m Found 381 HTML files.
+[2m01:49:18[22m [34m[starlight:pagefind][39m Finished building search index in 3.57s.
+[2m01:49:18[22m [34m[@astrojs/sitemap][39m `sitemap-index.xml` created at `dist`
+[2m01:49:18[22m [34m[build][39m 382 page(s) built in [1m97.81s[22m
+[2m01:49:18[22m [34m[build][39m [1mComplete![22m

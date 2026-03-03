@@ -15,9 +15,42 @@ const testimonialSchema = z.object({
   order: z.number().default(0),
 })
 
+const authorSchema = z.object({
+  name: z.string(),
+  role: z.string(),
+  bio: z.string(),
+  avatar: z.string().optional(),
+})
+
+const blogSchema = z.object({
+  title: z.string(),
+  date: z.coerce.date(),
+  description: z.string(),
+  authors: z.array(z.string()),
+  tags: z.array(z.string()).default([]),
+  draft: z.boolean().default(false),
+  coverImage: z.string().optional(),
+  // Injected by remark-reading-time plugin at build time
+  readingTime: z.string().optional(),
+})
+
 const testimonialsBase = import.meta.env.TESTIMONIALS_PATH || 'src/content/testimonials'
 
 export const collections = {
+  authors: defineCollection({
+    loader: glob({
+      base: 'src/content/authors',
+      pattern: '**/*.json',
+    }),
+    schema: authorSchema,
+  }),
+  blog: defineCollection({
+    loader: glob({
+      base: 'src/content/blog',
+      pattern: '**/*.{md,mdx}',
+    }),
+    schema: blogSchema,
+  }),
   testimonials: defineCollection({
     loader: glob({
       base: testimonialsBase,

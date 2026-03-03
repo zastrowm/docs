@@ -3,6 +3,7 @@ import { defineConfig } from 'astro/config'
 import starlight from '@astrojs/starlight'
 import path from 'node:path'
 import remarkMkdocsSnippets from './src/plugins/remark-mkdocs-snippets.ts'
+import remarkReadingTime from './src/plugins/remark-reading-time.ts'
 
 import { loadSidebarFromMkdocs } from "./src/sidebar.ts"
 import AutoImport from './src/plugins/astro-auto-import.ts'
@@ -28,7 +29,7 @@ export default defineConfig({
 		},
 	},
   markdown: {
-    remarkPlugins: [remarkMkdocsSnippets],
+    remarkPlugins: [remarkMkdocsSnippets, remarkReadingTime],
   },
   integrations: [
     astroExpressiveCode({
@@ -40,7 +41,6 @@ export default defineConfig({
         },
       },
     }),
-    mdx(),
     starlight({
       title: 'Strands Agents SDK',
       description: 'A model-driven approach to building AI agents in just a few lines of code.',
@@ -70,8 +70,9 @@ export default defineConfig({
         MarkdownContent: './src/components/overrides/MarkdownContent.astro',
         Sidebar: './src/components/overrides/Sidebar.astro',
       },
-  }),
-   AutoImport({
+    }),
+    // AutoImport must be before mdx() so auto-imports work in .mdx files
+    AutoImport({
       imports: [
         {
           '@astrojs/starlight/components': [
@@ -87,5 +88,6 @@ export default defineConfig({
         a: './src/components/PageLink.astro'
       }
     }),
+    mdx(),
   ],
 })

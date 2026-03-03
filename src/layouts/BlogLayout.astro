@@ -1,0 +1,160 @@
+---
+/**
+ * Blog Layout
+ *
+ * Provides the Starlight Header without the full docs page layout.
+ * Follows the same pattern as LandingLayout.astro: mocks starlightRoute
+ * and the translation function so the Header component can render.
+ */
+
+// Import Starlight styles - same order as Page.astro
+import 'virtual:starlight/user-css'
+import 'node_modules/@astrojs/starlight/style/layers.css'
+import 'node_modules/@astrojs/starlight/style/props.css'
+import 'node_modules/@astrojs/starlight/style/reset.css'
+import 'node_modules/@astrojs/starlight/style/util.css'
+
+// @ts-expect-error - Virtual modules are resolved at build time by Starlight
+import config from 'virtual:starlight/user-config'
+// @ts-expect-error - Virtual modules are resolved at build time by Starlight
+import ThemeProvider from 'virtual:starlight/components/ThemeProvider'
+
+import Header from '../components/overrides/Header.astro'
+import { pathWithBase } from '../util/links'
+
+interface Props {
+  title: string
+  description?: string
+  ogImage?: string
+}
+
+const { title, description, ogImage } = Astro.props
+
+const siteTitleHref = pathWithBase('/')
+const canonicalUrl = new URL(Astro.url.pathname, Astro.site)
+
+// Mock the minimal starlightRoute data needed for the Header component
+const mockStarlightRoute = {
+  siteTitle: config.title || 'Strands Agents SDK',
+  siteTitleHref,
+  lang: 'en',
+  dir: 'ltr' as const,
+  locale: undefined,
+  entry: {
+    id: 'blog',
+    slug: 'blog',
+    data: {
+      title,
+      description,
+      pagefind: false,
+      template: 'splash',
+    },
+  },
+  entryMeta: {
+    lang: 'en',
+    dir: 'ltr' as const,
+    locale: undefined,
+  },
+  sidebar: [],
+  hasSidebar: false,
+  headings: [],
+  pagination: { prev: undefined, next: undefined },
+  toc: undefined,
+  lastUpdated: undefined,
+  editUrl: undefined,
+  id: 'blog',
+  slug: 'blog',
+  head: [],
+}
+
+// @ts-expect-error - We're mocking the route data
+Astro.locals.starlightRoute = mockStarlightRoute
+
+// Mock the translation function that Starlight components use
+const translations: Record<string, string> = {
+  'sidebarNav.accessibleLabel': 'Main navigation',
+  'skipLink.label': 'Skip to content',
+  'search.label': 'Search',
+  'search.ctrlKey': 'Ctrl',
+  'search.cancelLabel': 'Cancel',
+  'themeSelect.accessibleLabel': 'Select theme',
+  'themeSelect.dark': 'Dark',
+  'themeSelect.light': 'Light',
+  'themeSelect.auto': 'Auto',
+  'menuButton.accessibleLabel': 'Menu',
+}
+
+const mockT = (key: string) => translations[key] || key
+mockT.all = () => translations
+
+// @ts-expect-error - We're mocking the translation function
+Astro.locals.t = mockT
+---
+
+<!doctype html>
+<html lang="en" dir="ltr" data-theme="dark">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="generator" content={Astro.generator} />
+    <title>{title} | Strands Agents Blog</title>
+    {description && <meta name="description" content={description} />}
+    <link rel="canonical" href={canonicalUrl.href} />
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href={pathWithBase('/favicon.svg')} />
+
+    <!-- Figtree Font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700&display=swap" rel="stylesheet" />
+
+    <!-- Open Graph -->
+    <meta property="og:title" content={title} />
+    {description && <meta property="og:description" content={description} />}
+    <meta property="og:type" content="article" />
+    <meta property="og:url" content={canonicalUrl.href} />
+    {ogImage && <meta property="og:image" content={ogImage} />}
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    {description && <meta name="twitter:description" content={description} />}
+    {ogImage && <meta name="twitter:image" content={ogImage} />}
+
+    <!-- RSS discovery -->
+    <link rel="alternate" type="application/rss+xml" title="Strands Agents Blog" href={pathWithBase('/blog/feed.xml')} />
+
+    <ThemeProvider />
+
+    <!-- Slot for page-specific head content (JSON-LD, etc.) -->
+    <slot name="head" />
+
+    <style is:global>
+      .blog-header {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        z-index: var(--sl-z-index-navbar);
+        height: var(--sl-nav-height);
+        padding: var(--sl-nav-pad-y) var(--sl-nav-pad-x);
+        background-color: var(--sl-color-bg-nav);
+        border-bottom: 1px solid var(--sl-color-hairline-shade);
+      }
+
+      .blog-main {
+        padding-top: var(--sl-nav-height);
+        min-height: 100vh;
+      }
+    </style>
+  </head>
+  <body>
+    <header class="blog-header">
+      <Header />
+    </header>
+    <main class="blog-main">
+      <slot />
+    </main>
+  </body>
+</html>

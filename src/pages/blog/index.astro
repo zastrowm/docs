@@ -1,18 +1,22 @@
 ---
 import BlogLayout from '../../layouts/BlogLayout.astro'
+import BlogFeaturedPost from '../../components/blog/BlogFeaturedPost.astro'
 import BlogPostGrid from '../../components/blog/BlogPostGrid.astro'
-import { getPublishedPosts, getAllTags, tagToSlug } from '../../util/blog'
+import { getPublishedPosts, getAllTags, tagToSlug, resolveAuthors } from '../../util/blog'
 import { pathWithBase } from '../../util/links'
 
 const posts = await getPublishedPosts()
 const tags = await getAllTags()
+
+const [featuredPost, ...remainingPosts] = posts
+const featuredAuthors = featuredPost ? await resolveAuthors(featuredPost.data.authors) : []
 ---
 
-<BlogLayout title="Blog" description="Tutorials, architecture deep-dives, and production insights from the Strands Agents team.">
+<BlogLayout title="Blog" description="News and updates from the Strands Agents team.">
   <div class="blog-index">
     <header class="blog-index-header">
       <h1>Blog</h1>
-      <p>Tutorials, architecture deep-dives, and production insights.</p>
+      <p>News and updates from the Strands Agents team.</p>
     </header>
 
     {tags.length > 0 && (
@@ -24,13 +28,19 @@ const tags = await getAllTags()
       </nav>
     )}
 
-    <BlogPostGrid posts={posts} />
+    {featuredPost && (
+      <BlogFeaturedPost post={featuredPost} authors={featuredAuthors} />
+    )}
+
+    {remainingPosts.length > 0 && (
+      <BlogPostGrid posts={remainingPosts} />
+    )}
   </div>
 </BlogLayout>
 
 <style>
   .blog-index {
-    max-width: 1200px;
+    max-width: 960px;
     margin: 0 auto;
     padding: 2rem 1.5rem 4rem;
   }

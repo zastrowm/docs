@@ -80,6 +80,11 @@ const rawNavLinks: NavLink[] = [
     basePath: '/community/',
   },
   {
+    label: 'Labs',
+    href: '/labs/',
+    basePath: '/labs/',
+  },
+  {
     label: 'Blog',
     href: '/blog/',
     basePath: '/blog/',

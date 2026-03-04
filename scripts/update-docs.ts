@@ -1,7 +1,8 @@
 import { readdir, readFile, writeFile, mkdir, unlink } from "fs/promises";
 import { join, dirname } from "path";
 import { updateQuickstart } from "./update-quickstart.js";
-import { getCommunityLabeledFiles } from "../src/sidebar.js";
+import { updateLanguageIndexFiles } from "./update-language-index.js";
+import { getCommunityLabeledFiles, getSidebarLabels, type SidebarInfo } from "../src/sidebar.js";
 import { convertApiLink, isOldApiLink } from "../src/util/api-link-converter.js";
 
 const DOCS_DIR = "docs";
@@ -24,6 +25,17 @@ const EXPLICIT_TITLES: Record<string, string> = {
   "user-guide/concepts/model-providers/fireworksai.md": "Fireworks AI",
   "user-guide/concepts/model-providers/xai.md": "xAI",
   "user-guide/concepts/model-providers/nebius-token-factory.md": "Nebius Token Factory",
+  // Labs pages (don't have H1 headings in source)
+  "labs/index.md": "Strands Labs",
+  "labs/robots.md": "Robots",
+  "labs/robots-sim.md": "Robots Sim",
+  "labs/ai-functions.md": "AI Functions",
+  // Contribute pages
+  "contribute/index.md": "Contribute",
+  "contribute/contributing/core-sdk.md": "Contributing to the SDK",
+  "contribute/contributing/documentation.md": "Contributing to Documentation",
+  "contribute/contributing/extensions.md": "Publishing Extensions",
+  "contribute/contributing/feature-proposals.md": "Feature Proposals",
 };
 
 // MkDocs extra variables from mkdocs.yml
@@ -364,7 +376,8 @@ function convertAdmonitions(content: string): string {
     const line = lines[i];
 
     // Match admonition start: !!! type "Title" or !!! type 'Title' or !!! type
-    const admonitionMatch = line.match(/^(\s*)!!!\s+(\w+)(?:\s+["']([^"']+)["'])?\s*$/);
+    // Also matches collapsible variants: ??? type and ???+ type
+    const admonitionMatch = line.match(/^(\s*)(?:!!!|\?\?\?[+]?)\s+(\w+)(?:\s+["']([^"']+)["'])?\s*$/);
 
     if (admonitionMatch) {
       const [, leadingWhitespace, type, title] = admonitionMatch;
@@ -602,7 +615,7 @@ function removeH1Heading(content: string): string {
   return result.join("\n");
 }
 
-function processFile(content: string, explicitTitle?: string, hasCommunityLabel?: boolean): { modified: boolean; newContent: string } {
+function processFile(content: string, explicitTitle?: string, hasCommunityLabel?: boolean, sidebarInfo?: SidebarInfo, isBidiPage?: boolean): { modified: boolean; newContent: string } {
   // Detect features BEFORE any transformations
   const hasLanguageBlock = content.includes(INFO_BLOCK_PATTERN);
   const hasCommunityBanner = content.includes(COMMUNITY_BANNER);
@@ -611,7 +624,7 @@ function processFile(content: string, explicitTitle?: string, hasCommunityLabel?
   const alreadyHasLanguages = content.includes("languages:");
   const alreadyHasCommunity = content.includes("community:");
   const alreadyHasExperimental = content.includes("experimental:");
-  const alreadyHasSidebarBadge = content.includes("sidebar:");
+  const alreadyHasSidebar = content.includes("sidebar:");
 
   // Determine what frontmatter needs to be added based on original content
   const needsLanguages = hasLanguageBlock && !alreadyHasLanguages;
@@ -641,16 +654,25 @@ function processFile(content: string, explicitTitle?: string, hasCommunityLabel?
   if (hasExperimentalInTitle && titleToUse) {
     titleToUse = titleToUse.replace(/\s*\[Experimental\]\s*/g, "").trim();
   }
-  
+
   // Determine if file needs experimental frontmatter (from title or macro)
   const hasExperimentalContent = hasExperimentalInTitle || hasExperimentalWarningMacro;
   const needsExperimental = hasExperimentalContent && !alreadyHasExperimental;
   const needsTitle = titleToUse && !hasExistingTitle;
   
-  // Determine sidebar badge type (experimental takes precedence over community)
-  const needsExperimentalBadge = hasExperimentalContent && !alreadyHasSidebarBadge;
-  const needsCommunityBadge = hasCommunityLabel && !alreadyHasSidebarBadge && !needsExperimentalBadge;
-  const needsSidebarBadge = needsExperimentalBadge || needsCommunityBadge;
+  // Determine sidebar badge type (experimental takes precedence, then nav badge, then community)
+  // Nav badges from <sup> tags: "new", "community", etc.
+  const navBadge = sidebarInfo?.badge;
+  const needsExperimentalBadge = hasExperimentalContent && !alreadyHasSidebar && !isBidiPage;
+  const needsNavBadge = navBadge && !alreadyHasSidebar && !needsExperimentalBadge;
+  const needsCommunityBadge = hasCommunityLabel && !alreadyHasSidebar && !needsExperimentalBadge && !needsNavBadge;
+  
+  // Determine if sidebar label is needed (when label differs from title)
+  const sidebarLabel = sidebarInfo?.label;
+  const needsSidebarLabel = sidebarLabel && sidebarLabel !== titleToUse && !alreadyHasSidebar;
+  
+  // Determine if any sidebar config is needed
+  const needsSidebar = needsExperimentalBadge || needsNavBadge || needsCommunityBadge || needsSidebarLabel;
 
   // If there's an H1 heading, remove it (title goes in frontmatter)
   if (h1Title) {
@@ -661,7 +683,7 @@ function processFile(content: string, explicitTitle?: string, hasCommunityLabel?
   const contentTransformed = newContent !== content;
 
   // Determine if any modifications are needed
-  const needsModification = contentTransformed || needsLanguages || needsCommunity || needsExperimental || needsTitle || needsSidebarBadge;
+  const needsModification = contentTransformed || needsLanguages || needsCommunity || needsExperimental || needsTitle || needsSidebar;
 
   if (!needsModification) {
     return { modified: false, newContent: content };
@@ -675,7 +697,7 @@ function processFile(content: string, explicitTitle?: string, hasCommunityLabel?
   let addedCommunity = alreadyHasCommunity;
   let addedExperimental = alreadyHasExperimental;
   let addedTitle = hasExistingTitle;
-  let addedSidebarBadge = alreadyHasSidebarBadge;
+  let addedSidebar = alreadyHasSidebar;
 
   for (let i = 0; i < lines.length; i++) {
     const line = lines[i];
@@ -709,19 +731,28 @@ function processFile(content: string, explicitTitle?: string, hasCommunityLabel?
         newLines.push("experimental: true");
         addedExperimental = true;
       }
-      if (hasCommunityLabel && !addedSidebarBadge && !needsExperimentalBadge) {
+      // Add sidebar config (label and/or badge)
+      if (needsSidebar && !addedSidebar) {
         newLines.push("sidebar:");
-        newLines.push("  badge:");
-        newLines.push("    text: Community");
-        newLines.push("    variant: note");
-        addedSidebarBadge = true;
-      }
-      if (needsExperimentalBadge && !addedSidebarBadge) {
-        newLines.push("sidebar:");
-        newLines.push("  badge:");
-        newLines.push("    text: Experimental");
-        newLines.push("    variant: note");
-        addedSidebarBadge = true;
+        if (needsSidebarLabel) {
+          newLines.push(`  label: "${sidebarLabel}"`);
+        }
+        if (needsExperimentalBadge) {
+          newLines.push("  badge:");
+          newLines.push("    text: Experimental");
+          newLines.push("    variant: note");
+        } else if (needsNavBadge) {
+          // Capitalize first letter of badge text
+          const badgeText = navBadge.charAt(0).toUpperCase() + navBadge.slice(1);
+          newLines.push("  badge:");
+          newLines.push(`    text: ${badgeText}`);
+          newLines.push("    variant: note");
+        } else if (needsCommunityBadge) {
+          newLines.push("  badge:");
+          newLines.push("    text: Community");
+          newLines.push("    variant: note");
+        }
+        addedSidebar = true;
       }
       inFrontMatter = false;
       newLines.push(line);
@@ -743,17 +774,27 @@ function processFile(content: string, explicitTitle?: string, hasCommunityLabel?
     if (hasLanguageBlock) frontMatterFields.push("languages: Python");
     if (hasCommunityBanner) frontMatterFields.push("community: true");
     if (hasExperimentalContent) frontMatterFields.push("experimental: true");
-    if (hasCommunityLabel && !needsExperimentalBadge) {
+    // Add sidebar config (label and/or badge)
+    if (needsSidebar) {
       frontMatterFields.push("sidebar:");
-      frontMatterFields.push("  badge:");
-      frontMatterFields.push("    text: Community");
-      frontMatterFields.push("    variant: note");
-    }
-    if (needsExperimentalBadge) {
-      frontMatterFields.push("sidebar:");
-      frontMatterFields.push("  badge:");
-      frontMatterFields.push("    text: Experimental");
-      frontMatterFields.push("    variant: note");
+      if (needsSidebarLabel) {
+        frontMatterFields.push(`  label: "${sidebarLabel}"`);
+      }
+      if (needsExperimentalBadge) {
+        frontMatterFields.push("  badge:");
+        frontMatterFields.push("    text: Experimental");
+        frontMatterFields.push("    variant: note");
+      } else if (needsNavBadge) {
+        // Capitalize first letter of badge text
+        const badgeText = navBadge.charAt(0).toUpperCase() + navBadge.slice(1);
+        frontMatterFields.push("  badge:");
+        frontMatterFields.push(`    text: ${badgeText}`);
+        frontMatterFields.push("    variant: note");
+      } else if (needsCommunityBadge) {
+        frontMatterFields.push("  badge:");
+        frontMatterFields.push("    text: Community");
+        frontMatterFields.push("    variant: note");
+      }
     }
     if (frontMatterFields.length > 0) {
       newLines.unshift("---", ...frontMatterFields, "---", "");
@@ -774,6 +815,10 @@ async function main() {
   // Load community-labeled files from mkdocs.yml nav
   const communityLabeledFiles = getCommunityLabeledFiles(MKDOCS_PATH);
   console.log(`Found ${communityLabeledFiles.size} community-labeled files in nav`);
+
+  // Load sidebar labels from mkdocs.yml nav
+  const sidebarLabels = getSidebarLabels(MKDOCS_PATH);
+  console.log(`Found ${sidebarLabels.size} sidebar labels in nav`);
 
   const files = await getAllMarkdownFiles(DOCS_DIR);
   let processedCount = 0;
@@ -799,7 +844,13 @@ async function main() {
     // Check if this file has a community label in the nav
     const hasCommunityLabel = communityLabeledFiles.has(relativePath);
     
-    const { newContent } = processFile(content, explicitTitle, hasCommunityLabel);
+    // Get sidebar info from nav (label and badge)
+    const sidebarInfo = sidebarLabels.get(relativePath);
+    
+    // Check if this is a bidi (bidirectional-streaming) page — skip experimental badge for these
+    const isBidiPage = relativePath.startsWith("user-guide/concepts/bidirectional-streaming/");
+
+    const { newContent } = processFile(content, explicitTitle, hasCommunityLabel, sidebarInfo, isBidiPage);
 
     // Determine output path (convert .md to .mdx and write to OUTPUT_DIR)
     const outputRelativePath = relativePath.replace(/\.md$/, ".mdx");
@@ -894,6 +945,7 @@ async function main() {
 
   // Run special-case page updates
   await updateQuickstart();
+  await updateLanguageIndexFiles();
 }
 
 main().catch(console.error);

@@ -48,33 +48,71 @@ const jsonLd = {
     <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
   </Fragment>
 
-  <article class="blog-post">
-    <header class="blog-post-header">
-      <div class="blog-post-meta">
-        <time datetime={date.toISOString()}>{formatDate(date)}</time>
-        {readingTime && <span class="reading-time">{readingTime}</span>}
+  <div class="blog-wrapper">
+    <aside class="blog-sidebar">
+      <a href={pathWithBase('/blog/')} class="blog-back-link">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><polyline points="15 18 9 12 15 6"></polyline></svg>
+        All posts
+      </a>
+    </aside>
+
+    <article class="blog-post">
+      <header class="blog-post-header">
+        <div class="blog-post-meta">
+          <time datetime={date.toISOString()}>{formatDate(date)}</time>
+          {readingTime && <span class="reading-time">{readingTime}</span>}
+        </div>
+        <h1>{title}</h1>
+        <p class="blog-post-description">{description}</p>
+        <BlogAuthorByline authors={authors} />
+        <BlogTagList tags={tags} />
+      </header>
+
+      {coverImage && (
+        <img src={coverImage} alt="" class="blog-post-cover" />
+      )}
+
+      <div class="blog-post-content">
+        <slot />
       </div>
-      <h1>{title}</h1>
-      <p class="blog-post-description">{description}</p>
-      <BlogAuthorByline authors={authors} />
-      <BlogTagList tags={tags} />
-    </header>
-
-    {coverImage && (
-      <img src={coverImage} alt="" class="blog-post-cover" />
-    )}
-
-    <div class="blog-post-content">
-      <slot />
-    </div>
-  </article>
+    </article>
+  </div>
 </BlogLayout>
 
 <style>
-  .blog-post {
-    max-width: 680px;
+  .blog-wrapper {
+    display: grid;
+    grid-template-columns: 1fr minmax(0, 760px) 1fr;
+    max-width: 1200px;
     margin: 0 auto;
     padding: 2rem 1.5rem 4rem;
+  }
+
+  .blog-sidebar {
+    padding-top: 0.25rem;
+    justify-self: end;
+    padding-right: 2rem;
+  }
+
+  .blog-back-link {
+    position: sticky;
+    top: 6rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.375rem;
+    font-family: 'Figtree', sans-serif;
+    font-size: 0.875rem;
+    color: var(--sl-color-gray-3);
+    text-decoration: none;
+    transition: color 0.15s;
+  }
+
+  .blog-back-link:hover {
+    color: var(--sl-color-white);
+  }
+
+  .blog-post {
+    min-width: 0;
   }
 
   .blog-post-header {
@@ -185,5 +223,24 @@ const jsonLd = {
     padding: 0.125rem 0.375rem;
     border-radius: 4px;
     font-size: 0.9em;
+  }
+
+  /* Mobile: collapse to single column with inline back link */
+  @media (max-width: 768px) {
+    .blog-wrapper {
+      grid-template-columns: 1fr;
+      padding: 1.5rem 1rem 3rem;
+    }
+
+    .blog-sidebar {
+      padding-top: 0;
+      padding-right: 0;
+      justify-self: start;
+      margin-bottom: 1rem;
+    }
+
+    .blog-back-link {
+      position: static;
+    }
   }
 </style>

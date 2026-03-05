@@ -666,10 +666,6 @@ The landing page renders both `logo` and `dark_logo` (falling back to `logo` whe
 [data-theme='dark'] .logo-dark { display: block; }
 ```
 
-### Extraction Script
-
-`scripts/extract-testimonials.py` — extracts testimonials from the old MkDocs `overrides/main.html` and writes them as JSON. `scripts/json-to-md-testimonials.py` converts those JSON files to the Markdown format described above. Both scripts are kept for reference but are not part of the build process.
-
 ## Temporary Migration Files
 
 The following files were created to support the MkDocs → Astro migration and should be deleted once migration is complete:

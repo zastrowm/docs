@@ -6,7 +6,7 @@ type ContentBlockDelta =
   | CitationsDelta;
 ```
 
-Defined in: [src/models/streaming.ts:327](https://github.com/strands-agents/sdk-typescript/blob/3d31e16991c3f9724599e58789ad8dcd94fe06b3/src/models/streaming.ts#L327)
+Defined in: [src/models/streaming.ts:327](https://github.com/strands-agents/sdk-typescript/blob/97040b5a028fde61291c32106f76392515fb9984/src/models/streaming.ts#L327)
 
 A delta (incremental chunk) of content within a content block. Can be text, tool use input, or reasoning content.
 

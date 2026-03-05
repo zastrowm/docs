@@ -2,7 +2,7 @@
 type HookCallback<T> = (event) => void | Promise<void>;
 ```
 
-Defined in: [src/hooks/types.ts:21](https://github.com/strands-agents/sdk-typescript/blob/3d31e16991c3f9724599e58789ad8dcd94fe06b3/src/hooks/types.ts#L21)
+Defined in: [src/hooks/types.ts:21](https://github.com/strands-agents/sdk-typescript/blob/97040b5a028fde61291c32106f76392515fb9984/src/hooks/types.ts#L21)
 
 Type for callback functions that handle hookable events. Callbacks can be synchronous or asynchronous.
 

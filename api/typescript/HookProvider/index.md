@@ -1,4 +1,4 @@
-Defined in: [src/hooks/types.ts:52](https://github.com/strands-agents/sdk-typescript/blob/3d31e16991c3f9724599e58789ad8dcd94fe06b3/src/hooks/types.ts#L52)
+Defined in: [src/hooks/types.ts:52](https://github.com/strands-agents/sdk-typescript/blob/97040b5a028fde61291c32106f76392515fb9984/src/hooks/types.ts#L52)
 
 Protocol for objects that provide hook callbacks to an agent. Enables composable extension of agent functionality.
 
@@ -29,7 +29,7 @@ class MyHooks implements HookProvider {
 registerCallbacks(registry): void;
 ```
 
-Defined in: [src/hooks/types.ts:58](https://github.com/strands-agents/sdk-typescript/blob/3d31e16991c3f9724599e58789ad8dcd94fe06b3/src/hooks/types.ts#L58)
+Defined in: [src/hooks/types.ts:58](https://github.com/strands-agents/sdk-typescript/blob/97040b5a028fde61291c32106f76392515fb9984/src/hooks/types.ts#L58)
 
 Register callback functions for specific event types.
 

@@ -18,7 +18,7 @@ type AgentConfig = {
 };
 ```
 
-Defined in: [src/agent/agent.ts:69](https://github.com/strands-agents/sdk-typescript/blob/3d31e16991c3f9724599e58789ad8dcd94fe06b3/src/agent/agent.ts#L69)
+Defined in: [src/agent/agent.ts:67](https://github.com/strands-agents/sdk-typescript/blob/97040b5a028fde61291c32106f76392515fb9984/src/agent/agent.ts#L67)
 
 Configuration object for creating a new Agent.
 
@@ -32,7 +32,7 @@ optional model:
   | string;
 ```
 
-Defined in: [src/agent/agent.ts:92](https://github.com/strands-agents/sdk-typescript/blob/3d31e16991c3f9724599e58789ad8dcd94fe06b3/src/agent/agent.ts#L92)
+Defined in: [src/agent/agent.ts:90](https://github.com/strands-agents/sdk-typescript/blob/97040b5a028fde61291c32106f76392515fb9984/src/agent/agent.ts#L90)
 
 The model instance that the agent will use to make decisions. Accepts either a Model instance or a string representing a Bedrock model ID. When a string is provided, it will be used to create a BedrockModel instance.
 
@@ -64,7 +64,7 @@ optional messages:
   | MessageData[];
 ```
 
-Defined in: [src/agent/agent.ts:94](https://github.com/strands-agents/sdk-typescript/blob/3d31e16991c3f9724599e58789ad8dcd94fe06b3/src/agent/agent.ts#L94)
+Defined in: [src/agent/agent.ts:92](https://github.com/strands-agents/sdk-typescript/blob/97040b5a028fde61291c32106f76392515fb9984/src/agent/agent.ts#L92)
 
 An initial set of messages to seed the agent’s conversation history.
 
@@ -76,7 +76,7 @@ An initial set of messages to seed the agent’s conversation history.
 optional tools: ToolList;
 ```
 
-Defined in: [src/agent/agent.ts:99](https://github.com/strands-agents/sdk-typescript/blob/3d31e16991c3f9724599e58789ad8dcd94fe06b3/src/agent/agent.ts#L99)
+Defined in: [src/agent/agent.ts:97](https://github.com/strands-agents/sdk-typescript/blob/97040b5a028fde61291c32106f76392515fb9984/src/agent/agent.ts#L97)
 
 An initial set of tools to register with the agent. Accepts nested arrays of tools at any depth, which will be flattened automatically.
 
@@ -90,7 +90,7 @@ optional systemPrompt:
   | SystemPromptData;
 ```
 
-Defined in: [src/agent/agent.ts:103](https://github.com/strands-agents/sdk-typescript/blob/3d31e16991c3f9724599e58789ad8dcd94fe06b3/src/agent/agent.ts#L103)
+Defined in: [src/agent/agent.ts:101](https://github.com/strands-agents/sdk-typescript/blob/97040b5a028fde61291c32106f76392515fb9984/src/agent/agent.ts#L101)
 
 A system prompt which guides model behavior.
 
@@ -102,7 +102,7 @@ A system prompt which guides model behavior.
 optional state: Record<string, JSONValue>;
 ```
 
-Defined in: [src/agent/agent.ts:105](https://github.com/strands-agents/sdk-typescript/blob/3d31e16991c3f9724599e58789ad8dcd94fe06b3/src/agent/agent.ts#L105)
+Defined in: [src/agent/agent.ts:103](https://github.com/strands-agents/sdk-typescript/blob/97040b5a028fde61291c32106f76392515fb9984/src/agent/agent.ts#L103)
 
 Optional initial state values for the agent.
 
@@ -114,7 +114,7 @@ Optional initial state values for the agent.
 optional printer: boolean;
 ```
 
-Defined in: [src/agent/agent.ts:111](https://github.com/strands-agents/sdk-typescript/blob/3d31e16991c3f9724599e58789ad8dcd94fe06b3/src/agent/agent.ts#L111)
+Defined in: [src/agent/agent.ts:109](https://github.com/strands-agents/sdk-typescript/blob/97040b5a028fde61291c32106f76392515fb9984/src/agent/agent.ts#L109)
 
 Enable automatic printing of agent output to console. When true, prints text generation, reasoning, and tool usage as they occur. Defaults to true.
 
@@ -126,7 +126,7 @@ Enable automatic printing of agent output to console. When true, prints text gen
 optional conversationManager: HookProvider;
 ```
 
-Defined in: [src/agent/agent.ts:116](https://github.com/strands-agents/sdk-typescript/blob/3d31e16991c3f9724599e58789ad8dcd94fe06b3/src/agent/agent.ts#L116)
+Defined in: [src/agent/agent.ts:114](https://github.com/strands-agents/sdk-typescript/blob/97040b5a028fde61291c32106f76392515fb9984/src/agent/agent.ts#L114)
 
 Conversation manager for handling message history and context overflow. Defaults to SlidingWindowConversationManager with windowSize of 40.
 
@@ -138,7 +138,7 @@ Conversation manager for handling message history and context overflow. Defaults
 optional hooks: HookProvider[];
 ```
 
-Defined in: [src/agent/agent.ts:121](https://github.com/strands-agents/sdk-typescript/blob/3d31e16991c3f9724599e58789ad8dcd94fe06b3/src/agent/agent.ts#L121)
+Defined in: [src/agent/agent.ts:119](https://github.com/strands-agents/sdk-typescript/blob/97040b5a028fde61291c32106f76392515fb9984/src/agent/agent.ts#L119)
 
 Hook providers to register with the agent. Hooks enable observing and extending agent behavior.
 
@@ -150,7 +150,7 @@ Hook providers to register with the agent. Hooks enable observing and extending 
 optional structuredOutputSchema: z.ZodSchema;
 ```
 
-Defined in: [src/agent/agent.ts:125](https://github.com/strands-agents/sdk-typescript/blob/3d31e16991c3f9724599e58789ad8dcd94fe06b3/src/agent/agent.ts#L125)
+Defined in: [src/agent/agent.ts:123](https://github.com/strands-agents/sdk-typescript/blob/97040b5a028fde61291c32106f76392515fb9984/src/agent/agent.ts#L123)
 
 Zod schema for structured output validation.
 
@@ -162,7 +162,7 @@ Zod schema for structured output validation.
 optional traceAttributes: Record<string, AttributeValue>;
 ```
 
-Defined in: [src/agent/agent.ts:131](https://github.com/strands-agents/sdk-typescript/blob/3d31e16991c3f9724599e58789ad8dcd94fe06b3/src/agent/agent.ts#L131)
+Defined in: [src/agent/agent.ts:129](https://github.com/strands-agents/sdk-typescript/blob/97040b5a028fde61291c32106f76392515fb9984/src/agent/agent.ts#L129)
 
 Custom trace attributes to include in all spans. These attributes are merged with standard attributes in telemetry spans. Telemetry must be enabled globally via telemetry.setupTracer() for these to take effect.
 
@@ -174,7 +174,7 @@ Custom trace attributes to include in all spans. These attributes are merged wit
 optional name: string;
 ```
 
-Defined in: [src/agent/agent.ts:135](https://github.com/strands-agents/sdk-typescript/blob/3d31e16991c3f9724599e58789ad8dcd94fe06b3/src/agent/agent.ts#L135)
+Defined in: [src/agent/agent.ts:133](https://github.com/strands-agents/sdk-typescript/blob/97040b5a028fde61291c32106f76392515fb9984/src/agent/agent.ts#L133)
 
 Optional name for the agent. Defaults to “Strands Agent”.
 
@@ -186,6 +186,6 @@ Optional name for the agent. Defaults to “Strands Agent”.
 optional agentId: string;
 ```
 
-Defined in: [src/agent/agent.ts:139](https://github.com/strands-agents/sdk-typescript/blob/3d31e16991c3f9724599e58789ad8dcd94fe06b3/src/agent/agent.ts#L139)
+Defined in: [src/agent/agent.ts:137](https://github.com/strands-agents/sdk-typescript/blob/97040b5a028fde61291c32106f76392515fb9984/src/agent/agent.ts#L137)
 
 Optional unique identifier for the agent. Defaults to “default”.

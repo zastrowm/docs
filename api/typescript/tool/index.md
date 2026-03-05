@@ -2,7 +2,7 @@
 function tool<TInput, TReturn>(config): InvokableTool<ZodInferred<TInput>, TReturn>;
 ```
 
-Defined in: [src/tools/zod-tool.ts:231](https://github.com/strands-agents/sdk-typescript/blob/3d31e16991c3f9724599e58789ad8dcd94fe06b3/src/tools/zod-tool.ts#L231)
+Defined in: [src/tools/zod-tool.ts:231](https://github.com/strands-agents/sdk-typescript/blob/97040b5a028fde61291c32106f76392515fb9984/src/tools/zod-tool.ts#L231)
 
 Creates an InvokableTool from a Zod schema and callback function.
 

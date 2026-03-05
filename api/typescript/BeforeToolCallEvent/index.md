@@ -1,4 +1,4 @@
-Defined in: [src/hooks/events.ts:148](https://github.com/strands-agents/sdk-typescript/blob/3d31e16991c3f9724599e58789ad8dcd94fe06b3/src/hooks/events.ts#L148)
+Defined in: [src/hooks/events.ts:148](https://github.com/strands-agents/sdk-typescript/blob/97040b5a028fde61291c32106f76392515fb9984/src/hooks/events.ts#L148)
 
 Event triggered just before a tool is executed. Fired after tool lookup but before execution begins.
 
@@ -14,7 +14,7 @@ Event triggered just before a tool is executed. Fired after tool lookup but befo
 new BeforeToolCallEvent(data): BeforeToolCallEvent;
 ```
 
-Defined in: [src/hooks/events.ts:158](https://github.com/strands-agents/sdk-typescript/blob/3d31e16991c3f9724599e58789ad8dcd94fe06b3/src/hooks/events.ts#L158)
+Defined in: [src/hooks/events.ts:158](https://github.com/strands-agents/sdk-typescript/blob/97040b5a028fde61291c32106f76392515fb9984/src/hooks/events.ts#L158)
 
 #### Parameters
 
@@ -44,7 +44,7 @@ Defined in: [src/hooks/events.ts:158](https://github.com/strands-agents/sdk-type
 readonly type: "beforeToolCallEvent";
 ```
 
-Defined in: [src/hooks/events.ts:149](https://github.com/strands-agents/sdk-typescript/blob/3d31e16991c3f9724599e58789ad8dcd94fe06b3/src/hooks/events.ts#L149)
+Defined in: [src/hooks/events.ts:149](https://github.com/strands-agents/sdk-typescript/blob/97040b5a028fde61291c32106f76392515fb9984/src/hooks/events.ts#L149)
 
 ---
 
@@ -54,7 +54,7 @@ Defined in: [src/hooks/events.ts:149](https://github.com/strands-agents/sdk-type
 readonly agent: AgentData;
 ```
 
-Defined in: [src/hooks/events.ts:150](https://github.com/strands-agents/sdk-typescript/blob/3d31e16991c3f9724599e58789ad8dcd94fe06b3/src/hooks/events.ts#L150)
+Defined in: [src/hooks/events.ts:150](https://github.com/strands-agents/sdk-typescript/blob/97040b5a028fde61291c32106f76392515fb9984/src/hooks/events.ts#L150)
 
 ---
 
@@ -68,7 +68,7 @@ readonly toolUse: {
 };
 ```
 
-Defined in: [src/hooks/events.ts:151](https://github.com/strands-agents/sdk-typescript/blob/3d31e16991c3f9724599e58789ad8dcd94fe06b3/src/hooks/events.ts#L151)
+Defined in: [src/hooks/events.ts:151](https://github.com/strands-agents/sdk-typescript/blob/97040b5a028fde61291c32106f76392515fb9984/src/hooks/events.ts#L151)
 
 #### name
 
@@ -96,4 +96,4 @@ input: JSONValue;
 readonly tool: Tool;
 ```
 
-Defined in: [src/hooks/events.ts:156](https://github.com/strands-agents/sdk-typescript/blob/3d31e16991c3f9724599e58789ad8dcd94fe06b3/src/hooks/events.ts#L156)
+Defined in: [src/hooks/events.ts:156](https://github.com/strands-agents/sdk-typescript/blob/97040b5a028fde61291c32106f76392515fb9984/src/hooks/events.ts#L156)

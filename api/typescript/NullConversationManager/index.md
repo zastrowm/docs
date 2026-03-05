@@ -1,4 +1,4 @@
-Defined in: [src/conversation-manager/null-conversation-manager.ts:16](https://github.com/strands-agents/sdk-typescript/blob/3d31e16991c3f9724599e58789ad8dcd94fe06b3/src/conversation-manager/null-conversation-manager.ts#L16)
+Defined in: [src/conversation-manager/null-conversation-manager.ts:16](https://github.com/strands-agents/sdk-typescript/blob/97040b5a028fde61291c32106f76392515fb9984/src/conversation-manager/null-conversation-manager.ts#L16)
 
 A no-op conversation manager that does not modify the conversation history. Implements HookProvider but registers zero hooks.
 
@@ -26,7 +26,7 @@ new NullConversationManager(): NullConversationManager;
 registerCallbacks(_registry): void;
 ```
 
-Defined in: [src/conversation-manager/null-conversation-manager.ts:23](https://github.com/strands-agents/sdk-typescript/blob/3d31e16991c3f9724599e58789ad8dcd94fe06b3/src/conversation-manager/null-conversation-manager.ts#L23)
+Defined in: [src/conversation-manager/null-conversation-manager.ts:23](https://github.com/strands-agents/sdk-typescript/blob/97040b5a028fde61291c32106f76392515fb9984/src/conversation-manager/null-conversation-manager.ts#L23)
 
 Registers callbacks with the hook registry. This implementation registers no hooks, providing a complete no-op behavior.
 

@@ -1,0 +1,63 @@
+Defined in: [src/hooks/events.ts:410](https://github.com/strands-agents/sdk-typescript/blob/3d31e16991c3f9724599e58789ad8dcd94fe06b3/src/hooks/events.ts#L410)
+
+Event triggered after all tools complete execution. Fired after tool results are collected and ready to be added to conversation. Uses reverse callback ordering for proper cleanup semantics.
+
+## Extends
+
+-   [`HookableEvent`](/api/typescript/HookableEvent/index.md)
+
+## Constructors
+
+### Constructor
+
+```ts
+new AfterToolsEvent(data): AfterToolsEvent;
+```
+
+Defined in: [src/hooks/events.ts:415](https://github.com/strands-agents/sdk-typescript/blob/3d31e16991c3f9724599e58789ad8dcd94fe06b3/src/hooks/events.ts#L415)
+
+#### Parameters
+
+| Parameter | Type |
+| --- | --- |
+| `data` | { `agent`: [`AgentData`](/api/typescript/AgentData/index.md); `message`: [`Message`](/api/typescript/Message/index.md); } |
+| `data.agent` | [`AgentData`](/api/typescript/AgentData/index.md) |
+| `data.message` | [`Message`](/api/typescript/Message/index.md) |
+
+#### Returns
+
+`AfterToolsEvent`
+
+#### Overrides
+
+[`HookableEvent`](/api/typescript/HookableEvent/index.md).[`constructor`](/api/typescript/HookableEvent/index.md#constructor)
+
+## Properties
+
+### type
+
+```ts
+readonly type: "afterToolsEvent";
+```
+
+Defined in: [src/hooks/events.ts:411](https://github.com/strands-agents/sdk-typescript/blob/3d31e16991c3f9724599e58789ad8dcd94fe06b3/src/hooks/events.ts#L411)
+
+---
+
+### agent
+
+```ts
+readonly agent: AgentData;
+```
+
+Defined in: [src/hooks/events.ts:412](https://github.com/strands-agents/sdk-typescript/blob/3d31e16991c3f9724599e58789ad8dcd94fe06b3/src/hooks/events.ts#L412)
+
+---
+
+### message
+
+```ts
+readonly message: Message;
+```
+
+Defined in: [src/hooks/events.ts:413](https://github.com/strands-agents/sdk-typescript/blob/3d31e16991c3f9724599e58789ad8dcd94fe06b3/src/hooks/events.ts#L413)

@@ -73,7 +73,7 @@ Note, interrupt state is cleared after resuming.
 def activate() -> None
 ```
 
-Defined in: [src/strands/interrupt.py:56](https://github.com/strands-agents/sdk-python/blob/main/src/strands/interrupt.py#L56)
+Defined in: [src/strands/interrupt.py:57](https://github.com/strands-agents/sdk-python/blob/main/src/strands/interrupt.py#L57)
 
 Activate the interrupt state.
 
@@ -83,7 +83,7 @@ Activate the interrupt state.
 def deactivate() -> None
 ```
 
-Defined in: [src/strands/interrupt.py:60](https://github.com/strands-agents/sdk-python/blob/main/src/strands/interrupt.py#L60)
+Defined in: [src/strands/interrupt.py:62](https://github.com/strands-agents/sdk-python/blob/main/src/strands/interrupt.py#L62)
 
 Deacitvate the interrupt state.
 
@@ -95,7 +95,7 @@ Interrupts and context are cleared.
 def resume(prompt: "AgentInput") -> None
 ```
 
-Defined in: [src/strands/interrupt.py:69](https://github.com/strands-agents/sdk-python/blob/main/src/strands/interrupt.py#L69)
+Defined in: [src/strands/interrupt.py:72](https://github.com/strands-agents/sdk-python/blob/main/src/strands/interrupt.py#L72)
 
 Configure the interrupt state if resuming from an interrupt event.
 
@@ -113,7 +113,7 @@ Configure the interrupt state if resuming from an interrupt event.
 def to_dict() -> dict[str, Any]
 ```
 
-Defined in: [src/strands/interrupt.py:104](https://github.com/strands-agents/sdk-python/blob/main/src/strands/interrupt.py#L104)
+Defined in: [src/strands/interrupt.py:120](https://github.com/strands-agents/sdk-python/blob/main/src/strands/interrupt.py#L120)
 
 Serialize to dict for session management.
 
@@ -124,7 +124,7 @@ Serialize to dict for session management.
 def from_dict(cls, data: dict[str, Any]) -> "_InterruptState"
 ```
 
-Defined in: [src/strands/interrupt.py:109](https://github.com/strands-agents/sdk-python/blob/main/src/strands/interrupt.py#L109)
+Defined in: [src/strands/interrupt.py:129](https://github.com/strands-agents/sdk-python/blob/main/src/strands/interrupt.py#L129)
 
 Initiailize interrupt state from serialized interrupt state.
 

@@ -1,4 +1,4 @@
-Defined in: [src/types/agent.ts:26](https://github.com/strands-agents/sdk-typescript/blob/97040b5a028fde61291c32106f76392515fb9984/src/types/agent.ts#L26)
+Defined in: [src/types/agent.ts:26](https://github.com/strands-agents/sdk-typescript/blob/1e39fd2194abd4b64787bb56d6fa62c1fa1c97f7/src/types/agent.ts#L26)
 
 Interface for objects that provide agent state. Allows ToolContext to work with different agent types.
 
@@ -10,7 +10,7 @@ Interface for objects that provide agent state. Allows ToolContext to work with 
 state: AppState;
 ```
 
-Defined in: [src/types/agent.ts:30](https://github.com/strands-agents/sdk-typescript/blob/97040b5a028fde61291c32106f76392515fb9984/src/types/agent.ts#L30)
+Defined in: [src/types/agent.ts:30](https://github.com/strands-agents/sdk-typescript/blob/1e39fd2194abd4b64787bb56d6fa62c1fa1c97f7/src/types/agent.ts#L30)
 
 App state storage accessible to tools and application logic.
 
@@ -22,6 +22,6 @@ App state storage accessible to tools and application logic.
 messages: Message[];
 ```
 
-Defined in: [src/types/agent.ts:35](https://github.com/strands-agents/sdk-typescript/blob/97040b5a028fde61291c32106f76392515fb9984/src/types/agent.ts#L35)
+Defined in: [src/types/agent.ts:35](https://github.com/strands-agents/sdk-typescript/blob/1e39fd2194abd4b64787bb56d6fa62c1fa1c97f7/src/types/agent.ts#L35)
 
 The conversation history of messages between user and assistant.

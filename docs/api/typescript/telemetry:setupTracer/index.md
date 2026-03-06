@@ -2,7 +2,7 @@
 function setupTracer(config?): NodeTracerProvider;
 ```
 
-Defined in: [src/telemetry/config.ts:77](https://github.com/strands-agents/sdk-typescript/blob/97040b5a028fde61291c32106f76392515fb9984/src/telemetry/config.ts#L77)
+Defined in: [src/telemetry/config.ts:77](https://github.com/strands-agents/sdk-typescript/blob/1e39fd2194abd4b64787bb56d6fa62c1fa1c97f7/src/telemetry/config.ts#L77)
 
 Set up the tracer provider with the given configuration.
 

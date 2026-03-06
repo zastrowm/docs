@@ -28,7 +28,7 @@ Initialize JSONSerializableDict.
 def set(key: str, value: Any) -> None
 ```
 
-Defined in: [src/strands/types/json\_dict.py:24](https://github.com/strands-agents/sdk-python/blob/main/src/strands/types/json_dict.py#L24)
+Defined in: [src/strands/types/json\_dict.py:25](https://github.com/strands-agents/sdk-python/blob/main/src/strands/types/json_dict.py#L25)
 
 Set a value in the store.
 
@@ -47,7 +47,7 @@ Set a value in the store.
 def get(key: str | None = None) -> Any
 ```
 
-Defined in: [src/strands/types/json\_dict.py:38](https://github.com/strands-agents/sdk-python/blob/main/src/strands/types/json_dict.py#L38)
+Defined in: [src/strands/types/json\_dict.py:40](https://github.com/strands-agents/sdk-python/blob/main/src/strands/types/json_dict.py#L40)
 
 Get a value or entire data.
 
@@ -65,7 +65,7 @@ The stored value, entire data dict, or None if not found
 def delete(key: str) -> None
 ```
 
-Defined in: [src/strands/types/json\_dict.py:52](https://github.com/strands-agents/sdk-python/blob/main/src/strands/types/json_dict.py#L52)
+Defined in: [src/strands/types/json\_dict.py:54](https://github.com/strands-agents/sdk-python/blob/main/src/strands/types/json_dict.py#L54)
 
 Delete a specific key from the store.
 

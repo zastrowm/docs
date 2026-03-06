@@ -34,7 +34,7 @@ export function resolveApiShorthand(link: string): string {
   const anchor = hashIndex !== -1 ? withoutPrefix.slice(hashIndex) : ''
 
   // The path is already in the correct format (python/strands.module or typescript/ClassName)
-  return `/api/${pathPart}/${anchor}`
+  return `/docs/api/${pathPart}/${anchor}`
 }
 
 /**
@@ -43,6 +43,19 @@ export function resolveApiShorthand(link: string): string {
  */
 export function getBase(): string {
   return import.meta.env.BASE_URL.replace(/\/$/, '')
+}
+
+/**
+ * Get the full site origin (scheme + host) from the SITE_URL environment variable.
+ * Returns an empty string if SITE_URL is not set, so URLs remain relative.
+ *
+ * Set SITE_DOMAIN=https://strandsagents.com when building for production to get
+ * absolute URLs in llms.txt / llms-full.txt.
+ */
+export function getSiteOrigin(): string {
+  const siteUrl = import.meta.env.SITE_DOMAIN
+  if (!siteUrl) return ''
+  return siteUrl.replace(/\/$/, '')
 }
 
 /**

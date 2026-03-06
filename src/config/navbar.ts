@@ -66,38 +66,38 @@ const rawNavLinks: NavLink[] = [
   },
   {
     label: 'User Guide',
-    href: '/user-guide/quickstart/overview/',
-    basePath: '/user-guide/',
+    href: '/docs/user-guide/quickstart/overview/',
+    basePath: '/docs/user-guide/',
   },
   {
     label: 'Examples',
-    href: '/examples/',
-    basePath: '/examples/',
+    href: '/docs/examples/',
+    basePath: '/docs/examples/',
   },
   {
     label: 'Community',
-    href: '/community/community-packages/',
-    basePath: '/community/',
+    href: '/docs/community/community-packages/',
+    basePath: '/docs/community/',
   },
   {
     label: 'Labs',
-    href: '/labs/',
-    basePath: '/labs/',
+    href: '/docs/labs/',
+    basePath: '/docs/labs/',
   },
   {
     label: 'Contribute ❤️',
-    href: '/contribute/',
-    basePath: '/contribute/',
+    href: '/docs/contribute/',
+    basePath: '/docs/contribute/',
   },
   {
     label: 'Python API',
-    href: '/api/python/',
-    basePath: '/api/python/',
+    href: '/docs/api/python/',
+    basePath: '/docs/api/python/',
   },
   {
     label: 'TypeScript API',
-    href: '/api/typescript/',
-    basePath: '/api/typescript/',
+    href: '/docs/api/typescript/',
+    basePath: '/docs/api/typescript/',
   },
 ]
 
@@ -106,3 +106,35 @@ const rawNavLinks: NavLink[] = [
  * Use this for rendering and comparisons.
  */
 export const navLinks: NavLink[] = transformNavLinks(rawNavLinks)
+
+/**
+ * GitHub links shown in the header dropdown (desktop) and mobile nav menu.
+ * Grouped into sections with a title and list of links.
+ */
+export interface GitHubLink {
+  label: string
+  href: string
+  icon?: string
+}
+
+export interface GitHubSection {
+  title: string
+  links: GitHubLink[]
+}
+
+export const githubSections: GitHubSection[] = [
+  {
+    title: 'SDKs',
+    links: [
+      { label: 'sdk-python', href: 'https://github.com/strands-agents/sdk-python', icon: 'PY' },
+      { label: 'sdk-typescript', href: 'https://github.com/strands-agents/sdk-typescript', icon: 'TS' },
+    ],
+  },
+  {
+    title: 'Organizations',
+    links: [
+      { label: 'strands-agents', href: 'https://github.com/strands-agents' },
+      { label: 'strands-labs', href: 'https://github.com/strands-labs' },
+    ],
+  },
+]

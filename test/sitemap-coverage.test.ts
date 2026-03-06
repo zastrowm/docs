@@ -4,8 +4,8 @@ import fs from 'node:fs'
 import path from 'node:path'
 import { resolveRedirectFromUrl } from '../src/util/redirect'
 
-const SITEMAP_URL = 'https://strandsagents.com/1.x/sitemap.xml'
-// Sitemap URLs look like: https://strandsagents.com/latest/documentation/docs/<path>/
+const KNOWN_ROUTES_PATH = path.resolve('test/known-routes.json')
+const SITEMAP_URL = 'https://strandsagents.com/1.x/sitemap.xml'// Sitemap URLs look like: https://strandsagents.com/latest/documentation/docs/<path>/
 // We extract the full URL for each entry and pass it through resolveRedirectFromUrl,
 // which strips the domain, version prefix, and /documentation/ segment.
 const SITEMAP_ENTRY = /^https:\/\/strandsagents\.com\/.+$/
@@ -121,5 +121,34 @@ describe('Sitemap Coverage', () => {
     }
 
     expect(brokenRedirects).toEqual([])
+  })
+})
+
+describe('Known Routes', () => {
+  // test/known-routes.json is an append-only registry of paths that must always resolve.
+  // Add new entries from the live sitemap with: npm run routes:update
+  it('every known route resolves to a valid CMS entry', async () => {
+    const knownRoutes: string[] = JSON.parse(fs.readFileSync(KNOWN_ROUTES_PATH, 'utf-8'))
+    const docs = await getCollection('docs')
+    const validIds = new Set(docs.map((doc) => doc.id))
+
+    const broken: Array<{ url: string; resolved: string }> = []
+    for (const routePath of knownRoutes) {
+      const resolved = resolveRedirectFromUrl(`https://strandsagents.com${routePath}`)
+      if (!resolved || resolved === '/') continue
+      const slug = resolved.replace(/\/$/, '')
+      if (!validIds.has(slug)) broken.push({ url: routePath, resolved: slug })
+    }
+
+    if (broken.length > 0) {
+      console.log(`\n=== Known routes no longer resolving (${broken.length}) ===\n`)
+      for (const { url, resolved } of broken) {
+        console.log(`  ${url}\n    -> ${resolved} (NOT FOUND)`)
+      }
+      console.log('\nIf these pages moved, add a redirect rule in src/util/redirect.ts.')
+      console.log('To sync known-routes.json with the live sitemap, run: npm run routes:update')
+    }
+
+    expect(broken).toEqual([])
   })
 })

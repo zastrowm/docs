@@ -3,8 +3,6 @@ name: Deploy Docs Preview
 on:
   pull_request_target:
     branches:
-      # TODO once we merge the new CMS to main, adjust this
-      - 'workstream/cms-migration'
     types: [opened, reopened, synchronize]
 
 concurrency:

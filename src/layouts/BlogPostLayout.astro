@@ -19,7 +19,7 @@ interface Props {
 }
 
 const { post, authors, readingTime } = Astro.props
-const { title, date, description, tags, coverImage } = post.data
+const { title, date, description, tags, coverImage, canonicalUrl } = post.data
 
 const ogImageUrl = new URL(pathWithBase(`/blog/og/${post.id}.png`), Astro.site).href
 
@@ -43,7 +43,7 @@ const jsonLd = {
 }
 ---
 
-<BlogLayout title={title} description={description} ogImage={ogImageUrl}>
+<BlogLayout title={title} description={description} ogImage={ogImageUrl} canonicalUrl={canonicalUrl}>
   <Fragment slot="head">
     <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
   </Fragment>

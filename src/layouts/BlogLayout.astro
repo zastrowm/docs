@@ -26,12 +26,14 @@ interface Props {
   title: string
   description?: string
   ogImage?: string
+  canonicalUrl?: string
 }
 
-const { title, description, ogImage } = Astro.props
+const { title, description, ogImage, canonicalUrl: canonicalOverride } = Astro.props
 
 const siteTitleHref = pathWithBase('/')
-const canonicalUrl = new URL(Astro.url.pathname, Astro.site)
+const pageUrl = new URL(Astro.url.pathname, Astro.site).href
+const canonicalUrl = canonicalOverride || pageUrl
 
 // Mock the minimal starlightRoute data needed for the Header component
 const mockStarlightRoute = {
@@ -99,7 +101,7 @@ Astro.locals.t = mockT
     <meta name="generator" content={Astro.generator} />
     <title>{title} | Strands Agents Blog</title>
     {description && <meta name="description" content={description} />}
-    <link rel="canonical" href={canonicalUrl.href} />
+    <link rel="canonical" href={canonicalUrl} />
 
     <!-- Favicon -->
     <link rel="icon" type="image/svg+xml" href={pathWithBase('/favicon.svg')} />
@@ -113,7 +115,7 @@ Astro.locals.t = mockT
     <meta property="og:title" content={title} />
     {description && <meta property="og:description" content={description} />}
     <meta property="og:type" content="article" />
-    <meta property="og:url" content={canonicalUrl.href} />
+    <meta property="og:url" content={pageUrl} />
     {ogImage && <meta property="og:image" content={ogImage} />}
 
     <!-- Twitter -->

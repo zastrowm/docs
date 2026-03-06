@@ -30,6 +30,8 @@ const blogSchema = z.object({
   tags: z.array(z.string()).default([]),
   draft: z.boolean().default(false),
   coverImage: z.string().optional(),
+  // For syndicated posts: set to the original URL so search engines credit the source
+  canonicalUrl: z.string().url().optional(),
   // Injected by remark-reading-time plugin at build time
   readingTime: z.string().optional(),
 })

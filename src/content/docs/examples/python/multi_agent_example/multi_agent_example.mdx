@@ -1,4 +1,8 @@
-# Teacher's Assistant - Strands Multi-Agent Architecture Example
+---
+title: "Teacher's Assistant - Strands Multi-Agent Architecture Example"
+sidebar:
+  label: "Multi Agents"
+---
 
 This [example](https://github.com/strands-agents/docs/blob/main/docs/examples/python/multi_agent_example/teachers_assistant.py) demonstrates how to implement a multi-agent architecture using Strands Agents, where specialized agents work together under the coordination of a central orchestrator. The system uses natural language routing to direct queries to the most appropriate specialized agent based on subject matter expertise.
 
@@ -72,7 +76,7 @@ teacher_agent = Agent(
 )
 ```
 
-- The orchestrator suppresses its intermediate output by setting `callback_handler` to `None`. Without this suppression, the default [`PrintingStreamHandler`](../../../api-reference/python/handlers/callback_handler.md#strands.handlers.callback_handler.PrintingCallbackHandler) would print all outputs to stdout, creating a cluttered experience with duplicate information from each agent's thinking process and tool calls.
+- The orchestrator suppresses its intermediate output by setting `callback_handler` to `None`. Without this suppression, the default [`PrintingStreamHandler`](@api/python/strands.handlers.callback_handler#PrintingCallbackHandler) would print all outputs to stdout, creating a cluttered experience with duplicate information from each agent's thinking process and tool calls.
 
 ### 2. Specialized Agents
 

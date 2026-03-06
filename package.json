@@ -7,7 +7,7 @@
     "build:all": "npm run sdk:clone && npm run sdk:generate && npm run docs:revert && npm run docs:update && npm run build",
     "dev": "astro dev",
     "test": "vitest run",
-    "test:prep": "timeout 10s npm run cms:dev || true",
+    "test:prep": "timeout 10s npm run dev || true",
     "typecheck": "tsc --noEmit",
     "typecheck:snippets": "npm run typecheck --prefix test-snippets",
     "format": "prettier --write docs",

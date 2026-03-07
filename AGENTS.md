@@ -191,7 +191,7 @@ For detailed information about the Astro/Starlight CMS architecture, components,
 
 The documentation supports showing both Python and TypeScript code examples side-by-side using:
 - **Astro `<Tabs>/<Tab>` components** for language switching (auto-imported, no import statement needed)
-- **MkDocs snippets syntax** for external code file inclusion (still works via `src/plugins/remark-mkdocs-snippets.ts`)
+- **Snippets** for external code file inclusion (still works via `src/plugins/remark-mkdocs-snippets.ts`)
 - **TypeScript type checking** for code validation
 
 ### 1. Create TypeScript Code File
@@ -363,7 +363,7 @@ When adding TypeScript examples to documentation:
 1. **Create the TypeScript file** with the same base name as the markdown file
 2. **Add snippet markers** around code sections you want to reference
 3. **Use descriptive snippet names** that clearly indicate the code's purpose
-4. **Validate TypeScript** by running `npm test`
+4. **Validate TypeScript** by running `npm run typecheck:snippets` (for snippet files) and `npm run typecheck` (for other TypeScript)
 5. **Update markdown** to use `<Tabs>/<Tab>` components with snippet inclusion
 6. **Test locally** with `npm run dev` to ensure snippets render correctly at http://localhost:4321/
 

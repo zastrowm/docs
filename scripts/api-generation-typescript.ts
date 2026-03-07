@@ -9,8 +9,13 @@
  */
 
 import { execSync } from 'child_process'
-import { existsSync, readdirSync, readFileSync, writeFileSync, rmSync, statSync } from 'fs'
+import { existsSync, readdirSync, readFileSync, writeFileSync, rmSync, statSync, mkdirSync } from 'fs'
 import { join, basename, relative } from 'path'
+import { unified } from 'unified'
+import remarkParse from 'remark-parse'
+import remarkGfm from 'remark-gfm'
+import remarkStringify from 'remark-stringify'
+import { mdxToMarkdown } from 'mdast-util-mdx'
 
 const OUTPUT_DIR = '.build/api-docs/typescript'
 
@@ -18,6 +23,7 @@ interface FileInfo {
   path: string
   category: string // 'classes', 'interfaces', 'type-aliases', 'functions', or 'index'
   name: string
+  namespace?: string // set for members under namespaces/<ns>/
 }
 
 /**
@@ -43,17 +49,34 @@ function getAllMdFiles(dir: string, baseDir: string = dir): FileInfo[] {
       let category: string
       let name: string
 
+      // Find 'namespaces' segment anywhere in the path (typedoc may nest under a project-name dir)
+      const nsIdx = parts.indexOf('namespaces')
+
       if (parts.length === 1) {
         // Root level file (index.md)
         category = 'index'
         name = basename(entry, '.md')
+        files.push({ path: fullPath, category, name })
+      } else if (nsIdx !== -1 && parts.length > nsIdx + 2) {
+        // Namespace file: [.../namespaces/<ns>/index.md] or [.../namespaces/<ns>/<category>/<Name>.md]
+        const ns = parts[nsIdx + 1]!
+        const afterNs = parts.slice(nsIdx + 2)
+        if (afterNs.length === 1 && basename(entry, '.md') === 'index') {
+          // namespaces/<ns>/index.md — keep as a dedicated namespace page
+          files.push({ path: fullPath, category: 'namespaces', name: ns, namespace: ns })
+        } else if (afterNs.length === 2) {
+          // namespaces/<ns>/<category>/<Name>.md
+          category = afterNs[0]!
+          name = basename(entry, '.md')
+          files.push({ path: fullPath, category, name, namespace: ns })
+        }
+        // deeper nesting not expected; ignore
       } else {
         // Nested file (classes/Agent.md)
         category = parts[0]!
         name = basename(entry, '.md')
+        files.push({ path: fullPath, category, name })
       }
-
-      files.push({ path: fullPath, category, name })
     }
   }
 
@@ -63,11 +86,17 @@ function getAllMdFiles(dir: string, baseDir: string = dir): FileInfo[] {
 /**
  * Generate a slug for a file (flat, without category)
  */
-function generateSlug(category: string, name: string): string {
+function generateSlug(category: string, name: string, namespace?: string): string {
   if (category === 'index') {
-    return 'api/typescript'
+    return 'docs/api/typescript'
   }
-  return `api/typescript/${name}`
+  if (category === 'namespaces') {
+    return `docs/api/typescript/${name}`
+  }
+  if (namespace) {
+    return `docs/api/typescript/${namespace}:${name}`
+  }
+  return `docs/api/typescript/${name}`
 }
 
 /**
@@ -81,9 +110,22 @@ function generateTitle(category: string, name: string): string {
 }
 
 /**
- * Process a single file to add frontmatter
+ * Escape MDX-unsafe characters in markdown content using the unified pipeline.
+ * Parses as GFM markdown, then serializes with mdxToMarkdown() which escapes
+ * characters like { } that are valid in markdown but invalid in MDX outside code blocks.
+ * Content inside code fences is left untouched.
  */
-function processFile(file: FileInfo): void {
+async function escapeMdxChars(content: string): Promise<string> {
+  const processor = unified().use(remarkParse).use(remarkGfm).use(remarkStringify)
+  processor.data('toMarkdownExtensions', [mdxToMarkdown()])
+  const result = await processor.process(content)
+  return String(result)
+}
+
+/**
+ * Process a single file: add frontmatter, escape MDX-unsafe chars, write as .mdx
+ */
+async function processFile(file: FileInfo): Promise<void> {
   const content = readFileSync(file.path, 'utf-8')
 
   // Check if frontmatter already exists
@@ -92,7 +134,7 @@ function processFile(file: FileInfo): void {
     return
   }
 
-  const slug = generateSlug(file.category, file.name)
+  const slug = generateSlug(file.category, file.name, file.namespace)
   const title = generateTitle(file.category, file.name)
 
   // For the index file, we'll create a custom one later
@@ -102,11 +144,37 @@ function processFile(file: FileInfo): void {
   }
 
   // Fix relative links to remove category folders (e.g., ../interfaces/AgentData.md -> ../AgentData.md)
-  // This matches the flat slug structure we use
-  const processedContent = content.replace(
-    /\]\(\.\.\/(classes|interfaces|type-aliases|functions)\/([^)]+)\)/g,
-    '](../$2)'
-  )
+  // Also update .md extensions to .mdx in relative links since we output .mdx files
+  // For namespace members, also strip the extra ../ that points up from the category subfolder
+  // For namespace index pages, rewrite category-prefixed links to absolute slug paths
+  //   e.g. interfaces/TracerConfig.md -> /api/typescript/telemetry:TracerConfig
+  let linkedFixed = content
+    .replace(/\]\(\.\.\/(classes|interfaces|type-aliases|functions)\/([^)]+)\)/g, '](../$2)')
+    .replace(/\]\(\.\.\/([^./][^)]+\.md(?:#[^)]*)?)\)/g, ']($1)')
+
+  if (file.namespace) {
+    // Rewrite category-prefixed links in namespace pages/members to relative paths
+    linkedFixed = linkedFixed.replace(
+      /\]\((classes|interfaces|type-aliases|functions|namespaces)\/([^)]+?)\.md((?:#[^)]*)?)\)/g,
+      (_match, _cat, name, hash) => `](../${file.namespace}:${name}/${hash})`,
+    )
+    // Also rewrite bare Name.md links (after ../category/ was already stripped) to relative paths
+    linkedFixed = linkedFixed.replace(
+      /\]\(([A-Z][^)/]+?)\.md((?:#[^)]*)?)\)/g,
+      (_match, name, hash) => `](../${file.namespace}:${name}/${hash})`,
+    )
+  }
+
+  linkedFixed = linkedFixed
+    .replace(/\]\((\.\.[^)]+)\.md((?:#[^)]+)?)\)/g, ']($1.mdx$2)')
+    .replace(/\]\(([^)]+)\.md((?:#[^)]+)?)\)/g, ']($1.mdx$2)')
+
+  // Special-case: escape the literal string "<name>Data" which typedoc emits in prose
+  // to describe the naming pattern for data interfaces (e.g. "the <name>Data pattern")
+  const specialCased = linkedFixed.replace(/<name>Data/g, '\\<name>Data')
+
+  // Escape MDX-unsafe characters (e.g. { } outside code blocks)
+  const mdxSafe = await escapeMdxChars(specialCased)
 
   // Add frontmatter with category for sidebar grouping
   const frontmatter = `---
@@ -118,16 +186,24 @@ editUrl: false
 
 `
 
-  const finalContent = frontmatter + processedContent
+  const finalContent = frontmatter + mdxSafe
 
-  writeFileSync(file.path, finalContent, 'utf-8')
-  console.log(`Processed: ${file.path}`)
+  // Write as .mdx into the flat category folder at OUTPUT_DIR root (not in-place)
+  const flatDir = join(OUTPUT_DIR, file.category)
+  const mdxPath = join(flatDir, `${file.name}.mdx`)
+  if (!existsSync(flatDir)) {
+    mkdirSync(flatDir, { recursive: true })
+  }
+  writeFileSync(mdxPath, finalContent, 'utf-8')
+  // Remove the original .md file
+  rmSync(file.path)
+  console.log(`Processed: ${file.path} → ${file.category}/${file.name}.mdx`)
 }
 
 /**
  * Main function
  */
-function main(): void {
+async function main(): Promise<void> {
   console.log('🔧 TypeScript API Documentation Generator\n')
 
   // Step 1: Clean output directory
@@ -159,10 +235,10 @@ function main(): void {
       console.log(`Deleted: ${file.path} (using custom index)`)
       continue
     }
-    processFile(file)
+    await processFile(file)
   }
 
   console.log(`\n✅ Done! Generated ${files.length - 1} API doc files.`)
 }
 
-main()
+main().catch(console.error)

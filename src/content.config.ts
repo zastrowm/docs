@@ -1,4 +1,4 @@
-import { defineCollection } from 'astro:content'
+import { defineCollection, type SchemaContext } from 'astro:content'
 import { z } from 'astro/zod'
 import { docsSchema } from '@astrojs/starlight/schema'
 // github-slugger is used by Astro internally for default slug generation.
@@ -6,14 +6,6 @@ import { docsSchema } from '@astrojs/starlight/schema'
 import { slug as githubSlug } from 'github-slugger'
 import { glob } from 'astro/loaders'
 import { normalizePathToSlug } from './util/links'
-
-const testimonialSchema = z.object({
-  quote: z.string(),
-  name: z.string(),
-  title: z.string().optional(),
-  icon: z.string().optional(),
-  order: z.number().default(0),
-})
 
 const authorSchema = z.object({
   name: z.string(),
@@ -36,8 +28,6 @@ const blogSchema = z.object({
   readingTime: z.string().optional(),
 })
 
-const testimonialsBase = import.meta.env.TESTIMONIALS_PATH || 'src/content/testimonials'
-
 export const collections = {
   authors: defineCollection({
     loader: glob({
@@ -55,27 +45,34 @@ export const collections = {
   }),
   testimonials: defineCollection({
     loader: glob({
-      base: testimonialsBase,
-      pattern: '**/*.json',
+      base: 'src/content',
+      pattern: 'testimonials/**/*.md',
     }),
-    schema: testimonialSchema,
+    schema: ({ image }: SchemaContext) => z.object({
+      name: z.string(),
+      title: z.string().optional(),
+      logo: image().optional(),
+      dark_logo: image().optional(),
+      order: z.number().default(0),
+    }),
   }),
   docs: defineCollection({
     loader: glob({
-      base: "src/content/docs",
+      base: "src/content",
       // We explicitly declare the folders we want to include, as otherwise it includes index.md files
       // in examples which are not intended to be rendered on the site.
       // Long-term we'll be moving examples into the sdk-python repository instead, solving this problem.
       pattern: [
-        "README.mdx",
-        "llms.mdx",
-        "user-guide/**/*.mdx",
-        "community/**/*.mdx",
-        "contribute/**/*.mdx",
-        "examples/**/[!index]*.mdx",
-        "labs/**/*.mdx",
-        "api/python/**/*.mdx",
-        "api/typescript/**/*.(md|mdx)",
+        "404.mdx",
+        "docs/README.mdx",
+        "docs/llms.mdx",
+        "docs/user-guide/**/*.mdx",
+        "docs/community/**/*.mdx",
+        "docs/contribute/**/*.mdx",
+        "docs/examples/**/[!index]*.mdx",
+        "docs/labs/**/*.mdx",
+        "docs/api/python/**/*.mdx",
+        "docs/api/typescript/**/*.(md|mdx)",
       ],
       generateId: generateDocsId,
     }),

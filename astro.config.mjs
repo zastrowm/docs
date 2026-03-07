@@ -9,12 +9,13 @@ import { loadSidebarFromMkdocs } from "./src/sidebar.ts"
 import AutoImport from './src/plugins/astro-auto-import.ts'
 import astroExpressiveCode from "astro-expressive-code"
 import mdx from '@astrojs/mdx';
+import astroBrokenLinksChecker from './scripts/astro-broken-links-checker-index.js';
 
 // Generate sidebar from mkdocs nav (validates against existing content files)
 // Top-level groups will be rendered as tabs by the custom Sidebar component
 const sidebar = loadSidebarFromMkdocs(
   path.resolve('./mkdocs.yml'),
-  path.resolve('./src/content/docs')
+  path.resolve('./src/content')
 )
 
 // https://astro.build/config
@@ -61,13 +62,6 @@ export default defineConfig({
         dark: './src/assets/logo-dark.svg',
         replacesTitle: false,
       },
-      social: [
-        {
-          icon: 'github',
-          label: 'GitHub',
-          href: 'https://github.com/strands-agents/sdk-python',
-        },
-      ],
       editLink: {
         baseUrl: 'https://github.com/strands-agents/docs/edit/main/',
       },
@@ -77,6 +71,12 @@ export default defineConfig({
         MarkdownContent: './src/components/overrides/MarkdownContent.astro',
         Sidebar: './src/components/overrides/Sidebar.astro',
       },
+    }),
+    astroBrokenLinksChecker({
+      checkExternalLinks: false,      // Optional: check external links (default: false)
+      cacheExternalLinks: false,      // Optional: cache verified external links to disk (default: true)
+      throwError: true,               // Optional: fail the build if broken links are found (default: false)
+      linkCheckerDir: '.link-checker' // Optional: directory for cache and log files (default: '.link-checker')
     }),
     // AutoImport must be before mdx() so auto-imports work in .mdx files
     AutoImport({

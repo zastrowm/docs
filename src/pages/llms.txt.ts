@@ -1,7 +1,7 @@
 import type { APIRoute } from 'astro'
 import type { CollectionEntry } from 'astro:content'
 import { getCollection, getEntry } from 'astro:content'
-import { getBase } from '@util/links'
+import { getBase, getSiteOrigin } from '@util/links'
 import { loadSidebarFromMkdocs, type StarlightSidebarItem } from '../sidebar'
 import { renderEntryToMarkdown } from '@util/render-to-markdown'
 import path from 'node:path'
@@ -42,7 +42,7 @@ function extractLinks(
 }
 
 function buildLlmsTxt(docs: CollectionEntry<'docs'>[], sidebar: StarlightSidebarItem[], header: string, blogPosts: CollectionEntry<'blog'>[]): string {
-  const base = getBase()
+  const base = getSiteOrigin() + getBase()
   const lines: string[] = []
 
   // Header from rendered llms.mdx
@@ -66,9 +66,9 @@ function buildLlmsTxt(docs: CollectionEntry<'docs'>[], sidebar: StarlightSidebar
   }
 
   // API sections - group by python/typescript
-  const apiDocs = docs.filter((doc) => doc.id.startsWith('api/'))
-  const pythonApi = apiDocs.filter((doc) => doc.id.startsWith('api/python/'))
-  const typescriptApi = apiDocs.filter((doc) => doc.id.startsWith('api/typescript/'))
+  const apiDocs = docs.filter((doc) => doc.id.startsWith('docs/api/'))
+  const pythonApi = apiDocs.filter((doc) => doc.id.startsWith('docs/api/python/'))
+  const typescriptApi = apiDocs.filter((doc) => doc.id.startsWith('docs/api/typescript/'))
 
   if (pythonApi.length > 0) {
     lines.push(`## Api Python`)
@@ -111,11 +111,11 @@ export const GET: APIRoute = async () => {
   const docs = await getCollection('docs')
   const sidebar = loadSidebarFromMkdocs(
     path.resolve('./mkdocs.yml'),
-    path.resolve('./src/content/docs')
+    path.resolve('./src/content')
   )
 
   // Render the llms.mdx page as the header
-  const llmsEntry = await getEntry('docs', 'llms')
+  const llmsEntry = await getEntry('docs', 'docs/llms')
   if (!llmsEntry) {
     throw new Error(`llms.mdx not found`)
   }

@@ -21,7 +21,7 @@ export async function setup() {
 
   const server = spawn('npx', ['astro', 'dev'], {
     stdio: ['ignore', 'pipe', 'pipe'],
-    detached: false,
+    detached: true,
   })
 
   try {
@@ -42,9 +42,17 @@ export async function setup() {
         clearTimeout(timer)
         reject(err)
       })
+      server.on('close', (code) => {
+        if (code !== null) {
+          clearTimeout(timer)
+          reject(new Error(`Astro dev server exited with code ${code}`))
+        }
+      })
     })
   } finally {
-    server.kill()
+    if (server.pid != null) {
+      process.kill(-server.pid, 'SIGTERM')
+    }
   }
 
   console.log('[global-setup] Data store ready.')

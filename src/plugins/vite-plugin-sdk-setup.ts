@@ -17,17 +17,29 @@ function run(command: string): void {
   execSync(command, { stdio: 'inherit' })
 }
 
+function setupSdks(): void {
+  if (areSdksPresent()) return
+
+  console.log('[sdk-setup] SDK build artifacts not found — running sdk:clone and sdk:generate...')
+  run('npm run sdk:clone')
+  run('npm run sdk:generate')
+  console.log('[sdk-setup] SDK setup complete.')
+}
+
 export default function sdkSetupPlugin(): Plugin {
   return {
     name: 'vite-plugin-sdk-setup',
     enforce: 'pre',
-    async buildStart() {
-      if (areSdksPresent()) return
-
-      console.log('[sdk-setup] SDK build artifacts not found — running sdk:clone and sdk:generate...')
-      run('npm run sdk:clone')
-      run('npm run sdk:generate')
-      console.log('[sdk-setup] SDK setup complete.')
+    // Used during `astro build`
+    buildStart() {
+      setupSdks()
+    },
+    // Used during `astro dev` — buildStart fires before the file watcher is running,
+    // so newly generated files would be missed by Astro's content layer. configureServer
+    // runs after the watcher is set up, and we emit a change event to trigger a re-sync.
+    configureServer(server) {
+      setupSdks()
+      server.watcher.emit('change', '.build/api-docs')
     },
   }
 }

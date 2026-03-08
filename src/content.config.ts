@@ -4,7 +4,7 @@ import { docsSchema } from '@astrojs/starlight/schema'
 // github-slugger is used by Astro internally for default slug generation.
 // We use it here to maintain parity with Astro's default behavior while adding a docs/ prefix.
 import { slug as githubSlug } from 'github-slugger'
-import { glob } from 'astro/loaders'
+import { glob, file } from 'astro/loaders'
 import { normalizePathToSlug } from './util/links'
 
 const authorSchema = z.object({
@@ -30,10 +30,7 @@ const blogSchema = z.object({
 
 export const collections = {
   authors: defineCollection({
-    loader: glob({
-      base: 'src/content/authors',
-      pattern: '**/*.json',
-    }),
+    loader: file('src/content/authors.yaml'),
     schema: authorSchema,
   }),
   blog: defineCollection({

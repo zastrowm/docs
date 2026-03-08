@@ -231,7 +231,6 @@ These documents define the standards and processes that ensure consistency and q
 │           ├── prompt-engineering.md
 │           └── responsible-ai.md
 ├── LICENSE
-├── mkdocs.yml
 ├── NOTICE
 ├── overrides
 │   ├── main.html
@@ -271,18 +270,18 @@ pip install .
 To generate the static site:
 
 ```bash
-mkdocs build
+npm run build
 ```
 
-This will create the site in the `site` directory.
+This will create the site in the `dist` directory.
 
 To run a local development server:
 
 ```bash
-mkdocs serve
+npm run dev
 ```
 
-This will start a server at http://127.0.0.1:8000/ for previewing the documentation.
+This will start a server at http://localhost:4321/ for previewing the documentation.
 
 ### 2. Making Changes
 
@@ -359,7 +358,7 @@ import type { Options, Config } from '../types'
 - **CONTRIBUTING.md**: Contains testing/setup commands and human contribution guidelines
 - **README.md**: Public-facing documentation, links to strandsagents.com
 - **package.json**: Defines the scripts needed to validate the TS syntax typing are correct
-- **mkdocs.yml**: Defines the structure, theme, navigation, and build settings for generating this Strands Agents SDK documentation which is served at https://strandsagents.com
+- **src/config/navigation.yml**: Defines the sidebar, navbar, and GitHub sections for the Strands Agents SDK documentation served at https://strandsagents.com
 
 ## Additional Resources
 
@@ -591,7 +590,7 @@ When adding TypeScript examples to documentation:
 3. **Use descriptive snippet names** that clearly indicate the code's purpose
 4. **Validate TypeScript** by running `npm run test`
 5. **Update markdown** to use tabbed content with snippet inclusion
-6. **Test locally** with `mkdocs serve` to ensure snippets render correctly
+6. **Test locally** with `npm run dev` to ensure snippets render correctly
 
 ### Example Workflow
 
@@ -611,7 +610,7 @@ When adding TypeScript examples to documentation:
    ```
 
 3. Validate: `npm run test`
-4. Preview: `mkdocs serve`
+4. Preview: `npm run dev`
 
 ## Benefits
 

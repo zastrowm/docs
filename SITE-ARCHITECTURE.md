@@ -10,15 +10,11 @@ We're using [Astro](https://astro.build/) with the [Starlight](https://starlight
 
 ### 1. Sidebar Generation (`src/sidebar.ts`)
 
-**What it does:** Reads the navigation structure from `mkdocs.yml` and converts it to Starlight's sidebar format. Also extracts sidebar labels and badges from nav entries.
+**What it does:** Reads the navigation structure from `src/config/navigation.yml` and converts it to Starlight's sidebar format.
 
-**Why:** Starlight can auto-generate sidebars from the file structure, but we have a specific navigation layout defined in `mkdocs.yml` that we want to preserve. This ensures consistency during the migration from MkDocs to Astro.
+**Why:** Starlight can auto-generate sidebars from the file structure, but we have a specific navigation layout defined in `navigation.yml` that we want to preserve. The config file also contains navbar and GitHub dropdown configuration.
 
-**Label and badge extraction:** The `getSidebarLabels()` function parses nav entries with `<sup>` tags (e.g., `AWS Lambda<sup> new</sup>`) and extracts:
-- `label`: The clean text without HTML tags (e.g., "AWS Lambda")
-- `badge`: The badge text from `<sup>` tags (e.g., "new", "community")
-
-This data is used by `scripts/update-docs.ts` to generate sidebar frontmatter during the migration process.
+**Badges:** Badges (like "new", "community", "experimental") come from page frontmatter, not the navigation config. This allows page authors to control badges directly.
 
 ### 2. Route Middleware (`src/route-middleware.ts`)
 
@@ -122,12 +118,12 @@ The collection base is `src/content` (not `src/content/docs`), so all doc slugs 
 The main config ties everything together:
 
 ```javascript
-import { loadSidebarFromMkdocs } from "./src/sidebar.ts"
+import { loadSidebarFromConfig } from "./src/sidebar.ts"
 import remarkMkdocsSnippets from './src/plugins/remark-mkdocs-snippets.ts'
 import AutoImport from 'astro-auto-import'
 
-const sidebar = loadSidebarFromMkdocs(
-  path.resolve('./mkdocs.yml'),
+const sidebar = loadSidebarFromConfig(
+  path.resolve('./src/config/navigation.yml'),
   path.resolve('./src/content')  // base is src/content, not src/content/docs
 )
 
@@ -243,14 +239,7 @@ sidebar:
 
 Available variants: `note`, `tip`, `caution`, `danger`, `success`, `default`
 
-**Automatic extraction:** During migration, `scripts/update-docs.ts` automatically generates sidebar frontmatter from `mkdocs.yml` nav entries. Entries like `AWS Lambda<sup> new</sup>` become:
-```yaml
-sidebar:
-  label: "AWS Lambda"
-  badge:
-    text: New
-    variant: note
-```
+**Badge sources:** Badges like "Experimental" or "Community" are determined from page content (e.g., experimental macros or community banners) and added to page frontmatter by `scripts/update-docs.ts`.
 
 ## MDX Components
 

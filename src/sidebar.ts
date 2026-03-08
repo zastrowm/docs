@@ -8,24 +8,41 @@ export type StarlightSidebarItem =
   | { label: string; link: string; attrs?: Record<string, string> } // External link
   | { label: string; items: StarlightSidebarItem[]; collapsed?: boolean } // Group
 
-interface ConvertContext {
-  contentDir: string
+// Navigation config types
+interface NavConfigItem {
+  label?: string
+  items?: NavConfigItem[]
+}
+type NavConfigEntry = string | NavConfigItem
+
+interface NavbarLink {
+  label: string
+  href: string
+  basePath?: string
+  external?: boolean
 }
 
-/**
- * Convert mkdocs md path to Starlight slug
- */
-export function mdPathToSlug(mdPath: string): string {
-  let slug = mdPath.replace(/\.md$/, '')
+interface GitHubLink {
+  label: string
+  href: string
+  icon?: string
+}
 
-  // README.md -> index (or parent directory)
-  if (slug === 'README') return 'docs/index'
-  if (slug.endsWith('/README')) return 'docs/' + slug.replace(/\/README$/, '')
+interface GitHubSection {
+  title: string
+  links: GitHubLink[]
+}
 
-  // index.md -> parent directory
-  if (slug.endsWith('/index')) return 'docs/' + slug.replace(/\/index$/, '')
+interface NavigationConfig {
+  navbar: NavbarLink[]
+  sidebar: NavConfigItem[]
+  github: {
+    sections: GitHubSection[]
+  }
+}
 
-  return 'docs/' + slug
+interface ConvertContext {
+  contentDir: string
 }
 
 /**
@@ -45,29 +62,108 @@ function contentExists(slug: string, contentDir: string): boolean {
 }
 
 /**
- * Check if a directory has an index file
+ * Convert a navigation config item to Starlight sidebar format
  */
-function hasIndexFile(dirSlug: string, contentDir: string): boolean {
-  if (!contentDir) return false
+function convertConfigItem(item: NavConfigEntry, ctx: ConvertContext): StarlightSidebarItem | null {
+  // String: slug only (e.g., "docs/user-guide/quickstart/overview")
+  if (typeof item === 'string') {
+    if (!contentExists(item, ctx.contentDir)) return null
+    return { slug: item }
+  }
 
-  const candidates = [path.join(contentDir, dirSlug, 'index.md'), path.join(contentDir, dirSlug, 'index.mdx')]
+  // Object with label and items (group)
+  if (typeof item === 'object' && item !== null) {
+    if (item.label && item.items) {
+      const children = item.items
+        .map((child) => convertConfigItem(child, ctx))
+        .filter((c): c is StarlightSidebarItem => c !== null)
 
-  return candidates.some((p) => fs.existsSync(p))
+      if (children.length === 0) return null
+
+      return { label: item.label, items: children }
+    }
+  }
+
+  return null
 }
 
 /**
- * Infer the common directory from a group's first item
+ * Apply collapse behavior to nested groups (depth >= 1)
  */
-function inferGroupDir(items: StarlightSidebarItem[]): string | null {
-  for (const item of items) {
-    if ('slug' in item && item.slug) {
-      const parts = item.slug.split('/')
-      if (parts.length > 1) {
-        return parts.slice(0, -1).join('/')
+function applyCollapse(items: StarlightSidebarItem[], depth: number = 0): StarlightSidebarItem[] {
+  return items.map((item) => {
+    if ('items' in item) {
+      const collapsed = depth >= 1
+      return {
+        ...item,
+        items: applyCollapse(item.items, depth + 1),
+        ...(collapsed && { collapsed }),
       }
     }
-  }
-  return null
+    return item
+  })
+}
+
+/**
+ * Load navigation configuration from YAML file
+ */
+export function loadNavigationConfig(configPath: string): NavigationConfig {
+  const content = fs.readFileSync(configPath, 'utf-8')
+  return yaml.load(content) as NavigationConfig
+}
+
+/**
+ * Load sidebar from navigation.yml config
+ */
+export function loadSidebarFromConfig(configPath: string, docsContentDir?: string): StarlightSidebarItem[] {
+  const config = loadNavigationConfig(configPath)
+  if (!config.sidebar) return []
+
+  const ctx: ConvertContext = { contentDir: docsContentDir || '' }
+
+  const items = config.sidebar
+    .map((item) => convertConfigItem(item, ctx))
+    .filter((i): i is StarlightSidebarItem => i !== null)
+
+  return applyCollapse(items)
+}
+
+/**
+ * Load navbar links from navigation.yml config
+ */
+export function loadNavbarFromConfig(configPath: string): NavbarLink[] {
+  const config = loadNavigationConfig(configPath)
+  return config.navbar || []
+}
+
+/**
+ * Load GitHub sections from navigation.yml config
+ */
+export function loadGitHubSectionsFromConfig(configPath: string): GitHubSection[] {
+  const config = loadNavigationConfig(configPath)
+  return config.github?.sections || []
+}
+
+// ============================================================================
+// Legacy functions for backward compatibility during migration
+// These can be removed once all references to mkdocs.yml are eliminated
+// ============================================================================
+
+/**
+ * Convert mkdocs md path to Starlight slug
+ * @deprecated Use loadSidebarFromConfig instead
+ */
+export function mdPathToSlug(mdPath: string): string {
+  let slug = mdPath.replace(/\.md$/, '')
+
+  // README.md -> index (or parent directory)
+  if (slug === 'README') return 'docs/index'
+  if (slug.endsWith('/README')) return 'docs/' + slug.replace(/\/README$/, '')
+
+  // index.md -> parent directory
+  if (slug.endsWith('/index')) return 'docs/' + slug.replace(/\/index$/, '')
+
+  return 'docs/' + slug
 }
 
 /**
@@ -79,6 +175,7 @@ function cleanLabel(label: string): string {
 
 /**
  * Convert a single mkdocs nav item to Starlight format
+ * @deprecated Use loadSidebarFromConfig instead
  */
 export function convertNavItem(item: unknown, ctx: ConvertContext = { contentDir: '' }): StarlightSidebarItem | null {
   // String: bare path like "path.md"
@@ -122,7 +219,6 @@ export function convertNavItem(item: unknown, ctx: ConvertContext = { contentDir
 
       if (children.length === 0) return null
 
-      
       return { label, items: children }
     }
   }
@@ -131,24 +227,8 @@ export function convertNavItem(item: unknown, ctx: ConvertContext = { contentDir
 }
 
 /**
- * Apply collapse behavior to nested groups (depth >= 1)
- */
-function applyCollapse(items: StarlightSidebarItem[], depth: number = 0): StarlightSidebarItem[] {
-  return items.map((item) => {
-    if ('items' in item) {
-      const collapsed = depth >= 1
-      return {
-        ...item,
-        items: applyCollapse(item.items, depth + 1),
-        ...(collapsed && { collapsed }),
-      }
-    }
-    return item
-  })
-}
-
-/**
  * Load sidebar from mkdocs.yml
+ * @deprecated Use loadSidebarFromConfig instead
  */
 export function loadSidebarFromMkdocs(mkdocsPath: string, docsContentDir?: string): StarlightSidebarItem[] {
   let content = fs.readFileSync(mkdocsPath, 'utf-8')
@@ -171,6 +251,7 @@ export function loadSidebarFromMkdocs(mkdocsPath: string, docsContentDir?: strin
 
 /**
  * Extract files with <sup> community</sup> in their nav label
+ * @deprecated Badges should come from frontmatter only
  */
 export function getCommunityLabeledFiles(mkdocsPath: string): Set<string> {
   const communityFiles = new Set<string>()
@@ -201,6 +282,7 @@ export function getCommunityLabeledFiles(mkdocsPath: string): Set<string> {
   search(mkdocs.nav)
   return communityFiles
 }
+
 export interface SidebarInfo {
   label: string
   badge?: string
@@ -210,6 +292,7 @@ export interface SidebarInfo {
  * Extract sidebar labels and badges for files in the nav
  * Returns a map of file path -> { label, badge? }
  * Badges are extracted from <sup> tags (e.g., <sup> new</sup> -> "new")
+ * @deprecated Badges should come from frontmatter only
  */
 export function getSidebarLabels(mkdocsPath: string): Map<string, SidebarInfo> {
   const sidebarLabels = new Map<string, SidebarInfo>()
@@ -229,14 +312,14 @@ export function getSidebarLabels(mkdocsPath: string): Map<string, SidebarInfo> {
             // Extract badge from <sup> tag if present
             const supMatch = label.match(/<sup>\s*(\w+)\s*<\/sup>/i)
             const badge = supMatch?.[1]?.toLowerCase()
-            
+
             // Clean the label by removing <sup>...</sup> tags entirely (including content)
             // then remove any other HTML tags
             const cleanedLabel = label
-              .replace(/<sup>[^<]*<\/sup>/gi, '')  // Remove <sup> tags and their content
-              .replace(/<[^>]+>/g, '')              // Remove any other HTML tags
+              .replace(/<sup>[^<]*<\/sup>/gi, '') // Remove <sup> tags and their content
+              .replace(/<[^>]+>/g, '') // Remove any other HTML tags
               .trim()
-            
+
             const info: SidebarInfo = { label: cleanedLabel }
             if (badge) {
               info.badge = badge
@@ -254,5 +337,3 @@ export function getSidebarLabels(mkdocsPath: string): Map<string, SidebarInfo> {
   search(mkdocs.nav)
   return sidebarLabels
 }
-
-

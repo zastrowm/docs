@@ -2,12 +2,10 @@ import { readdir, readFile, writeFile, mkdir, unlink } from "fs/promises";
 import { join, dirname } from "path";
 import { updateQuickstart } from "./update-quickstart.js";
 import { updateLanguageIndexFiles } from "./update-language-index.js";
-import { getCommunityLabeledFiles, getSidebarLabels, type SidebarInfo } from "../src/sidebar.js";
 import { convertApiLink, isOldApiLink } from "../src/util/api-link-converter.js";
 
 const DOCS_DIR = "docs";
 const OUTPUT_DIR = "src/content/docs";
-const MKDOCS_PATH = "mkdocs.yml";
 const INFO_BLOCK_PATTERN = '!!! info "Language Support"';
 const INFO_BLOCK_CONTENT = "    This provider is only supported in Python.";
 const COMMUNITY_BANNER = "{{ community_contribution_banner }}";
@@ -38,8 +36,9 @@ const EXPLICIT_TITLES: Record<string, string> = {
   "contribute/contributing/feature-proposals.md": "Feature Proposals",
 };
 
-// MkDocs extra variables from mkdocs.yml
-const MKDOCS_VARIABLES: Record<string, string> = {
+// Template variables for documentation
+// Note: These were previously in mkdocs.yml extra section but are now defined here
+const TEMPLATE_VARIABLES: Record<string, string> = {
   docs_repo: "https://github.com/strands-agents/docs/tree/main",
   sdk_pypi: "https://pypi.org/project/strands-agents/",
   sdk_repo: "https://github.com/strands-agents/sdk-python/blob/main",
@@ -138,12 +137,12 @@ async function getAllAssetFiles(dir: string): Promise<string[]> {
 }
 
 /**
- * Replace MkDocs variable references like {{ variable_name }}
+ * Replace template variable references like {{ variable_name }}
  */
-function replaceMkdocsVariables(content: string): string {
+function replaceTemplateVariables(content: string): string {
   let result = content;
 
-  for (const [varName, value] of Object.entries(MKDOCS_VARIABLES)) {
+  for (const [varName, value] of Object.entries(TEMPLATE_VARIABLES)) {
     // Match {{ variable_name }} with optional whitespace
     const pattern = new RegExp(`\\{\\{\\s*${varName}\\s*\\}\\}`, "g");
     result = result.replace(pattern, value);
@@ -197,7 +196,7 @@ function replaceExperimentalWarning(content: string): string {
  *       content (indented 4 spaces)
  *   === "Label2"
  *       content (indented 4 spaces)
- * 
+ *
  * New format:
  *   <tabs>
  *   <tab label="Label">
@@ -226,7 +225,7 @@ function convertMkdocsTabs(content: string): string {
 
       // Start collecting tabs
       const tabs: Array<{ label: string; content: string[] }> = [];
-      
+
       // Process first tab
       let currentLabel = firstLabel;
       let currentContent: string[] = [];
@@ -234,7 +233,7 @@ function convertMkdocsTabs(content: string): string {
 
       while (i < lines.length) {
         const currentLine = lines[i];
-        
+
         // Check for next tab at same indentation level
         const nextTabMatch = currentLine.match(/^(\s*)===\s+["']([^"']+)["']\s*$/);
         if (nextTabMatch && nextTabMatch[1].length === baseIndent) {
@@ -267,7 +266,7 @@ function convertMkdocsTabs(content: string): string {
             const nextLine = lines[nextNonEmpty];
             const nextTabMatch = nextLine.match(/^(\s*)===\s+["']([^"']+)["']\s*$/);
             const nextIndent = nextLine.match(/^(\s*)/)?.[1].length ?? 0;
-            
+
             // Continue if next content is indented or is another tab
             if (nextIndent >= contentIndent || (nextTabMatch && nextTabMatch[1].length === baseIndent)) {
               currentContent.push("");
@@ -467,11 +466,11 @@ function convertBrToSelfClosing(content: string): string {
 
 /**
  * Convert old MkDocs-style API reference links to the new @api shorthand format.
- * 
+ *
  * Old formats:
  * - Python: `../api-reference/python/agent/agent_result.md#strands.agent.agent_result.AgentResult`
  * - TypeScript: `../api-reference/typescript/classes/BedrockModel.html`
- * 
+ *
  * New formats:
  * - Python: `@api/python/strands.agent.agent_result#AgentResult`
  * - TypeScript: `@api/typescript/BedrockModel`
@@ -480,7 +479,7 @@ function convertApiLinks(content: string): string {
   // Match markdown links with potentially nested brackets in the text
   // This handles cases like [`list[ToolSpec]`](url)
   const markdownLinkPattern = /\[([^\]]*(?:\[[^\]]*\][^\]]*)*)\]\(([^)\s]+)(?:\s+"[^"]*")?\)/g;
-  
+
   return content.replace(markdownLinkPattern, (match, text, url) => {
     if (isOldApiLink(url)) {
       const newUrl = convertApiLink(url);
@@ -615,7 +614,7 @@ function removeH1Heading(content: string): string {
   return result.join("\n");
 }
 
-function processFile(content: string, explicitTitle?: string, hasCommunityLabel?: boolean, sidebarInfo?: SidebarInfo, isBidiPage?: boolean): { modified: boolean; newContent: string } {
+function processFile(content: string, explicitTitle?: string, hasCommunityLabel?: boolean, isBidiPage?: boolean): { modified: boolean; newContent: string } {
   // Detect features BEFORE any transformations
   const hasLanguageBlock = content.includes(INFO_BLOCK_PATTERN);
   const hasCommunityBanner = content.includes(COMMUNITY_BANNER);
@@ -632,7 +631,7 @@ function processFile(content: string, explicitTitle?: string, hasCommunityLabel?
 
   // Apply all macro replacements and conversions
   let newContent = content;
-  newContent = replaceMkdocsVariables(newContent);
+  newContent = replaceTemplateVariables(newContent);
   newContent = replaceTsNotSupported(newContent);
   newContent = replaceTsNotSupportedCode(newContent);
   newContent = replaceExperimentalWarning(newContent);
@@ -648,7 +647,7 @@ function processFile(content: string, explicitTitle?: string, hasCommunityLabel?
   const h1Title = extractH1Title(newContent);
   const hasExistingTitle = frontmatterHasTitle(newContent);
   let titleToUse = explicitTitle ?? h1Title;
-  
+
   // Check if title contains [Experimental] and strip it
   const hasExperimentalInTitle = titleToUse?.includes("[Experimental]") ?? false;
   if (hasExperimentalInTitle && titleToUse) {
@@ -659,20 +658,14 @@ function processFile(content: string, explicitTitle?: string, hasCommunityLabel?
   const hasExperimentalContent = hasExperimentalInTitle || hasExperimentalWarningMacro;
   const needsExperimental = hasExperimentalContent && !alreadyHasExperimental;
   const needsTitle = titleToUse && !hasExistingTitle;
-  
-  // Determine sidebar badge type (experimental takes precedence, then nav badge, then community)
-  // Nav badges from <sup> tags: "new", "community", etc.
-  const navBadge = sidebarInfo?.badge;
+
+  // Determine sidebar badge type (experimental takes precedence, then community)
+  // Note: Nav badges from <sup> tags are no longer supported - badges come from frontmatter only
   const needsExperimentalBadge = hasExperimentalContent && !alreadyHasSidebar && !isBidiPage;
-  const needsNavBadge = navBadge && !alreadyHasSidebar && !needsExperimentalBadge;
-  const needsCommunityBadge = hasCommunityLabel && !alreadyHasSidebar && !needsExperimentalBadge && !needsNavBadge;
-  
-  // Determine if sidebar label is needed (when label differs from title)
-  const sidebarLabel = sidebarInfo?.label;
-  const needsSidebarLabel = sidebarLabel && sidebarLabel !== titleToUse && !alreadyHasSidebar;
-  
-  // Determine if any sidebar config is needed
-  const needsSidebar = needsExperimentalBadge || needsNavBadge || needsCommunityBadge || needsSidebarLabel;
+  const needsCommunityBadge = hasCommunityLabel && !alreadyHasSidebar && !needsExperimentalBadge;
+
+  // Determine if any sidebar config is needed (badge only - labels come from frontmatter title)
+  const needsSidebar = needsExperimentalBadge || needsCommunityBadge;
 
   // If there's an H1 heading, remove it (title goes in frontmatter)
   if (h1Title) {
@@ -731,21 +724,12 @@ function processFile(content: string, explicitTitle?: string, hasCommunityLabel?
         newLines.push("experimental: true");
         addedExperimental = true;
       }
-      // Add sidebar config (label and/or badge)
+      // Add sidebar config (badge only - labels come from frontmatter title)
       if (needsSidebar && !addedSidebar) {
         newLines.push("sidebar:");
-        if (needsSidebarLabel) {
-          newLines.push(`  label: "${sidebarLabel}"`);
-        }
         if (needsExperimentalBadge) {
           newLines.push("  badge:");
           newLines.push("    text: Experimental");
-          newLines.push("    variant: note");
-        } else if (needsNavBadge) {
-          // Capitalize first letter of badge text
-          const badgeText = navBadge.charAt(0).toUpperCase() + navBadge.slice(1);
-          newLines.push("  badge:");
-          newLines.push(`    text: ${badgeText}`);
           newLines.push("    variant: note");
         } else if (needsCommunityBadge) {
           newLines.push("  badge:");
@@ -774,21 +758,12 @@ function processFile(content: string, explicitTitle?: string, hasCommunityLabel?
     if (hasLanguageBlock) frontMatterFields.push("languages: Python");
     if (hasCommunityBanner) frontMatterFields.push("community: true");
     if (hasExperimentalContent) frontMatterFields.push("experimental: true");
-    // Add sidebar config (label and/or badge)
+    // Add sidebar config (badge only - labels come from frontmatter title)
     if (needsSidebar) {
       frontMatterFields.push("sidebar:");
-      if (needsSidebarLabel) {
-        frontMatterFields.push(`  label: "${sidebarLabel}"`);
-      }
       if (needsExperimentalBadge) {
         frontMatterFields.push("  badge:");
         frontMatterFields.push("    text: Experimental");
-        frontMatterFields.push("    variant: note");
-      } else if (needsNavBadge) {
-        // Capitalize first letter of badge text
-        const badgeText = navBadge.charAt(0).toUpperCase() + navBadge.slice(1);
-        frontMatterFields.push("  badge:");
-        frontMatterFields.push(`    text: ${badgeText}`);
         frontMatterFields.push("    variant: note");
       } else if (needsCommunityBadge) {
         frontMatterFields.push("  badge:");
@@ -812,14 +787,6 @@ async function main() {
   // Ensure output directory exists (use docs:revert to clean before re-running)
   await mkdir(OUTPUT_DIR, { recursive: true });
 
-  // Load community-labeled files from mkdocs.yml nav
-  const communityLabeledFiles = getCommunityLabeledFiles(MKDOCS_PATH);
-  console.log(`Found ${communityLabeledFiles.size} community-labeled files in nav`);
-
-  // Load sidebar labels from mkdocs.yml nav
-  const sidebarLabels = getSidebarLabels(MKDOCS_PATH);
-  console.log(`Found ${sidebarLabels.size} sidebar labels in nav`);
-
   const files = await getAllMarkdownFiles(DOCS_DIR);
   let processedCount = 0;
 
@@ -828,7 +795,7 @@ async function main() {
     if (SKIP_FILES.some((skip) => file.endsWith(skip))) {
       continue;
     }
-    
+
     // Skip files matching skip patterns (e.g., index files in examples)
     if (SKIP_PATTERNS.some((pattern) => pattern.test(file))) {
       console.log(`⊘ Skipped (pattern): ${file}`);
@@ -836,35 +803,32 @@ async function main() {
     }
 
     const content = await readFile(file, "utf-8");
-    
+
     // Check if this file needs an explicit title
     const relativePath = file.replace(`${DOCS_DIR}/`, "");
     const explicitTitle = EXPLICIT_TITLES[relativePath];
-    
-    // Check if this file has a community label in the nav
-    const hasCommunityLabel = communityLabeledFiles.has(relativePath);
-    
-    // Get sidebar info from nav (label and badge)
-    const sidebarInfo = sidebarLabels.get(relativePath);
-    
+
+    // Community labels now come from frontmatter only, not from navigation config
+    const hasCommunityLabel = false;
+
     // Check if this is a bidi (bidirectional-streaming) page — skip experimental badge for these
     const isBidiPage = relativePath.startsWith("user-guide/concepts/bidirectional-streaming/");
 
-    const { newContent } = processFile(content, explicitTitle, hasCommunityLabel, sidebarInfo, isBidiPage);
+    const { newContent } = processFile(content, explicitTitle, hasCommunityLabel, isBidiPage);
 
     // Determine output path (convert .md to .mdx and write to OUTPUT_DIR)
     const outputRelativePath = relativePath.replace(/\.md$/, ".mdx");
     const outputPath = join(OUTPUT_DIR, outputRelativePath);
-    
+
     // Ensure output directory exists
     await mkdir(dirname(outputPath), { recursive: true });
-    
+
     // Write processed content to output directory
     await writeFile(outputPath, newContent, "utf-8");
-    
+
     // Delete the original source file
     await unlink(file);
-    
+
     console.log(`✓ ${relativePath} → ${outputRelativePath}`);
     processedCount++;
   }

@@ -31,20 +31,24 @@ These documents define the standards and processes that ensure consistency and q
 ├── CODE_OF_CONDUCT.md
 ├── CONTRIBUTING.md
 ├── SITE-ARCHITECTURE.md          # Detailed Astro/Starlight customizations
-├── docs/                         # Documentation content (Markdown)
-│   ├── api-reference/
-│   ├── assets/
-│   ├── community/
-│   ├── examples/
-│   ├── user-guide/
-│   └── ...
 ├── src/                          # Astro source files
 │   ├── components/               # Custom Astro components
 │   │   ├── overrides/            # Starlight component overrides
 │   │   └── ...
 │   ├── config/                   # Site configuration
 │   ├── content/                  # Content collections
-│   │   └── docs/                 # Symlinked to docs/ directory
+│   │   └── docs/                 # Documentation content (Markdown/MDX)
+│   │       ├── api/
+│   │       │   ├── python/
+│   │       │   │   └── _generated/   # Symlink to .build/api-docs/python
+│   │       │   └── typescript/
+│   │       │       └── _generated/   # Symlink to .build/api-docs/typescript
+│   │       ├── assets/
+│   │       ├── community/
+│   │       ├── contribute/
+│   │       ├── examples/
+│   │       ├── labs/
+│   │       └── user-guide/
 │   ├── layouts/                  # Custom layouts
 │   ├── pages/                    # Astro pages
 │   ├── plugins/                  # Remark/Rehype plugins

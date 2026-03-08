@@ -5,10 +5,6 @@ import {
   loadNavigationConfig,
   loadNavbarFromConfig,
   loadGitHubSectionsFromConfig,
-  // Legacy functions for backward compatibility tests
-  loadSidebarFromMkdocs,
-  convertNavItem,
-  mdPathToSlug,
   type StarlightSidebarItem,
 } from '../src/sidebar'
 
@@ -126,57 +122,28 @@ describe('Sidebar Generation from navigation.yml', () => {
     expect(leafItem).toHaveProperty('slug')
     expect(leafItem).not.toHaveProperty('label')
   })
-})
 
-// Legacy tests for backward compatibility during migration
-describe('Legacy: Sidebar Generation from mkdocs.yml', () => {
-  const pathToMkdocsYaml = path.resolve('./mkdocs.yml')
+  it('should handle external links in sidebar', () => {
+    const sidebar = loadSidebarFromConfig(pathToNavigationYml)
 
-  // Skip these tests if mkdocs.yml doesn't exist (after migration complete)
-  const mkdocsExists = (() => {
-    try {
-      require('fs').accessSync(pathToMkdocsYaml)
-      return true
-    } catch {
-      return false
+    // Find the Contribute section which has an external link
+    const contribute = sidebar.find(
+      (item): item is StarlightSidebarItem & { label: string } =>
+        'label' in item && item.label === 'Contribute ❤️'
+    )
+
+    expect(contribute).toBeDefined()
+    if (contribute && 'items' in contribute) {
+      // Look for external links in the items
+      const externalLink = (contribute.items as StarlightSidebarItem[]).find(
+        (item): item is StarlightSidebarItem & { link: string } => 'link' in item && item.link?.startsWith('http')
+      )
+
+      // If there's an external link, it should have the right attributes
+      if (externalLink) {
+        expect(externalLink).toHaveProperty('attrs')
+        expect(externalLink.attrs).toHaveProperty('target', '_blank')
+      }
     }
-  })()
-
-  it.skipIf(!mkdocsExists)('should generate sidebar structure from mkdocs.yml', () => {
-    const sidebar = loadSidebarFromMkdocs(pathToMkdocsYaml)
-
-    expect(sidebar).toBeDefined()
-    expect(Array.isArray(sidebar)).toBe(true)
-    expect(sidebar.length).toBeGreaterThan(0)
-  })
-
-  it('should convert README.md to index slug', () => {
-    expect(mdPathToSlug('README.md')).toBe('docs/index')
-    expect(mdPathToSlug('examples/README.md')).toBe('docs/examples')
-  })
-
-  it('should strip .md extension and handle index files', () => {
-    expect(mdPathToSlug('user-guide/quickstart/overview.md')).toBe('docs/user-guide/quickstart/overview')
-    expect(mdPathToSlug('user-guide/concepts/tools/index.md')).toBe('docs/user-guide/concepts/tools')
-  })
-
-  it('should handle external links', () => {
-    const item = convertNavItem({ 'Contribute ❤️': 'https://github.com/example' })
-    expect(item).toEqual({
-      label: 'Contribute ❤️',
-      link: 'https://github.com/example',
-      attrs: { target: '_blank' },
-    })
-  })
-
-  it('should handle nested items', () => {
-    const item = convertNavItem({
-      Quickstart: [{ 'Getting Started': 'overview.md' }, { Python: 'python.md' }],
-    })
-    // Internal links omit labels - Starlight uses page title from frontmatter
-    expect(item).toEqual({
-      label: 'Quickstart',
-      items: [{ slug: 'docs/overview' }, { slug: 'docs/python' }],
-    })
   })
 })

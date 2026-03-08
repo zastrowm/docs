@@ -161,20 +161,6 @@ Notable config details:
 - `themeCssSelector` on Expressive Code makes code block themes follow Starlight's `[data-theme]` attribute rather than the browser's `prefers-color-scheme`, keeping syntax highlighting in sync with the site's theme toggle.
 - `processedDirs` tells Starlight to run its rehype plugins (e.g. heading anchor links) on the real resolved paths of the API docs symlinks.
 
-## Temporary Migration Script (`scripts/update-docs.ts`)
-
-**What it does:** Converts documentation files from MkDocs markdown format to Astro/Starlight markdown format.
-
-**Why:** MkDocs and Astro use different markdown conventions. Rather than updating Astro's parser to support MkDocs syntax, we convert files to what Astro expects. This runs at build time because the main branch (still in MkDocs format) is a moving target until migration is complete.
-
-**Current approach:** Source control keeps files in MkDocs format. The script runs at build time to transform them. Once migration is complete, we'll do a final conversion, remove the script, and commit the transformed files directly.
-
-For detailed information about what transformations the script performs (and what's planned), see [`scripts/update-docs.md`](scripts/update-docs.md).
-
-Notable behaviors:
-- Collapsible MkDocs admonitions (`???` and `???+`) are converted alongside standard `!!!` admonitions.
-- Bidirectional-streaming pages are excluded from receiving the experimental sidebar badge (the badge is already present via other means for those pages).
-
 ## Custom Frontmatter Fields
 
 The documentation extends Starlight's default schema with custom fields that automatically render contextual banners at the top of pages.
@@ -239,7 +225,7 @@ sidebar:
 
 Available variants: `note`, `tip`, `caution`, `danger`, `success`, `default`
 
-**Badge sources:** Badges like "Experimental" or "Community" are determined from page content (e.g., experimental macros or community banners) and added to page frontmatter by `scripts/update-docs.ts`.
+**Badge sources:** Badges like "Experimental" or "Community" are determined from page frontmatter. Add a `sidebar.badge` field to a page's frontmatter to display a badge in the sidebar.
 
 ## MDX Components
 
@@ -668,21 +654,11 @@ These files handle converting old MkDocs-style API reference links to the new `@
 
 ### Migration Scripts
 
-These scripts transform MkDocs markdown to Astro-compatible format at build time:
+These scripts assist with documentation maintenance:
 
-- `scripts/update-docs.ts` - Main transformation script (converts admonitions, tabs, API links, etc.)
 - `scripts/update-quickstart.ts` - Quickstart-specific transformations
-- `test/update-docs.test.ts` - Tests for the update-docs transformations
-
-### When to Delete
-
-Once the migration is complete and all documentation is committed in Astro format:
-
-1. Run `npm run docs:update` one final time to apply all transformations
-2. Commit the transformed files directly (no longer keeping MkDocs format in source control)
-3. Delete the files listed above
-4. Remove the `docs:update` and `docs:revert` scripts from `package.json`
-5. Update this README to remove references to the migration process
+- `scripts/update-language-index.ts` - Updates language index pages
+- `test/update-docs.test.ts` - Tests for API link conversion utilities
 
 
 ## URL Redirects (Old MkDocs URLs → New CMS URLs)

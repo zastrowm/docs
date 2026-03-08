@@ -1,0 +1,2 @@
+{"timestamp": "2026-03-08T22:57:31.719222Z", "function": "reply_to_review_comment", "args": [], "kwargs": {"pr_number": 18, "comment_id": 2902557339, "reply_text": "Removing this reference since update-docs.ts is being deleted.", "repo": null}}
+{"timestamp": "2026-03-08T22:57:31.718617Z", "function": "reply_to_review_comment", "args": [], "kwargs": {"pr_number": 18, "comment_id": 2902556553, "reply_text": "Will do - deleting `update-docs.ts` and removing the deprecated `loadSidebarFromMkdocs()` function and related legacy code.", "repo": null}}

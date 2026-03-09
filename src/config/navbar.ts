@@ -60,17 +60,9 @@ function transformNavLinks(links: NavLink[]): NavLink[] {
 
 // Load configuration from navigation.yml
 const configPath = path.resolve('./src/config/navigation.yml')
-let rawNavLinks: NavLink[] = []
-let rawGithubSections: GitHubSection[] = []
-
-try {
-  const config = loadNavigationConfig(configPath)
-  rawNavLinks = config.navbar || []
-  rawGithubSections = config.github?.sections || []
-} catch {
-  // Fallback to empty arrays if config cannot be loaded
-  console.warn('Warning: Could not load navigation.yml, using empty navigation')
-}
+const config = loadNavigationConfig(configPath)
+const rawNavLinks: NavLink[] = config.navbar || []
+const rawGithubSections: GitHubSection[] = config.github?.sections || []
 
 /**
  * Navigation links with base path applied.

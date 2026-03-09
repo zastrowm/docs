@@ -3,6 +3,7 @@ import { defineConfig } from 'astro/config'
 import starlight from '@astrojs/starlight'
 import path from 'node:path'
 import remarkMkdocsSnippets from './src/plugins/remark-mkdocs-snippets.ts'
+import sdkSetupPlugin from './src/plugins/vite-plugin-sdk-setup.ts'
 import remarkReadingTime from './src/plugins/remark-reading-time.ts'
 
 import { loadSidebarFromMkdocs } from "./src/sidebar.ts"
@@ -23,6 +24,7 @@ export default defineConfig({
   site: 'https://strandsagents.com',
   base: process.env.ASTRO_BASE_PATH || '/',
   vite: {
+    plugins: [sdkSetupPlugin()],
     // TODO once we separate out CMS build from TS verification, fix this
     // https://github.com/withastro/astro/issues/14117
 		ssr: {
@@ -44,6 +46,7 @@ export default defineConfig({
         },
       },
     }),
+    mdx(),
     starlight({
       markdown: {
         // API docs are symlinked from .build/api-docs; processedDirs ensures Starlight's
@@ -70,16 +73,16 @@ export default defineConfig({
         Header: './src/components/overrides/Header.astro',
         MarkdownContent: './src/components/overrides/MarkdownContent.astro',
         Sidebar: './src/components/overrides/Sidebar.astro',
+        PageFrame: './src/components/overrides/PageFrame.astro',
       },
-    }),
-    astroBrokenLinksChecker({
+  }),
+   astroBrokenLinksChecker({
       checkExternalLinks: false,      // Optional: check external links (default: false)
       cacheExternalLinks: false,      // Optional: cache verified external links to disk (default: true)
       throwError: true,               // Optional: fail the build if broken links are found (default: false)
       linkCheckerDir: '.link-checker' // Optional: directory for cache and log files (default: '.link-checker')
     }),
-    // AutoImport must be before mdx() so auto-imports work in .mdx files
-    AutoImport({
+   AutoImport({
       imports: [
         {
           '@astrojs/starlight/components': [
@@ -95,6 +98,5 @@ export default defineConfig({
         a: './src/components/PageLink.astro'
       }
     }),
-    mdx(),
   ],
 })

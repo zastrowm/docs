@@ -3,6 +3,7 @@ import { defineConfig } from 'astro/config'
 import starlight from '@astrojs/starlight'
 import path from 'node:path'
 import remarkMkdocsSnippets from './src/plugins/remark-mkdocs-snippets.ts'
+import sdkSetupPlugin from './src/plugins/vite-plugin-sdk-setup.ts'
 
 import { loadSidebarFromConfig } from "./src/sidebar.ts"
 import AutoImport from './src/plugins/astro-auto-import.ts'
@@ -22,6 +23,7 @@ export default defineConfig({
   site: 'https://strandsagents.com',
   base: process.env.ASTRO_BASE_PATH || '/',
   vite: {
+    plugins: [sdkSetupPlugin()],
     // TODO once we separate out CMS build from TS verification, fix this
     // https://github.com/withastro/astro/issues/14117
 		ssr: {
@@ -70,6 +72,7 @@ export default defineConfig({
         Header: './src/components/overrides/Header.astro',
         MarkdownContent: './src/components/overrides/MarkdownContent.astro',
         Sidebar: './src/components/overrides/Sidebar.astro',
+        PageFrame: './src/components/overrides/PageFrame.astro',
       },
   }),
    astroBrokenLinksChecker({

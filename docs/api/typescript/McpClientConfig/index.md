@@ -2,10 +2,11 @@
 type McpClientConfig = RuntimeConfig & {
   transport: Transport;
   disableMcpInstrumentation?: boolean;
+  tasksConfig?: TasksConfig;
 };
 ```
 
-Defined in: [src/mcp.ts:16](https://github.com/strands-agents/sdk-typescript/blob/1e39fd2194abd4b64787bb56d6fa62c1fa1c97f7/src/mcp.ts#L16)
+Defined in: [src/mcp.ts:40](https://github.com/strands-agents/sdk-typescript/blob/ae03eab9d140374d9ba28bac0a1ec3dcbb5a1c7a/src/mcp.ts#L40)
 
 Arguments for configuring an MCP Client.
 
@@ -13,5 +14,6 @@ Arguments for configuring an MCP Client.
 
 | Name | Type | Description | Defined in |
 | --- | --- | --- | --- |
-| `transport` | `Transport` | \- | [src/mcp.ts:17](https://github.com/strands-agents/sdk-typescript/blob/1e39fd2194abd4b64787bb56d6fa62c1fa1c97f7/src/mcp.ts#L17) |
-| `disableMcpInstrumentation?` | `boolean` | Disable OpenTelemetry MCP instrumentation. | [src/mcp.ts:20](https://github.com/strands-agents/sdk-typescript/blob/1e39fd2194abd4b64787bb56d6fa62c1fa1c97f7/src/mcp.ts#L20) |
+| `transport` | `Transport` | \- | [src/mcp.ts:41](https://github.com/strands-agents/sdk-typescript/blob/ae03eab9d140374d9ba28bac0a1ec3dcbb5a1c7a/src/mcp.ts#L41) |
+| `disableMcpInstrumentation?` | `boolean` | Disable OpenTelemetry MCP instrumentation. | [src/mcp.ts:44](https://github.com/strands-agents/sdk-typescript/blob/ae03eab9d140374d9ba28bac0a1ec3dcbb5a1c7a/src/mcp.ts#L44) |
+| `tasksConfig?` | [`TasksConfig`](/docs/api/typescript/TasksConfig/index.md) | Configuration for task-augmented tool execution (experimental). When provided (even as empty object), enables MCP task-based tool invocation. When undefined, tools are called directly without task management. | [src/mcp.ts:51](https://github.com/strands-agents/sdk-typescript/blob/ae03eab9d140374d9ba28bac0a1ec3dcbb5a1c7a/src/mcp.ts#L51) |

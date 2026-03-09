@@ -1,4 +1,4 @@
-Defined in: [src/logging/types.ts:10](https://github.com/strands-agents/sdk-typescript/blob/1e39fd2194abd4b64787bb56d6fa62c1fa1c97f7/src/logging/types.ts#L10)
+Defined in: [src/logging/types.ts:10](https://github.com/strands-agents/sdk-typescript/blob/ae03eab9d140374d9ba28bac0a1ec3dcbb5a1c7a/src/logging/types.ts#L10)
 
 Logger interface.
 
@@ -12,7 +12,7 @@ Compatible with standard logging libraries like Pino, Winston, and console.
 debug(...args): void;
 ```
 
-Defined in: [src/logging/types.ts:14](https://github.com/strands-agents/sdk-typescript/blob/1e39fd2194abd4b64787bb56d6fa62c1fa1c97f7/src/logging/types.ts#L14)
+Defined in: [src/logging/types.ts:14](https://github.com/strands-agents/sdk-typescript/blob/ae03eab9d140374d9ba28bac0a1ec3dcbb5a1c7a/src/logging/types.ts#L14)
 
 Log a debug message.
 
@@ -34,7 +34,7 @@ Log a debug message.
 info(...args): void;
 ```
 
-Defined in: [src/logging/types.ts:19](https://github.com/strands-agents/sdk-typescript/blob/1e39fd2194abd4b64787bb56d6fa62c1fa1c97f7/src/logging/types.ts#L19)
+Defined in: [src/logging/types.ts:19](https://github.com/strands-agents/sdk-typescript/blob/ae03eab9d140374d9ba28bac0a1ec3dcbb5a1c7a/src/logging/types.ts#L19)
 
 Log an info message.
 
@@ -56,7 +56,7 @@ Log an info message.
 warn(...args): void;
 ```
 
-Defined in: [src/logging/types.ts:24](https://github.com/strands-agents/sdk-typescript/blob/1e39fd2194abd4b64787bb56d6fa62c1fa1c97f7/src/logging/types.ts#L24)
+Defined in: [src/logging/types.ts:24](https://github.com/strands-agents/sdk-typescript/blob/ae03eab9d140374d9ba28bac0a1ec3dcbb5a1c7a/src/logging/types.ts#L24)
 
 Log a warning message.
 
@@ -78,7 +78,7 @@ Log a warning message.
 error(...args): void;
 ```
 
-Defined in: [src/logging/types.ts:29](https://github.com/strands-agents/sdk-typescript/blob/1e39fd2194abd4b64787bb56d6fa62c1fa1c97f7/src/logging/types.ts#L29)
+Defined in: [src/logging/types.ts:29](https://github.com/strands-agents/sdk-typescript/blob/ae03eab9d140374d9ba28bac0a1ec3dcbb5a1c7a/src/logging/types.ts#L29)
 
 Log an error message.
 

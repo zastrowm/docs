@@ -46,6 +46,7 @@
     -   [SlidingWindowConversationManager](/docs/api/typescript/SlidingWindowConversationManager/index.md)
     -   [StreamEvent](/docs/api/typescript/StreamEvent/index.md)
     -   [StructuredOutputException](/docs/api/typescript/StructuredOutputException/index.md)
+    -   [Swarm](/docs/api/typescript/Swarm/index.md)
     -   [TextBlock](/docs/api/typescript/TextBlock/index.md)
     -   [Tool](/docs/api/typescript/Tool/index.md)
     -   [ToolResultBlock](/docs/api/typescript/ToolResultBlock/index.md)
@@ -93,6 +94,7 @@
     -   [SnapshotStorage](/docs/api/typescript/SnapshotStorage/index.md)
     -   [SnapshotTriggerParams](/docs/api/typescript/SnapshotTriggerParams/index.md)
     -   [StreamOptions](/docs/api/typescript/StreamOptions/index.md)
+    -   [TasksConfig](/docs/api/typescript/TasksConfig/index.md)
     -   [TextBlockData](/docs/api/typescript/TextBlockData/index.md)
     -   [TextDelta](/docs/api/typescript/TextDelta/index.md)
     -   [ToolContext](/docs/api/typescript/ToolContext/index.md)
@@ -157,6 +159,7 @@
 -   **Functions**
     -   [configureLogging](/docs/api/typescript/configureLogging/index.md)
     -   [contentBlockFromData](/docs/api/typescript/contentBlockFromData/index.md)
+    -   [getTracer](/docs/api/typescript/telemetry:getTracer/index.md)
     -   [isModelStreamEvent](/docs/api/typescript/isModelStreamEvent/index.md)
     -   [setupTracer](/docs/api/typescript/telemetry:setupTracer/index.md)
     -   [tool](/docs/api/typescript/tool/index.md)

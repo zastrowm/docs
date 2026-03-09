@@ -24,7 +24,6 @@
   "author": "",
   "license": "Apache-2.0",
   "dependencies": {
-    "@strands-agents/sdk": "github:strands-agents/sdk-typescript",
     "@types/express": "^5.0.5",
     "@types/turndown": "^5.0.6",
     "express": "^5.1.0",

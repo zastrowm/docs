@@ -22,13 +22,13 @@ interface NavbarLink {
   external?: boolean
 }
 
-interface GitHubLink {
+export interface GitHubLink {
   label: string
   href: string
   icon?: string
 }
 
-interface GitHubSection {
+export interface GitHubSection {
   title: string
   links: GitHubLink[]
 }
@@ -144,13 +144,4 @@ export function loadGitHubSectionsFromConfig(configPath: string): GitHubSection[
   return config.github?.sections || []
 }
 
-// ============================================================================
-// Utility functions
-// ============================================================================
 
-/**
- * Strip HTML tags from label (e.g., <sup> community</sup>)
- */
-function cleanLabel(label: string): string {
-  return label.replace(/<[^>]+>/g, '').trim()
-}

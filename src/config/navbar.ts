@@ -6,7 +6,7 @@
  */
 
 import path from 'node:path'
-import { loadNavigationConfig } from '../sidebar'
+import { loadNavigationConfig, type GitHubSection } from '../sidebar'
 
 export interface NavLink {
   /** Display label for the link */
@@ -22,20 +22,6 @@ export interface NavLink {
   basePath?: string
   /** Set to true for external links (opens in new tab) */
   external?: boolean
-}
-
-/**
- * GitHub links shown in the header dropdown (desktop) and mobile nav menu.
- */
-export interface GitHubLink {
-  label: string
-  href: string
-  icon?: string
-}
-
-export interface GitHubSection {
-  title: string
-  links: GitHubLink[]
 }
 
 /**

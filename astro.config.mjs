@@ -71,6 +71,7 @@ export default defineConfig({
       components: {
         Head: './src/components/overrides/Head.astro',
         Header: './src/components/overrides/Header.astro',
+        Hero: './src/components/overrides/Hero.astro',
         MarkdownContent: './src/components/overrides/MarkdownContent.astro',
         Sidebar: './src/components/overrides/Sidebar.astro',
         PageFrame: './src/components/overrides/PageFrame.astro',

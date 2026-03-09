@@ -99,7 +99,6 @@ Run a local development server at http://localhost:4321/:
 npm run dev
 ```
 
-
 ### 2. Making Changes
 
 1. **Create feature branch**: `git checkout -b agent-tasks/{ISSUE_NUMBER}`

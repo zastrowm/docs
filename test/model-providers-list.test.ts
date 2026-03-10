@@ -1,114 +1,122 @@
 import { describe, it, expect } from 'vitest'
 import { getCollection } from 'astro:content'
+import {
+  getLanguageSupport,
+  getIntegrationEntries,
+  splitByCategory,
+  type IntegrationEntry,
+} from '../src/util/integration-content'
 
-/**
- * Helper to determine language support from the languages field.
- * No languages field = both supported
- * languages: 'Python' = Python only
- * languages: 'TypeScript' = TypeScript only
- * languages: ['Python', 'TypeScript'] = both supported
- */
-function getLanguageSupport(languages: string | string[] | undefined): { python: boolean; typescript: boolean } {
-  if (!languages) {
-    return { python: true, typescript: true }
-  }
-  const langArray = Array.isArray(languages) ? languages : [languages]
-  return {
-    python: langArray.includes('Python') || langArray.length === 0,
-    typescript: langArray.includes('TypeScript') || langArray.length === 0,
-  }
-}
+describe('Integration Content Utilities', () => {
+  describe('getLanguageSupport', () => {
+    it('should return both supported when no languages field', () => {
+      expect(getLanguageSupport(undefined)).toEqual({ python: true, typescript: true })
+    })
 
-describe('Model Providers List Component Logic', () => {
+    it('should return Python only when languages is "Python"', () => {
+      expect(getLanguageSupport('Python')).toEqual({ python: true, typescript: false })
+    })
+
+    it('should return TypeScript only when languages is "TypeScript"', () => {
+      expect(getLanguageSupport('TypeScript')).toEqual({ python: false, typescript: true })
+    })
+
+    it('should return both when languages array contains both', () => {
+      expect(getLanguageSupport(['Python', 'TypeScript'])).toEqual({ python: true, typescript: true })
+    })
+
+    it('should return Python only when languages array contains only Python', () => {
+      expect(getLanguageSupport(['Python'])).toEqual({ python: true, typescript: false })
+    })
+
+    it('should return both supported for empty array', () => {
+      expect(getLanguageSupport([])).toEqual({ python: true, typescript: true })
+    })
+  })
+
+  describe('splitByCategory', () => {
+    it('should split entries into official and community', () => {
+      const entries: IntegrationEntry[] = [
+        { id: '1', title: 'A', href: '/a/', pythonSupport: true, typescriptSupport: true, community: false },
+        { id: '2', title: 'B', href: '/b/', pythonSupport: true, typescriptSupport: false, community: true },
+        { id: '3', title: 'C', href: '/c/', pythonSupport: true, typescriptSupport: true, community: false },
+      ]
+
+      const { official, community } = splitByCategory(entries)
+
+      expect(official).toHaveLength(2)
+      expect(community).toHaveLength(1)
+      expect(official.map((e) => e.title)).toEqual(['A', 'C'])
+      expect(community.map((e) => e.title)).toEqual(['B'])
+    })
+  })
+
+  describe('getIntegrationEntries sorting', () => {
+    it('should sort providers correctly - non-community first, then alphabetically', () => {
+      // Test data simulating provider pages
+      const mockProviders: IntegrationEntry[] = [
+        { id: '1', title: 'Zebra Provider', href: '/z/', pythonSupport: true, typescriptSupport: true, community: true },
+        { id: '2', title: 'Amazon Bedrock', href: '/a/', pythonSupport: true, typescriptSupport: true, community: false },
+        { id: '3', title: 'Apple Provider', href: '/ap/', pythonSupport: true, typescriptSupport: true, community: true },
+        { id: '4', title: 'OpenAI', href: '/o/', pythonSupport: true, typescriptSupport: true, community: false },
+      ]
+
+      // Sort using same logic as getIntegrationEntries
+      const sorted = [...mockProviders].sort((a, b) => {
+        if (a.community !== b.community) return a.community ? 1 : -1
+        return a.title.localeCompare(b.title)
+      })
+
+      expect(sorted.map((p) => p.title)).toEqual([
+        'Amazon Bedrock',
+        'OpenAI',
+        'Apple Provider',
+        'Zebra Provider',
+      ])
+    })
+  })
+})
+
+describe('Model Providers List Integration', () => {
   it('should have integrationType field available in schema', async () => {
     const docs = await getCollection('docs')
-    // Find the model-providers index page to verify schema access
     const indexPage = docs.find((doc) => doc.id === 'docs/user-guide/concepts/model-providers')
 
     expect(indexPage).toBeDefined()
-    // The integrationType field should be accessible (even if undefined)
     expect('integrationType' in indexPage!.data || indexPage!.data.integrationType === undefined).toBe(true)
   })
 
   it('should filter model provider pages by integrationType', async () => {
     const docs = await getCollection('docs')
-
-    // Filter docs with integrationType: 'model-provider'
-    const modelProviders = docs.filter(
-      (doc) =>
-        doc.data.integrationType === 'model-provider' &&
-        doc.id.startsWith('docs/user-guide/concepts/model-providers/') &&
-        !doc.id.endsWith('/model-providers') // Exclude index page
+    const modelProviders = getIntegrationEntries(
+      docs,
+      'model-provider',
+      'docs/user-guide/concepts/model-providers/'
     )
 
-    // Once frontmatter is added, there should be 18 model provider pages
-    // For now, we test the filtering logic works
     expect(modelProviders).toBeInstanceOf(Array)
-  })
-
-  it('should correctly detect language support', () => {
-    // No languages field = both supported
-    expect(getLanguageSupport(undefined)).toEqual({ python: true, typescript: true })
-
-    // Python only
-    expect(getLanguageSupport('Python')).toEqual({ python: true, typescript: false })
-
-    // TypeScript only
-    expect(getLanguageSupport('TypeScript')).toEqual({ python: false, typescript: true })
-
-    // Array with both
-    expect(getLanguageSupport(['Python', 'TypeScript'])).toEqual({ python: true, typescript: true })
-
-    // Array with Python only
-    expect(getLanguageSupport(['Python'])).toEqual({ python: true, typescript: false })
-  })
-
-  it('should sort providers correctly - non-community first, then alphabetically', async () => {
-    // Test data simulating provider pages
-    const mockProviders = [
-      { title: 'Zebra Provider', community: true },
-      { title: 'Amazon Bedrock', community: false },
-      { title: 'Apple Provider', community: true },
-      { title: 'OpenAI', community: false },
-    ]
-
-    // Sort: non-community first (alphabetically), then community (alphabetically)
-    const sorted = [...mockProviders].sort((a, b) => {
-      // Community providers go last
-      if (a.community !== b.community) {
-        return a.community ? 1 : -1
-      }
-      // Alphabetical within group
-      return a.title.localeCompare(b.title)
-    })
-
-    expect(sorted.map((p) => p.title)).toEqual([
-      'Amazon Bedrock',
-      'OpenAI',
-      'Apple Provider',
-      'Zebra Provider',
-    ])
+    expect(modelProviders.length).toBeGreaterThan(0)
   })
 
   it('should exclude index page from model providers list', async () => {
     const docs = await getCollection('docs')
-
-    // Filter docs with integrationType: 'model-provider'
-    const modelProviders = docs.filter(
-      (doc) =>
-        doc.data.integrationType === 'model-provider' &&
-        doc.id.startsWith('docs/user-guide/concepts/model-providers/')
+    const modelProviders = getIntegrationEntries(
+      docs,
+      'model-provider',
+      'docs/user-guide/concepts/model-providers/'
     )
 
-    // Index page should not be in the filtered list
     const indexPage = modelProviders.find((doc) => doc.id === 'docs/user-guide/concepts/model-providers')
     expect(indexPage).toBeUndefined()
   })
-})
 
-describe('Model Provider Pages Frontmatter', () => {
-  it('should have all model provider pages with integrationType after update', async () => {
+  it('should have all model provider pages with integrationType', async () => {
     const docs = await getCollection('docs')
+    const modelProviders = getIntegrationEntries(
+      docs,
+      'model-provider',
+      'docs/user-guide/concepts/model-providers/'
+    )
 
     // Get all pages in model-providers directory (excluding index)
     const modelProviderPages = docs.filter(
@@ -117,48 +125,29 @@ describe('Model Provider Pages Frontmatter', () => {
         doc.id !== 'docs/user-guide/concepts/model-providers'
     )
 
-    // Check which pages have integrationType set
-    const pagesWithIntegrationType = modelProviderPages.filter(
-      (doc) => doc.data.integrationType === 'model-provider'
-    )
-
-    // After frontmatter updates, all 18 provider pages should have integrationType
-    // This test will help verify the updates are complete
     console.log(`\n=== Model Provider Pages Status ===`)
     console.log(`Total pages in model-providers: ${modelProviderPages.length}`)
-    console.log(`Pages with integrationType: ${pagesWithIntegrationType.length}`)
-
-    if (pagesWithIntegrationType.length < modelProviderPages.length) {
-      const missingPages = modelProviderPages.filter(
-        (doc) => doc.data.integrationType !== 'model-provider'
-      )
-      console.log('\nPages missing integrationType:')
-      missingPages.forEach((doc) => console.log(`  - ${doc.id}`))
-    }
+    console.log(`Pages with integrationType: ${modelProviders.length}`)
 
     // All model provider pages should have integrationType set
-    expect(pagesWithIntegrationType.length).toBe(modelProviderPages.length)
+    expect(modelProviders.length).toBe(modelProviderPages.length)
   })
 
   it('should have consistent language support data', async () => {
     const docs = await getCollection('docs')
-
-    // Get all model provider pages with integrationType
-    const modelProviders = docs.filter(
-      (doc) =>
-        doc.data.integrationType === 'model-provider' &&
-        doc.id.startsWith('docs/user-guide/concepts/model-providers/')
+    const modelProviders = getIntegrationEntries(
+      docs,
+      'model-provider',
+      'docs/user-guide/concepts/model-providers/'
     )
 
     console.log('\n=== Language Support Overview ===')
     for (const provider of modelProviders) {
-      const support = getLanguageSupport(provider.data.languages)
-      const pythonIcon = support.python ? '✅' : '❌'
-      const tsIcon = support.typescript ? '✅' : '❌'
-      console.log(`${provider.data.title}: Python ${pythonIcon} | TypeScript ${tsIcon}`)
+      const pythonIcon = provider.pythonSupport ? '✅' : '❌'
+      const tsIcon = provider.typescriptSupport ? '✅' : '❌'
+      console.log(`${provider.title}: Python ${pythonIcon} | TypeScript ${tsIcon}`)
     }
 
-    // Test passes if we can iterate - specific validation is visual
     expect(true).toBe(true)
   })
 })

@@ -5,47 +5,11 @@ sidebar:
 ---
 
 import { getCollection } from 'astro:content'
+import { getIntegrationEntries, splitByCategory } from '@util/integration-content'
 
 export const allDocs = await getCollection('docs')
-
-export const modelProviders = allDocs
-  .filter(
-    (doc) =>
-      doc.data.integrationType === 'model-provider' &&
-      doc.id.startsWith('docs/user-guide/concepts/model-providers/') &&
-      doc.id !== 'docs/user-guide/concepts/model-providers'
-  )
-  .map((doc) => {
-    const languages = doc.data.languages
-    let pythonSupport = true
-    let typescriptSupport = true
-    if (languages) {
-      const langArray = Array.isArray(languages) ? languages : [languages]
-      pythonSupport = langArray.includes('Python') || langArray.length === 0
-      typescriptSupport = langArray.includes('TypeScript') || langArray.length === 0
-      if (langArray.length === 1 && langArray[0] === 'Python') typescriptSupport = false
-      if (langArray.length === 1 && langArray[0] === 'TypeScript') pythonSupport = false
-    }
-    const sidebarLabel = doc.data.sidebar?.label
-    return {
-      id: doc.id,
-      title: doc.data.title,
-      sidebarLabel,
-      href: `/docs/${doc.id.replace(/^docs\//, '')}/`,
-      pythonSupport,
-      typescriptSupport,
-      community: doc.data.community === true,
-    }
-  })
-  .sort((a, b) => {
-    if (a.community !== b.community) return a.community ? 1 : -1
-    const aName = a.sidebarLabel || a.title
-    const bName = b.sidebarLabel || b.title
-    return aName.localeCompare(bName)
-  })
-
-export const officialProviders = modelProviders.filter((p) => !p.community)
-export const communityProviders = modelProviders.filter((p) => p.community)
+export const modelProviders = getIntegrationEntries(allDocs, 'model-provider', 'docs/user-guide/concepts/model-providers/')
+export const { official: officialProviders, community: communityProviders } = splitByCategory(modelProviders)
 
 ## What are Model Providers?
 

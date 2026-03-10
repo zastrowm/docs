@@ -1,0 +1,181 @@
+---
+/**
+ * ModelProvidersList.astro
+ *
+ * Dynamically generates a table of model providers by querying the docs collection
+ * for entries with `integrationType: 'model-provider'` frontmatter.
+ *
+ * Features:
+ * - Filters out the index page automatically
+ * - Sorts non-community providers first, then community providers, alphabetically
+ * - Shows Python and TypeScript support icons based on `languages` frontmatter
+ * - Displays community badge for community providers
+ */
+import { getCollection } from 'astro:content'
+import { pathWithBase } from '../util/links'
+
+interface ModelProvider {
+  id: string
+  title: string
+  sidebarLabel?: string
+  href: string
+  pythonSupport: boolean
+  typescriptSupport: boolean
+  community: boolean
+}
+
+// Get all docs and filter for model providers
+const allDocs = await getCollection('docs')
+
+const modelProviders: ModelProvider[] = allDocs
+  .filter(
+    (doc) =>
+      doc.data.integrationType === 'model-provider' &&
+      doc.id.startsWith('docs/user-guide/concepts/model-providers/') &&
+      doc.id !== 'docs/user-guide/concepts/model-providers' // Exclude index page
+  )
+  .map((doc) => {
+    // Determine language support
+    const languages = doc.data.languages
+    let pythonSupport = true
+    let typescriptSupport = true
+
+    if (languages) {
+      const langArray = Array.isArray(languages) ? languages : [languages]
+      pythonSupport = langArray.includes('Python') || langArray.length === 0
+      typescriptSupport = langArray.includes('TypeScript') || langArray.length === 0
+
+      // If only Python is specified, TypeScript is not supported
+      if (langArray.length === 1 && langArray[0] === 'Python') {
+        typescriptSupport = false
+      }
+      // If only TypeScript is specified, Python is not supported
+      if (langArray.length === 1 && langArray[0] === 'TypeScript') {
+        pythonSupport = false
+      }
+    }
+
+    // Get sidebar label if available (for display name)
+    const sidebarLabel = doc.data.sidebar?.label as string | undefined
+
+    return {
+      id: doc.id,
+      title: doc.data.title as string,
+      sidebarLabel,
+      href: pathWithBase(`/${doc.id}/`),
+      pythonSupport,
+      typescriptSupport,
+      community: doc.data.community === true,
+    }
+  })
+  // Sort: non-community first (alphabetically), then community (alphabetically)
+  .sort((a, b) => {
+    if (a.community !== b.community) {
+      return a.community ? 1 : -1
+    }
+    const aName = a.sidebarLabel || a.title
+    const bName = b.sidebarLabel || b.title
+    return aName.localeCompare(bName)
+  })
+
+// Split into official and community providers
+const officialProviders = modelProviders.filter((p) => !p.community)
+const communityProviders = modelProviders.filter((p) => p.community)
+---
+
+<div class="model-providers-table">
+  <table>
+    <thead>
+      <tr>
+        <th>Provider</th>
+        <th>Python Support</th>
+        <th>TypeScript Support</th>
+      </tr>
+    </thead>
+    <tbody>
+      {
+        officialProviders.map((provider) => (
+          <tr>
+            <td>
+              <a href={provider.href}>{provider.sidebarLabel || provider.title}</a>
+            </td>
+            <td class="support-cell">{provider.pythonSupport ? '✅' : '❌'}</td>
+            <td class="support-cell">{provider.typescriptSupport ? '✅' : '❌'}</td>
+          </tr>
+        ))
+      }
+      {
+        communityProviders.length > 0 && (
+          <tr class="community-header">
+            <td colspan="3">
+              <strong>Community Providers</strong>
+            </td>
+          </tr>
+        )
+      }
+      {
+        communityProviders.map((provider) => (
+          <tr class="community-provider">
+            <td>
+              <a href={provider.href}>{provider.sidebarLabel || provider.title}</a>
+              <span class="community-badge">Community</span>
+            </td>
+            <td class="support-cell">{provider.pythonSupport ? '✅' : '❌'}</td>
+            <td class="support-cell">{provider.typescriptSupport ? '✅' : '❌'}</td>
+          </tr>
+        ))
+      }
+    </tbody>
+  </table>
+</div>
+
+<style>
+  .model-providers-table {
+    margin: 1.5rem 0;
+  }
+
+  .model-providers-table table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+  .model-providers-table th,
+  .model-providers-table td {
+    padding: 0.75rem 1rem;
+    text-align: left;
+    border-bottom: 1px solid var(--sl-color-gray-5);
+  }
+
+  .model-providers-table th {
+    font-weight: 600;
+    background: var(--sl-color-gray-6);
+  }
+
+  .support-cell {
+    text-align: center;
+  }
+
+  .community-header td {
+    background: var(--sl-color-gray-6);
+    padding-top: 1.5rem;
+  }
+
+  .community-badge {
+    display: inline-block;
+    margin-left: 0.5rem;
+    padding: 0.125rem 0.5rem;
+    font-size: 0.75rem;
+    font-weight: 500;
+    border-radius: 4px;
+    background: var(--sl-color-accent);
+    color: var(--sl-color-accent-high);
+    vertical-align: middle;
+  }
+
+  .community-provider td:first-child {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    flex-wrap: wrap;
+  }
+</style>

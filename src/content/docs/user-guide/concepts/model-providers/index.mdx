@@ -4,7 +4,48 @@ sidebar:
   label: "Overview"
 ---
 
-import ModelProvidersList from '@components/ModelProvidersList.astro'
+import { getCollection } from 'astro:content'
+
+export const allDocs = await getCollection('docs')
+
+export const modelProviders = allDocs
+  .filter(
+    (doc) =>
+      doc.data.integrationType === 'model-provider' &&
+      doc.id.startsWith('docs/user-guide/concepts/model-providers/') &&
+      doc.id !== 'docs/user-guide/concepts/model-providers'
+  )
+  .map((doc) => {
+    const languages = doc.data.languages
+    let pythonSupport = true
+    let typescriptSupport = true
+    if (languages) {
+      const langArray = Array.isArray(languages) ? languages : [languages]
+      pythonSupport = langArray.includes('Python') || langArray.length === 0
+      typescriptSupport = langArray.includes('TypeScript') || langArray.length === 0
+      if (langArray.length === 1 && langArray[0] === 'Python') typescriptSupport = false
+      if (langArray.length === 1 && langArray[0] === 'TypeScript') pythonSupport = false
+    }
+    const sidebarLabel = doc.data.sidebar?.label
+    return {
+      id: doc.id,
+      title: doc.data.title,
+      sidebarLabel,
+      href: `/docs/${doc.id.replace(/^docs\//, '')}/`,
+      pythonSupport,
+      typescriptSupport,
+      community: doc.data.community === true,
+    }
+  })
+  .sort((a, b) => {
+    if (a.community !== b.community) return a.community ? 1 : -1
+    const aName = a.sidebarLabel || a.title
+    const bName = b.sidebarLabel || b.title
+    return aName.localeCompare(bName)
+  })
+
+export const officialProviders = modelProviders.filter((p) => !p.community)
+export const communityProviders = modelProviders.filter((p) => p.community)
 
 ## What are Model Providers?
 
@@ -14,7 +55,49 @@ A model provider is a service or platform that hosts and serves large language m
 
 The following table shows all model providers supported by Strands Agents SDK and their availability in Python and TypeScript:
 
-<ModelProvidersList />
+<table>
+  <thead>
+    <tr>
+      <th>Provider</th>
+      <th style={{textAlign: 'center'}}>Python Support</th>
+      <th style={{textAlign: 'center'}}>TypeScript Support</th>
+    </tr>
+  </thead>
+  <tbody>
+    {officialProviders.map((provider) => (
+      <tr>
+        <td><a href={provider.href}>{provider.sidebarLabel || provider.title}</a></td>
+        <td style={{textAlign: 'center'}}>{provider.pythonSupport ? '✅' : '❌'}</td>
+        <td style={{textAlign: 'center'}}>{provider.typescriptSupport ? '✅' : '❌'}</td>
+      </tr>
+    ))}
+    {communityProviders.length > 0 && (
+      <tr style={{background: 'var(--sl-color-gray-6)'}}>
+        <td colSpan={3}><strong>Community Providers</strong></td>
+      </tr>
+    )}
+    {communityProviders.map((provider) => (
+      <tr>
+        <td>
+          <a href={provider.href}>{provider.sidebarLabel || provider.title}</a>
+          {' '}
+          <span style={{
+            display: 'inline-block',
+            padding: '0.125rem 0.5rem',
+            fontSize: '0.75rem',
+            fontWeight: 500,
+            borderRadius: '4px',
+            background: 'var(--sl-color-accent)',
+            color: 'var(--sl-color-accent-high)',
+            verticalAlign: 'middle'
+          }}>Community</span>
+        </td>
+        <td style={{textAlign: 'center'}}>{provider.pythonSupport ? '✅' : '❌'}</td>
+        <td style={{textAlign: 'center'}}>{provider.typescriptSupport ? '✅' : '❌'}</td>
+      </tr>
+    ))}
+  </tbody>
+</table>
 
 ## Getting Started
 

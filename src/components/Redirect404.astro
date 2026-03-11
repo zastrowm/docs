@@ -1,3 +1,9 @@
+---
+import { buildRedirectFromMap } from '../util/redirect.build'
+
+const redirectFromMap = await buildRedirectFromMap()
+---
+
 <!--
   Redirect404: handles client-side redirects for old/moved URLs that land on the 404 page.
 
@@ -29,7 +35,7 @@
   </style>
 </noscript>
 
-<script>
+<script define:vars={{ redirectFromMap }}>
   import { resolveRedirectFromUrl } from '../util/redirect'
 
   // Safety net: reveal the page after 3s no matter what, in case the redirect doesn't fire
@@ -40,11 +46,11 @@
     clearTimeout(showTimeout)
   }
 
-  function tryRedirect(): boolean {
-    const target = resolveRedirectFromUrl(window.location.href)
+  function tryRedirect() {
+    const target = resolveRedirectFromUrl(window.location.href, redirectFromMap)
     if (!target) return false
 
-    let dest: string
+    let dest
     if (target.startsWith('https://') || target.startsWith('http://')) {
       dest = target
     } else {
@@ -62,7 +68,7 @@
   }
 
   function showPage() {
-    const el = document.querySelector<HTMLElement>('.main-pane')
+    const el = document.querySelector('.main-pane')
     if (el) el.style.visibility = 'visible'
   }
 </script>

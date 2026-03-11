@@ -6,12 +6,18 @@ sidebar:
 
 import { getCollection } from 'astro:content'
 import { getIntegrationEntries } from '@util/integration-content'
+import SimpleTable from '@components/SimpleTable.astro'
 
 export const allDocs = await getCollection('docs')
 export const communityTools = getIntegrationEntries(allDocs, 'community-tool', 'docs/community/tools/')
 export const communityModelProviders = getIntegrationEntries(allDocs, 'community-model-provider', 'docs/community/model-providers/')
 export const communitySessionManagers = getIntegrationEntries(allDocs, 'community-session-manager', 'docs/community/session-managers/')
 export const communityIntegrations = getIntegrationEntries(allDocs, 'community-integration', 'docs/community/integrations/')
+
+export const columns = [
+  { header: "Package", key: "title", link: true },
+  { header: "Description", key: "description" }
+]
 
 The Strands community has built tools and integrations for a variety of use cases. This catalog helps you discover what's available and find packages that solve your specific needs.
 
@@ -25,85 +31,25 @@ These packages are maintained by their authors, not the Strands team. Review pac
 
 Tools extend your agents with capabilities for specific services and platforms. Each package provides one or more tools you can add to your agents.
 
-<table>
-  <thead>
-    <tr>
-      <th>Package</th>
-      <th>Description</th>
-    </tr>
-  </thead>
-  <tbody>
-    {communityTools.map((tool) => (
-      <tr>
-        <td><a href={tool.href}>{tool.sidebarLabel || tool.title}</a></td>
-        <td>{tool.description}</td>
-      </tr>
-    ))}
-  </tbody>
-</table>
+<SimpleTable data={communityTools} columns={columns} />
 
 ## Model providers
 
 Model providers add support for additional LLM services beyond the built-in providers. Use these to integrate with specialized or regional LLM platforms.
 
-<table>
-  <thead>
-    <tr>
-      <th>Package</th>
-      <th>Description</th>
-    </tr>
-  </thead>
-  <tbody>
-    {communityModelProviders.map((provider) => (
-      <tr>
-        <td><a href={provider.href}>{provider.sidebarLabel || provider.title}</a></td>
-        <td>{provider.description}</td>
-      </tr>
-    ))}
-  </tbody>
-</table>
+<SimpleTable data={communityModelProviders} columns={columns} />
 
 ## Session managers
 
 Session managers provide alternative storage backends for conversation history. Use these when you need persistent, scalable, or distributed session storage.
 
-<table>
-  <thead>
-    <tr>
-      <th>Package</th>
-      <th>Description</th>
-    </tr>
-  </thead>
-  <tbody>
-    {communitySessionManagers.map((manager) => (
-      <tr>
-        <td><a href={manager.href}>{manager.sidebarLabel || manager.title}</a></td>
-        <td>{manager.description}</td>
-      </tr>
-    ))}
-  </tbody>
-</table>
+<SimpleTable data={communitySessionManagers} columns={columns} />
 
 ## Integrations
 
 Platform integrations help you connect Strands agents with external services and user interfaces.
 
-<table>
-  <thead>
-    <tr>
-      <th>Package</th>
-      <th>Description</th>
-    </tr>
-  </thead>
-  <tbody>
-    {communityIntegrations.map((integration) => (
-      <tr>
-        <td><a href={integration.href}>{integration.sidebarLabel || integration.title}</a></td>
-        <td>{integration.description}</td>
-      </tr>
-    ))}
-  </tbody>
-</table>
+<SimpleTable data={communityIntegrations} columns={columns} />
 
 ---
 

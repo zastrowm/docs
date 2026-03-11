@@ -82,6 +82,10 @@ export const collections = {
         experimental: z.boolean().default(false),
         // Category for TypeScript API docs (classes, interfaces, type-aliases, functions)
         category: z.string().optional(),
+        // Integration type for filtering (e.g., 'model-provider' for model providers)
+        integrationType: z.string().optional(),
+        // Short description for catalog listings
+        description: z.string().optional(),
       }),
     }),
   }),

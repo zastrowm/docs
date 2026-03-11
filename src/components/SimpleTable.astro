@@ -1,0 +1,69 @@
+---
+/**
+ * A reusable table component for displaying integration entries.
+ * 
+ * @example
+ * <SimpleTable
+ *   data={tools}
+ *   columns={[
+ *     { header: "Package", key: "title", link: true },
+ *     { header: "Description", key: "description" }
+ *   ]}
+ * />
+ */
+interface Column {
+  /** Column header text */
+  header: string
+  /** Property key to access from data item */
+  key: string
+  /** If true, renders as a link using item.href */
+  link?: boolean
+}
+
+interface DataItem {
+  title: string
+  sidebarLabel?: string
+  description?: string
+  href: string
+  [key: string]: any
+}
+
+interface Props {
+  data: DataItem[]
+  columns: Column[]
+}
+
+const { data, columns } = Astro.props
+
+function getCellValue(item: DataItem, key: string): string {
+  if (key === 'title') {
+    return item.sidebarLabel || item.title
+  }
+  return item[key] ?? ''
+}
+---
+
+<table>
+  <thead>
+    <tr>
+      {columns.map((col) => (
+        <th>{col.header}</th>
+      ))}
+    </tr>
+  </thead>
+  <tbody>
+    {data.map((item) => (
+      <tr>
+        {columns.map((col) => (
+          <td>
+            {col.link ? (
+              <a href={item.href}>{getCellValue(item, col.key)}</a>
+            ) : (
+              getCellValue(item, col.key)
+            )}
+          </td>
+        ))}
+      </tr>
+    ))}
+  </tbody>
+</table>

@@ -52,6 +52,8 @@ export const collections = {
         category: z.string().optional(),
         // Integration type for filtering (e.g., 'model-provider' for model providers)
         integrationType: z.string().optional(),
+        // Short description for catalog listings
+        description: z.string().optional(),
       }),
     }),
   }),

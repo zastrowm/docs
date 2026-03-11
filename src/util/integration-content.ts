@@ -2,7 +2,7 @@
  * Utilities for querying and filtering integration content from the docs collection.
  *
  * This module provides typed helper functions for working with integration pages
- * (model providers, tools, etc.) that have `integrationType` frontmatter.
+ * (model providers, tools, session managers, etc.) that have `integrationType` frontmatter.
  */
 
 import type { CollectionEntry } from 'astro:content'
@@ -10,7 +10,12 @@ import type { CollectionEntry } from 'astro:content'
 /**
  * Integration types that can be used to filter content.
  */
-export type IntegrationType = 'model-provider'
+export type IntegrationType =
+  | 'model-provider'
+  | 'community-tool'
+  | 'community-model-provider'
+  | 'community-session-manager'
+  | 'community-integration'
 
 /**
  * Represents language support for an integration.
@@ -38,6 +43,8 @@ export interface IntegrationEntry {
   typescriptSupport: boolean
   /** Whether this is a community-contributed integration */
   community: boolean
+  /** Optional description for catalog listings */
+  description?: string
 }
 
 /**
@@ -102,6 +109,9 @@ export function getIntegrationEntries(
       // Get sidebar label if available
       const sidebarLabel = (doc.data.sidebar as { label?: string } | undefined)?.label
 
+      // Get description if available
+      const description = (doc.data as { description?: string }).description
+
       return {
         id: doc.id,
         title: doc.data.title as string,
@@ -110,6 +120,7 @@ export function getIntegrationEntries(
         pythonSupport: python,
         typescriptSupport: typescript,
         community: doc.data.community === true,
+        description,
       }
     })
     .sort((a, b) => {

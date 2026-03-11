@@ -74,7 +74,7 @@ export function resolveRedirect(slug: string, redirectFromMap?: Record<string, s
 
   // Then check redirectFromMap (frontmatter-based redirects)
   if (redirectFromMap && slug in redirectFromMap) {
-    return redirectFromMap[slug]
+    return redirectFromMap[slug] ?? null
   }
 
   return null

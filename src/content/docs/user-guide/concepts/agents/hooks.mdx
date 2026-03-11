@@ -109,8 +109,8 @@ agent = Agent(plugins=[LoggingPlugin()])
 </Tab>
 <Tab label="TypeScript">
 
-```ts
-// Plugins are not yet available in TypeScript SDK
+```typescript
+--8<-- "user-guide/concepts/plugins/index.ts:plugin_for_hooks"
 ```
 </Tab>
 </Tabs>
@@ -1096,8 +1096,12 @@ agent.hooks.add_hook(RequestLogger())
 </Tab>
 <Tab label="TypeScript">
 
-```ts
-// This feature is not yet available in TypeScript SDK
+:::note[TypeScript SDK]
+The TypeScript SDK does not export a `HookProvider` interface. Instead, use the [Plugin](../plugins/index.md) class to bundle multiple hooks together. The `Plugin` class provides `initAgent()` for registering hooks and `getTools()` for providing tools.
+:::
+
+```typescript
+--8<-- "user-guide/concepts/plugins/index.ts:plugin_for_hooks"
 ```
 </Tab>
 </Tabs>

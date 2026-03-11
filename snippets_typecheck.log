@@ -1,0 +1,8 @@
+
+> docs@1.0.0 typecheck:snippets
+> npm run typecheck --prefix test-snippets
+
+
+> test-snippets@1.0.0 typecheck
+> tsc --noEmit
+

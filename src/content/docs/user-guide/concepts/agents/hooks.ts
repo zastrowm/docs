@@ -1,5 +1,5 @@
-import { Agent, FunctionTool, Plugin } from '@strands-agents/sdk'
-import type { AgentData } from '@strands-agents/sdk'
+import { Agent, FunctionTool } from '@strands-agents/sdk'
+import type { AgentData, Plugin } from '@strands-agents/sdk'
 import {
   BeforeInvocationEvent,
   AfterInvocationEvent,
@@ -79,7 +79,7 @@ async function toolInterceptionExample() {
   class ToolInterceptor extends Plugin {
     name = 'tool-interceptor'
 
-    override initAgent(agent: AgentData): void {
+    initAgent(agent: AgentData): void {
       agent.addHook(BeforeToolCallEvent, (ev) => this.interceptTool(ev))
     }
 
@@ -99,7 +99,7 @@ async function resultModificationExample() {
   class ResultProcessor extends Plugin {
     name = 'result-processor'
 
-    override initAgent(agent: AgentData): void {
+    initAgent(agent: AgentData): void {
       agent.addHook(AfterToolCallEvent, (ev) => this.processResult(ev))
     }
 
@@ -126,7 +126,7 @@ async function composabilityExample() {
   class RequestLoggingHook extends Plugin {
     name = 'request-logging'
 
-    override initAgent(agent: AgentData): void {
+    initAgent(agent: AgentData): void {
       agent.addHook(BeforeInvocationEvent, (ev) => this.logRequest(ev))
       agent.addHook(AfterInvocationEvent, (ev) => this.logResponse(ev))
       agent.addHook(BeforeToolCallEvent, (ev) => this.logToolUse(ev))
@@ -154,7 +154,7 @@ async function loggingModificationsExample() {
   class ResultProcessor extends Plugin {
     name = 'result-processor'
 
-    override initAgent(agent: AgentData): void {
+    initAgent(agent: AgentData): void {
       agent.addHook(AfterToolCallEvent, (ev) => this.processResult(ev))
     }
 
@@ -196,7 +196,7 @@ async function fixedToolArgumentsExample() {
 
     name = 'constant-tool-arguments'
 
-    override initAgent(agent: AgentData): void {
+    initAgent(agent: AgentData): void {
       agent.addHook(BeforeToolCallEvent, (ev) => this.fixToolArguments(ev))
     }
 

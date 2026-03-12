@@ -2,7 +2,6 @@
 title: Plugins
 ---
 
-
 Plugins allow you to change the typical behavior of an agent. They enable you to introduce concepts like [Skills](https://agentskills.io/specification), [steering](./steering), or other behavioral modifications into the agentic loop. Plugins work by taking advantage of the low-level primitives exposed by the Agent class—`model`, `system_prompt`, `messages`, `tools`, and `hooks`—and executing logic to improve an agent's behavior.
 
 The Strands SDK provides built-in plugins that you can use out of the box:
@@ -109,16 +108,6 @@ When you attach a plugin to an agent, the following happens:
 3. **Tool Registration**: Each `@tool` method is added to the agent's tools list
 4. **Initialization**: The `init_agent(agent)` method is called for any custom setup
 
-```mermaid
-flowchart TD
-    A[Plugin Attached] --> B[Scan for @hook methods]
-    A --> C[Scan for @tool methods]
-    B --> D[Register hooks with agent]
-    C --> E[Add tools to agent]
-    D --> F[init_agent called]
-    E --> F
-    F --> G[Plugin Ready]
-```
 </Tab>
 <Tab label="TypeScript">
 
@@ -126,19 +115,20 @@ flowchart TD
 2. **Initialization**: The `initAgent(agent)` method is called for hook registration and setup
 3. **Hook Registration**: In `initAgent`, use `agent.addHook()` to register event callbacks manually
 
+**Note**: TypeScript does not use `@hook` or `@tool` decorators. Instead, tools are returned from `getTools()` and hooks are registered manually in `initAgent()`.
+
+</Tab>
+</Tabs>
+
 ```mermaid
 flowchart TD
-    A[Plugin Attached] --> B[Call getTools method]
-    A --> C[Call initAgent method]
-    B --> D[Add tools to agent]
-    C --> E[Register hooks via addHook]
+    A[Plugin Attached] --> B["Discover Tools\n(@tool / getTools)"]
+    A --> C["Initialize\n(init_agent / initAgent)"]
+    B --> D[Add Tools]
+    C --> E["Register Hooks\n(@hook / addHook)"]
     D --> F[Plugin Ready]
     E --> F
 ```
-
-**Note**: TypeScript does not use `@hook` or `@tool` decorators. Instead, tools are returned from `getTools()` and hooks are registered manually in `initAgent()`.
-</Tab>
-</Tabs>
 
 ### Registering Hooks in Plugins
 

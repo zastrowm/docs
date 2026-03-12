@@ -76,7 +76,7 @@ async function individualCallbackExample() {
 
 async function toolInterceptionExample() {
   // --8<-- [start:tool_interception]
-  class ToolInterceptor extends Plugin {
+  class ToolInterceptor implements Plugin {
     name = 'tool-interceptor'
 
     initAgent(agent: AgentData): void {
@@ -96,7 +96,7 @@ async function toolInterceptionExample() {
 
 async function resultModificationExample() {
   // --8<-- [start:result_modification]
-  class ResultProcessor extends Plugin {
+  class ResultProcessor implements Plugin {
     name = 'result-processor'
 
     initAgent(agent: AgentData): void {
@@ -123,7 +123,7 @@ async function resultModificationExample() {
 
 async function composabilityExample() {
   // --8<-- [start:composability]
-  class RequestLoggingHook extends Plugin {
+  class RequestLoggingHook implements Plugin {
     name = 'request-logging'
 
     initAgent(agent: AgentData): void {
@@ -151,7 +151,7 @@ async function composabilityExample() {
 
 async function loggingModificationsExample() {
   // --8<-- [start:logging_modifications]
-  class ResultProcessor extends Plugin {
+  class ResultProcessor implements Plugin {
     name = 'result-processor'
 
     initAgent(agent: AgentData): void {
@@ -179,7 +179,7 @@ async function loggingModificationsExample() {
 
 async function fixedToolArgumentsExample() {
   // --8<-- [start:fixed_tool_arguments_class]
-  class ConstantToolArguments extends Plugin {
+  class ConstantToolArguments implements Plugin {
     private fixedToolArguments: Record<string, Record<string, unknown>>
 
     /**
@@ -190,7 +190,6 @@ async function fixedToolArgumentsExample() {
      *     values provided by the agent when the tool is invoked.
      */
     constructor(fixedToolArguments: Record<string, Record<string, unknown>>) {
-      super()
       this.fixedToolArguments = fixedToolArguments
     }
 

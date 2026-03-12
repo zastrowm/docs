@@ -22,11 +22,10 @@ void myTool
 // =====================
 
 async function usingPluginsExample() {
-  class GuidancePlugin extends Plugin {
+  class GuidancePlugin implements Plugin {
     private systemPrompt: string
 
     constructor(systemPrompt: string) {
-      super()
       this.systemPrompt = systemPrompt
     }
 
@@ -75,7 +74,7 @@ async function basicPluginExample() {
   })
 
   // --8<-- [start:basic_plugin]
-  class LoggingPlugin extends Plugin {
+  class LoggingPlugin implements Plugin {
     name = 'logging-plugin'
 
     initAgent(agent: AgentData): void {
@@ -110,7 +109,7 @@ async function basicPluginExample() {
 
 async function hookDecoratorAlternativeExample() {
   // --8<-- [start:hook_decorator_alternative]
-  class ModelMonitorPlugin extends Plugin {
+  class ModelMonitorPlugin implements Plugin {
     name = 'model-monitor'
 
     initAgent(agent: AgentData): void {
@@ -138,11 +137,10 @@ async function hookDecoratorAlternativeExample() {
 
 async function manualRegistrationExample() {
   // --8<-- [start:manual_registration]
-  class ManualPlugin extends Plugin {
+  class ManualPlugin implements Plugin {
     private verbose: boolean
 
     constructor(options: { verbose?: boolean } = {}) {
-      super()
       this.verbose = options.verbose ?? false
     }
 
@@ -171,7 +169,7 @@ async function manualRegistrationExample() {
 
 async function stateManagementExample() {
   // --8<-- [start:state_management]
-  class MetricsPlugin extends Plugin {
+  class MetricsPlugin implements Plugin {
     name = 'metrics-plugin'
 
     initAgent(agent: AgentData): void {
@@ -203,7 +201,7 @@ async function stateManagementExample() {
 
 async function asyncInitializationExample() {
   // --8<-- [start:async_initialization]
-  class AsyncConfigPlugin extends Plugin {
+  class AsyncConfigPlugin implements Plugin {
     private config: Record<string, unknown> = {}
 
     name = 'async-config'
@@ -233,7 +231,7 @@ async function asyncInitializationExample() {
 
 async function pluginForHooksExample() {
   // --8<-- [start:plugin_for_hooks]
-  class LoggingPlugin extends Plugin {
+  class LoggingPlugin implements Plugin {
     name = 'logging-plugin'
 
     initAgent(agent: AgentData): void {

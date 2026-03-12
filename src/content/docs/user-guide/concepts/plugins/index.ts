@@ -39,12 +39,15 @@ async function usingPluginsExample() {
     }
   }
 
+  const myTool = null as unknown as Tool
   // --8<-- [start:using_plugins]
+
   // Create an agent with plugins
   const agent = new Agent({
     tools: [myTool],
     plugins: [new GuidancePlugin('Guide the agent...')],
   })
+
   // --8<-- [end:using_plugins]
 
   void GuidancePlugin
@@ -56,23 +59,6 @@ async function usingPluginsExample() {
 // =====================
 
 async function basicPluginExample() {
-  const debugPrintTool = new FunctionTool({
-    name: 'debug_print',
-    description: 'Print a debug message',
-    inputSchema: {
-      type: 'object',
-      properties: {
-        message: { type: 'string', description: 'The message to print' },
-      },
-      required: ['message'],
-    },
-    callback: async (input: unknown) => {
-      const typedInput = input as { message: string }
-      console.log(`[DEBUG] ${typedInput.message}`)
-      return `Printed: ${typedInput.message}`
-    },
-  })
-
   // --8<-- [start:basic_plugin]
   class LoggingPlugin implements Plugin {
     name = 'logging-plugin'
@@ -98,6 +84,24 @@ async function basicPluginExample() {
   // Using the plugin
   const agent = new Agent({
     plugins: [new LoggingPlugin()],
+  })
+
+  // Custom tool to add
+  const debugPrintTool = new FunctionTool({
+    name: 'debug_print',
+    description: 'Print a debug message',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        message: { type: 'string', description: 'The message to print' },
+      },
+      required: ['message'],
+    },
+    callback: async (input: unknown) => {
+      const typedInput = input as { message: string }
+      console.log(`[DEBUG] ${typedInput.message}`)
+      return `Printed: ${typedInput.message}`
+    },
   })
   // --8<-- [end:basic_plugin]
   void agent
@@ -140,11 +144,11 @@ async function manualRegistrationExample() {
   class ManualPlugin implements Plugin {
     private verbose: boolean
 
+    name = 'manual-plugin'
+
     constructor(options: { verbose?: boolean } = {}) {
       this.verbose = options.verbose ?? false
     }
-
-    name = 'manual-plugin'
 
     initAgent(agent: AgentData): void {
       // Conditionally register additional hooks

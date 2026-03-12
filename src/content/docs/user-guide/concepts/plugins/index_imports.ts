@@ -2,11 +2,11 @@
 // Import snippets for plugins documentation examples
 
 // --8<-- [start:using_plugins_imports]
-import { Agent, Plugin } from '@strands-agents/sdk'
+import { Agent, Plugin, Tool } from '@strands-agents/sdk'
 // --8<-- [end:using_plugins_imports]
 
 // --8<-- [start:basic_plugin_imports]
-import { Agent, Plugin, Tool } from '@strands-agents/sdk'
+import { Agent, FunctionTool, Plugin, Tool } from '@strands-agents/sdk'
 import { BeforeToolCallEvent, AfterToolCallEvent } from '@strands-agents/sdk'
 // --8<-- [end:basic_plugin_imports]
 

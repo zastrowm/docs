@@ -58,7 +58,7 @@ async function buildValidSlugs(): Promise<Set<string>> {
   ])
 }
 
-const VERIFY_LIVE_SITEMAP = process.env.VERIFY_LIVE_SITEMAP === 'true'
+const VERIFY_LIVE_SITEMAP = process.env.VERIFY_LIVE_SITEMAP !== 'true'
 
 describe('Sitemap Coverage', { skip: !VERIFY_LIVE_SITEMAP }, () => {
   it('every page in the live sitemap has a corresponding CMS entry (or a known redirect)', async () => {
@@ -70,9 +70,10 @@ describe('Sitemap Coverage', { skip: !VERIFY_LIVE_SITEMAP }, () => {
     const redirected: Array<{ from: string; to: string }> = []
 
     for (const url of sitemapUrls) {
-      // resolveRedirectFromUrl strips domain, version prefix, and /documentation/ segment,
+      // resolveRedirectFromUrl strips version prefix and /documentation/ segment from the path,
       // then applies any slug rename rules. The result is a CMS slug (e.g. "docs/user-guide/...").
-      const resolved = resolveRedirectFromUrl(url)
+      const urlPath = new URL(url).pathname
+      const resolved = resolveRedirectFromUrl(urlPath)
       if (!resolved || resolved === '/') continue
 
       // External redirects (e.g. GitHub) are always valid — no CMS entry needed
@@ -83,7 +84,7 @@ describe('Sitemap Coverage', { skip: !VERIFY_LIVE_SITEMAP }, () => {
 
       if (validIds.has(slug)) {
         // Check whether a redirect rule was applied (i.e. the raw path differs from resolved)
-        const rawPath = url.replace(/^https?:\/\/[^/]+/, '').replace(/^\/+|\/+$/g, '')
+        const rawPath = new URL(url).pathname.replace(/^\/+|\/+$/g, '')
         if (rawPath !== slug) {
           redirected.push({ from: rawPath, to: slug })
         }
@@ -117,7 +118,8 @@ describe('Sitemap Coverage', { skip: !VERIFY_LIVE_SITEMAP }, () => {
 
     const brokenRedirects: Array<{ from: string; to: string }> = []
     for (const url of sitemapUrls) {
-      const resolved = resolveRedirectFromUrl(url)
+      const urlPath = new URL(url).pathname
+      const resolved = resolveRedirectFromUrl(urlPath)
       if (!resolved || resolved === '/') continue
 
       // External redirects (e.g. GitHub) are always valid
@@ -171,7 +173,7 @@ describe('Known Routes', () => {
 
     const broken: Array<{ url: string; resolved: string }> = []
     for (const routePath of knownRoutes) {
-      const resolved = resolveRedirectFromUrl(`https://strandsagents.com${routePath}`, redirectFromMap)
+      const resolved = resolveRedirectFromUrl(routePath, redirectFromMap)
       if (!resolved || resolved === '/') continue
       // External redirects (e.g. GitHub) are always valid
       if (resolved.startsWith('https://') || resolved.startsWith('http://')) continue

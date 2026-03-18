@@ -13,6 +13,7 @@
 import { execFileSync } from 'node:child_process'
 import path from 'node:path'
 import sitemap from '@astrojs/sitemap'
+import type { SitemapItem } from '@astrojs/sitemap'
 
 /**
  * Build a map of content file path → last git commit date (ISO 8601).
@@ -77,7 +78,7 @@ export function sitemapWithLastmod(contentDir: string = 'src/content') {
   console.log(`[sitemap-lastmod] Loaded ${lastModMap.size} git dates`)
 
   return sitemap({
-    serialize(item) {
+    serialize(item: SitemapItem) {
       const url = new URL(item.url)
 
       // Skip API reference pages — generated at build time, not git-tracked

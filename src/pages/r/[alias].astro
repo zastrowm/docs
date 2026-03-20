@@ -1,0 +1,33 @@
+---
+import type { GetStaticPaths } from 'astro'
+import { parse } from 'yaml'
+import fs from 'node:fs'
+import path from 'node:path'
+import LandingLayout from '../../layouts/LandingLayout.astro'
+import { pathWithBase } from '../../util/links'
+
+export const getStaticPaths: GetStaticPaths = () => {
+  const raw = fs.readFileSync(path.resolve('src/config/short-links.yml'), 'utf-8')
+  const entries = parse(raw) as Record<string, string>
+  return Object.entries(entries).map(([alias, target]) => ({
+    params: { alias },
+    props: { target },
+  }))
+}
+
+const { alias } = Astro.params
+const { target } = Astro.props
+
+const dest = target.startsWith('http://') || target.startsWith('https://')
+  ? target
+  : pathWithBase(`/docs/${target.startsWith('/') ? target.slice(1) : target}`)
+---
+
+<LandingLayout title="Redirecting…">
+  <script is:inline define:vars={{ dest }}>
+    window.location.replace(dest)
+  </script>
+  <p style="padding: 2rem; font-family: sans-serif;">
+    Redirecting to <a href={dest}>{dest}</a>…
+  </p>
+</LandingLayout>

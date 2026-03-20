@@ -1,0 +1,9 @@
+# Short-link aliases served under /r/<alias>
+#
+# Each entry maps a slug to a destination path (relative to site root)
+# or a full URL. Add new entries here to create new short-links.
+#
+# Example:
+#   my-alias: docs/some/page/#optional-anchor
+
+max-tokens-reached-error: user-guide/concepts/agents/agent-loop/#maxtokensreachedexception

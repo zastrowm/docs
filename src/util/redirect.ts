@@ -105,6 +105,9 @@ export function resolveRedirectFromUrl(
 
   if (path === '') return '/'
 
+  // /r/ paths are handled by their own static pages — don't redirect them
+  if (path.startsWith('r/') || path === 'r') return null
+
   // Try resolving as-is first
   let resolved = resolveRedirect(path, redirectFromMap)
 

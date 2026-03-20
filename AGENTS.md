@@ -175,6 +175,7 @@ import type { Options, Config } from '../types'
 - **SITE-ARCHITECTURE.md**: Comprehensive documentation of Astro/Starlight customizations, components, and plugins
 - **package.json**: Defines scripts for building, testing, and linting
 - **src/config/navigation.yml**: Defines the navigation structure (loaded by `src/sidebar.ts` for Astro)
+- **src/config/short-links.yml**: Defines `/r/<alias>` short-links for embedding stable URLs in SDK source code
 
 ## Additional Resources
 

@@ -71,6 +71,7 @@ const urlCases: Array<{ description: string; path: string; expected: string | nu
   { description: 'unrecognised path with trailing slash gets docs/ prefix', path: '/latest/some/other/path/',                                          expected: 'docs/some/other/path/' },
   { description: 'unrecognised path without trailing slash gets docs/ prefix', path: '/latest/some/other/path',                                        expected: 'docs/some/other/path' },
   { description: 'versioned user-guide path without docs/ prefix gets docs/ prefix', path: '/latest/user-guide/concepts/agents/agent-loop',            expected: 'docs/user-guide/concepts/agents/agent-loop' },
+  { description: '/r/ paths return null (handled by static pages)',               path: '/r/max-tokens-reached-error',                                 expected: null },
   { description: 'unchanged slug with trailing slash from 1.x',        path: '/1.x/documentation/docs/community/community-packages/',                 expected: 'docs/community/community-packages/' },
   { description: 'unchanged slug without trailing slash from 1.x',     path: '/1.x/documentation/docs/community/community-packages',                  expected: 'docs/community/community-packages' },
   { description: 'renamed page with trailing slash',                   path: '/latest/documentation/docs/user-guide/concepts/tools/python-tools/',    expected: 'docs/user-guide/concepts/tools/custom-tools/' },

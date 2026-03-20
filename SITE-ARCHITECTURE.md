@@ -664,6 +664,42 @@ These scripts assist with documentation maintenance:
 - `test/update-docs.test.ts` - Tests for API link conversion utilities
 
 
+## Short-Links (`/r/`)
+
+Short-links are stable, human-readable URLs intended to be embedded in **source code** — error messages, log output, SDK exceptions, and similar places where a developer will see a URL and want to look up more context. Because source code is hard to update after release, these links need to be permanent and independent of doc page restructuring.
+
+**Example use case:** The SDK raises a `MaxTokensReachedException` and includes a link to the relevant docs section. Rather than hardcoding the full doc URL (which may change), the SDK embeds `https://strandsagents.com/r/max-tokens-reached-error`, which always redirects to the correct page.
+
+### Adding a Short-Link
+
+Edit `src/config/short-links.yml`:
+
+```yaml
+my-new-link: user-guide/concepts/some-page/#optional-anchor
+```
+
+- Keys must be lowercase letters, numbers, and hyphens only
+- Values are collection IDs (no leading `docs/`) with an optional `#anchor`
+- External URLs (`https://...`) are also supported
+
+The page at `/r/my-new-link` is generated automatically at build time.
+
+### Implementation
+
+| File | Purpose |
+|------|---------|
+| `src/config/short-links.yml` | Source of truth — add new short-links here |
+| `src/pages/r/[alias].astro` | Generates a static redirect page per alias using `LandingLayout` |
+| `test/short-links.test.ts` | Validates YAML structure and that all targets resolve to real pages |
+
+### Testing
+
+```bash
+npm test -- --run test/short-links.test.ts
+```
+
+---
+
 ## URL Redirects (Old MkDocs URLs → New CMS URLs)
 
 The old MkDocs site used versioned URLs like `/latest/documentation/docs/<path>/` and `/1.x/documentation/docs/<path>/`. The new CMS uses clean paths like `/docs/<path>/`. Some pages also moved or were renamed. The redirect system handles both cases client-side via the 404 page.

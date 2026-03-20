@@ -68,8 +68,9 @@ const urlCases: Array<{ description: string; path: string; expected: string | nu
   { description: 'latest docs index redirects to docs/',               path: '/latest/documentation/docs/',                                            expected: 'docs/' },
   { description: '1.5.x doc page with trailing slash passes through',  path: '/1.5.x/documentation/docs/user-guide/concepts/agents/state/',            expected: 'docs/user-guide/concepts/agents/state/' },
   { description: '1.5.x doc page without trailing slash',              path: '/1.5.x/documentation/docs/user-guide/concepts/agents/state',             expected: 'docs/user-guide/concepts/agents/state' },
-  { description: 'unrecognised path with trailing slash passes through', path: '/latest/some/other/path/',                                              expected: 'some/other/path/' },
-  { description: 'unrecognised path without trailing slash',            path: '/latest/some/other/path',                                               expected: 'some/other/path' },
+  { description: 'unrecognised path with trailing slash gets docs/ prefix', path: '/latest/some/other/path/',                                          expected: 'docs/some/other/path/' },
+  { description: 'unrecognised path without trailing slash gets docs/ prefix', path: '/latest/some/other/path',                                        expected: 'docs/some/other/path' },
+  { description: 'versioned user-guide path without docs/ prefix gets docs/ prefix', path: '/latest/user-guide/concepts/agents/agent-loop',            expected: 'docs/user-guide/concepts/agents/agent-loop' },
   { description: 'unchanged slug with trailing slash from 1.x',        path: '/1.x/documentation/docs/community/community-packages/',                 expected: 'docs/community/community-packages/' },
   { description: 'unchanged slug without trailing slash from 1.x',     path: '/1.x/documentation/docs/community/community-packages',                  expected: 'docs/community/community-packages' },
   { description: 'renamed page with trailing slash',                   path: '/latest/documentation/docs/user-guide/concepts/tools/python-tools/',    expected: 'docs/user-guide/concepts/tools/custom-tools/' },
@@ -79,8 +80,8 @@ const urlCases: Array<{ description: string; path: string; expected: string | nu
   // paths with file extensions must not have a trailing slash added
   { description: 'index.md path has no trailing slash added',          path: '/latest/documentation/docs/some/files/index.md',                        expected: 'docs/some/files/index.md' },
   { description: '.txt path has no trailing slash added',              path: '/latest/documentation/docs/llms.txt',                                   expected: 'docs/llms.txt' },
-  // Top-level versioned paths (not under /documentation/docs/) pass through after version strip
-  { description: 'versioned llms.txt redirects to llms.txt',           path: '/latest/llms.txt',                                                      expected: 'llms.txt' },
+  // Top-level versioned paths (not under /documentation/docs/) also get docs/ prefix
+  { description: 'versioned llms.txt gets docs/ prefix',               path: '/latest/llms.txt',                                                      expected: 'docs/llms.txt' },
 ]
 
 describe('resolveRedirectFromUrl', () => {

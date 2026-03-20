@@ -105,6 +105,17 @@ export function resolveRedirectFromUrl(
 
   if (path === '') return '/'
 
-  const resolved = resolveRedirect(path, redirectFromMap) ?? path
+  // Try resolving as-is first
+  let resolved = resolveRedirect(path, redirectFromMap)
+
+  // If no rule matched and the path doesn't already start with "docs/", try prefixing with "docs/".
+  // This handles URLs like https://strandsagents.com/latest/user-guide/concepts/agents/agent-loop/
+  // that should resolve to docs/user-guide/concepts/agents/agent-loop.
+  if (resolved === null && !path.startsWith('docs/') && path !== 'docs') {
+    const withDocs = `docs/${path}`
+    resolved = resolveRedirect(withDocs, redirectFromMap) ?? withDocs
+  }
+
+  resolved = resolved ?? path
   return hadTrailingSlash ? `${resolved}/` : resolved
 }

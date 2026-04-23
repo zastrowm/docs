@@ -2,14 +2,15 @@
 // NOTE: Type-checking is disabled because the interrupt feature is not yet published in the installed SDK.
 
 import { Agent, tool, SessionManager, FileStorage } from '@strands-agents/sdk'
-import { BeforeToolCallEvent } from '@strands-agents/sdk'
+import { BeforeToolCallEvent, BeforeToolsEvent } from '@strands-agents/sdk'
 import { z } from 'zod'
 
 // =====================
-// Hooks Example
+// Hooks — BeforeToolCallEvent Example
 // =====================
 
-async function hooksExample() {
+async function hooksBeforeToolCallExample() {
+  // --8<-- [start:hooks_before_tool_call]
   const deleteFiles = tool({
     name: 'delete_files',
     description: 'Delete files at the given paths',
@@ -30,7 +31,6 @@ async function hooksExample() {
     },
   })
 
-  // --8<-- [start:hooks_example]
   const agent = new Agent({
     systemPrompt: 'You delete files older than 5 days',
     tools: [deleteFiles, inspectFiles],
@@ -64,7 +64,35 @@ async function hooksExample() {
   }
 
   console.log('MESSAGE:', JSON.stringify(result.lastMessage))
-  // --8<-- [end:hooks_example]
+  // --8<-- [end:hooks_before_tool_call]
+}
+
+// =====================
+// Hooks — BeforeToolsEvent Example
+// =====================
+
+async function hooksBeforeToolsExample() {
+  // --8<-- [start:hooks_before_tools]
+  const agent = new Agent({
+    tools: [/* ... */],
+  })
+
+  agent.addHook(BeforeToolsEvent, (event) => {
+    const dangerousTools = event.message.content
+      .filter((block) => block.type === 'toolUseBlock')
+      .filter((block) => ['delete_files'].includes(block.name))
+
+    if (dangerousTools.length > 0) {
+      const response = event.interrupt<{ approved: boolean }>({
+        name: 'batch_approval',
+        reason: `Approve ${dangerousTools.length} dangerous tool calls?`,
+      })
+      if (!response.approved) {
+        event.cancel = 'Batch cancelled by user'
+      }
+    }
+  })
+  // --8<-- [end:hooks_before_tools]
 }
 
 // =====================
@@ -114,6 +142,7 @@ async function toolsExample() {
 // =====================
 
 async function sessionManagementExample() {
+  // --8<-- [start:session_management]
   const deleteFiles = tool({
     name: 'delete_files',
     description: 'Delete files at the given paths',
@@ -134,7 +163,6 @@ async function sessionManagementExample() {
     },
   })
 
-  // --8<-- [start:session_management]
   // Server function — creates a fresh agent with session management each call
   async function server(
     prompt: string | { interruptResponse: { interruptId: string; response: unknown } }[]
@@ -194,6 +222,7 @@ async function sessionManagementExample() {
 }
 
 // Suppress unused function warnings
-void hooksExample
+void hooksBeforeToolCallExample
+void hooksBeforeToolsExample
 void toolsExample
 void sessionManagementExample

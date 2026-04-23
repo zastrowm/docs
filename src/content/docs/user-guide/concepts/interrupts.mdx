@@ -134,14 +134,14 @@ For additional details on each of these components, refer to the [Python API Ref
 </Tab>
 <Tab label="TypeScript">
 
-- [`BeforeToolCallEvent`](@api/typescript/BeforeToolCallEvent) / [`BeforeToolsEvent`](@api/typescript/BeforeToolsEvent) — hook events that expose the ability to interrupt via the [`interrupt`](@api/typescript/InterruptParams) method
+- [`BeforeToolCallEvent`](@api/typescript/BeforeToolCallEvent) / [`BeforeToolsEvent`](@api/typescript/BeforeToolsEvent) — hook events that expose the ability to interrupt via the `interrupt` method
     - `event.interrupt({ name, reason? })` — halts the agent loop. `name` is a string identifier and `reason` is an optional JSON-serializable value providing context for why the interrupt was raised.
     - The `name` must be unique across all interrupt calls configured on the same event. In the example above, we demonstrate using a namespace prefix for the interrupt call. This is particularly helpful if you plan to vend your hooks to other users.
     - `event.cancel` — cancel tool execution based on the interrupt response. Set to `true` for a default message or provide a custom cancellation message string.
 - [`AgentResult`](@api/typescript/AgentResult) — returned by `invoke()` / `stream()`, contains interrupt information when the agent pauses
     - `result.stopReason` — check if agent stopped due to `'interrupt'`
-    - `result.interrupts` — array of [`Interrupt`](@api/typescript/Interrupt) objects, each containing the user-provided `name` and `reason`, along with a unique `id`
-- [`InterruptResponseContent`](@api/typescript/InterruptResponseContent) — content block type for resuming from an interrupt
+    - `result.interrupts` — array of `Interrupt` objects, each containing the user-provided `name` and `reason`, along with a unique `id`
+- `InterruptResponseContent` — content block type for resuming from an interrupt
     - Pass an array of these to `agent.invoke()` to resume. Each response is keyed by the interrupt's `id` and will be returned from the associated `interrupt()` call when the tool/hook re-executes. The `response` must be JSON-serializable.
 </Tab>
 </Tabs>
@@ -244,7 +244,7 @@ Tool interrupts work similarly to hook interrupts with only a few notable differ
 <Tab label="TypeScript">
 
 - [`ToolContext`](@api/typescript/ToolContext) — the second argument passed to the tool callback, providing access to the `interrupt` method
-    - `context.interrupt({ name, reason? })` — halts the agent loop. `name` is a string identifier and `reason` is an optional JSON-serializable value. See [`InterruptParams`](@api/typescript/InterruptParams).
+    - `context.interrupt({ name, reason? })` — halts the agent loop. `name` is a string identifier and `reason` is an optional JSON-serializable value.
     - The `name` must be unique only among interrupt calls configured in the same tool definition. It is still advisable however to namespace your interrupts so as to more easily distinguish the calls when constructing responses outside the agent.
 </Tab>
 </Tabs>

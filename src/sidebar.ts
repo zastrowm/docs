@@ -100,7 +100,10 @@ function convertConfigItem(item: NavConfigEntry, ctx: ConvertContext): Starlight
 }
 
 /**
- * Apply collapse behavior to nested groups (depth >= 1)
+ * Apply collapse behavior to nested groups (depth >= 2). Depth-1 groups are
+ * handled by expandFirstLevelGroups in route-middleware, which needs to be
+ * the sole owner of that decision so explicit collapsed: true from the YAML
+ * is distinguishable from auto-collapse.
  */
 function applyCollapse(items: StarlightSidebarItem[], depth: number = 0): StarlightSidebarItem[] {
   return items.map((item) => {

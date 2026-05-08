@@ -68,13 +68,16 @@ export function filterSidebarByBasePath(entries: SidebarEntry[], basePath: strin
 }
 
 /**
- * Expand first-level groups (set collapsed to false), unless the group
- * was explicitly configured with collapsed: true in the sidebar config.
+ * Apply collapse behavior to all sidebar groups:
+ * - depth 0 (top-level): expanded by default
+ * - depth >= 1 (nested): collapsed by default
+ * An explicit collapsed value in the navigation config always takes precedence.
  */
-export function expandFirstLevelGroups(items: SidebarEntry[]): SidebarEntry[] {
+export function applyCollapse(items: SidebarEntry[], depth: number = 0): SidebarEntry[] {
   return items.map((item) => {
     if (item.type === 'group') {
-      return { ...item, collapsed: item.collapsed === true }
+      const collapsed = item.collapsed !== undefined ? item.collapsed : depth >= 1
+      return { ...item, collapsed, entries: applyCollapse(item.entries, depth + 1) }
     }
     return item
   })
@@ -157,8 +160,7 @@ export const onRequest = defineRouteMiddleware(async (context) => {
 
   // Otherwise filter it down to the major section that we're in
   const filteredSidebar = filterSidebarByBasePath(sidebar, allBasePaths)
-  const expandedSidebar = expandFirstLevelGroups(filteredSidebar)
-  starlightRoute.sidebar = expandedSidebar
+  starlightRoute.sidebar = applyCollapse(filteredSidebar)
 
   // Starlight pre-computes pagination from the full sidebar before our middleware runs.
   // Prune any prev/next links that fall outside the current nav section, then override

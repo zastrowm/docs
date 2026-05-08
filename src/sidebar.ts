@@ -100,26 +100,6 @@ function convertConfigItem(item: NavConfigEntry, ctx: ConvertContext): Starlight
 }
 
 /**
- * Apply collapse behavior to nested groups (depth >= 2). Depth-1 groups are
- * handled by expandFirstLevelGroups in route-middleware, which needs to be
- * the sole owner of that decision so explicit collapsed: true from the YAML
- * is distinguishable from auto-collapse.
- */
-function applyCollapse(items: StarlightSidebarItem[], depth: number = 0): StarlightSidebarItem[] {
-  return items.map((item) => {
-    if ('items' in item) {
-      const collapsed = typeof item.collapsed === 'boolean' ? item.collapsed : depth >= 2
-      return {
-        ...item,
-        items: applyCollapse(item.items, depth + 1),
-        ...(collapsed && { collapsed }),
-      }
-    }
-    return item
-  })
-}
-
-/**
  * Load navigation configuration from YAML file
  */
 export function loadNavigationConfig(configPath: string): NavigationConfig {
@@ -140,7 +120,7 @@ export function loadSidebarFromConfig(configPath: string, docsContentDir?: strin
     .map((item) => convertConfigItem(item, ctx))
     .filter((i): i is StarlightSidebarItem => i !== null)
 
-  return applyCollapse(items)
+  return items
 }
 
 /**

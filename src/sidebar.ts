@@ -12,8 +12,8 @@ export type StarlightSidebarItem =
 interface NavConfigItem {
   label?: string
   items?: NavConfigItem[]
-  slug?: string  // For labeled leaf items (e.g., { label: "Adding Tools", slug: "docs/user-guide/concepts/tools" })
-  collapsed?: boolean  // Explicit collapse state for groups (overrides auto-collapse)
+  slug?: string // For labeled leaf items "Adding Tools"
+  collapsed?: boolean // Explicit collapse state for groups (overrides auto-collapse)
 }
 type NavConfigEntry = string | NavConfigItem
 
@@ -82,7 +82,11 @@ function convertConfigItem(item: NavConfigEntry, ctx: ConvertContext): Starlight
 
       if (children.length === 0) return null
 
-      return { label: item.label, items: children }
+      return {
+        label: item.label,
+        items: children,
+        ...(typeof item.collapsed === 'boolean' && { collapsed: item.collapsed }),
+      }
     }
 
     // Object with label and slug (labeled leaf item)
@@ -101,7 +105,7 @@ function convertConfigItem(item: NavConfigEntry, ctx: ConvertContext): Starlight
 function applyCollapse(items: StarlightSidebarItem[], depth: number = 0): StarlightSidebarItem[] {
   return items.map((item) => {
     if ('items' in item) {
-      const collapsed = depth >= 1
+      const collapsed = typeof item.collapsed === 'boolean' ? item.collapsed : depth >= 2
       return {
         ...item,
         items: applyCollapse(item.items, depth + 1),
@@ -151,5 +155,3 @@ export function loadGitHubSectionsFromConfig(configPath: string): GitHubSection[
   const config = loadNavigationConfig(configPath)
   return config.github?.sections || []
 }
-
-

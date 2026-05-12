@@ -34,7 +34,7 @@ The `"session"` preset captures `messages`, `state`, `conversation_manager_state
 <Tab label="TypeScript">
 
 ```typescript
---8<-- "user-guide/concepts/agents/snapshots.ts:imports"
+--8<-- "user-guide/concepts/agents/snapshots_imports.ts:imports"
 
 --8<-- "user-guide/concepts/agents/snapshots.ts:take_snapshot"
 ```
@@ -73,7 +73,7 @@ print(len(agent.messages))  # Only the messages from before the jokes
 <Tab label="TypeScript">
 
 ```typescript
---8<-- "user-guide/concepts/agents/snapshots.ts:imports"
+--8<-- "user-guide/concepts/agents/snapshots_imports.ts:imports"
 
 --8<-- "user-guide/concepts/agents/snapshots.ts:load_snapshot"
 ```
@@ -134,7 +134,7 @@ snapshot = agent.take_snapshot(preset="session", exclude=["interrupt_state"])
 <Tab label="TypeScript">
 
 ```typescript
---8<-- "user-guide/concepts/agents/snapshots.ts:imports"
+--8<-- "user-guide/concepts/agents/snapshots_imports.ts:imports"
 
 --8<-- "user-guide/concepts/agents/snapshots.ts:field_selection"
 ```
@@ -168,7 +168,7 @@ print(snapshot.app_data["user_display_name"])  # "Alice"
 <Tab label="TypeScript">
 
 ```typescript
---8<-- "user-guide/concepts/agents/snapshots.ts:imports"
+--8<-- "user-guide/concepts/agents/snapshots_imports.ts:imports"
 
 --8<-- "user-guide/concepts/agents/snapshots.ts:app_data"
 ```
@@ -213,7 +213,7 @@ new_agent.load_snapshot(restored_snapshot)
 <Tab label="TypeScript">
 
 ```typescript
---8<-- "user-guide/concepts/agents/snapshots.ts:imports_snapshot"
+--8<-- "user-guide/concepts/agents/snapshots_imports.ts:imports_snapshot"
 
 --8<-- "user-guide/concepts/agents/snapshots.ts:serialization"
 ```
@@ -250,7 +250,7 @@ agent("Focus specifically on multi-agent systems and summarize")
 <Tab label="TypeScript">
 
 ```typescript
---8<-- "user-guide/concepts/agents/snapshots.ts:imports"
+--8<-- "user-guide/concepts/agents/snapshots_imports.ts:imports"
 
 --8<-- "user-guide/concepts/agents/snapshots.ts:checkpointing"
 ```
@@ -286,7 +286,7 @@ casual_snapshot = agent.take_snapshot(preset="session")
 <Tab label="TypeScript">
 
 ```typescript
---8<-- "user-guide/concepts/agents/snapshots.ts:imports"
+--8<-- "user-guide/concepts/agents/snapshots_imports.ts:imports"
 
 --8<-- "user-guide/concepts/agents/snapshots.ts:branching"
 ```

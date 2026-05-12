@@ -1,13 +1,5 @@
 import { Agent, type Snapshot } from '@strands-agents/sdk'
 
-// --8<-- [start:imports]
-import { Agent } from '@strands-agents/sdk'
-// --8<-- [end:imports]
-
-// --8<-- [start:imports_snapshot]
-import { Agent, type Snapshot } from '@strands-agents/sdk'
-// --8<-- [end:imports_snapshot]
-
 // Take snapshot example
 async function takeSnapshotExample() {
   // --8<-- [start:take_snapshot]

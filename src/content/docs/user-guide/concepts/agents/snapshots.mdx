@@ -3,7 +3,7 @@ title: Snapshots
 description: "Capture and restore agent state at any point in time. Use snapshots for checkpointing, undo/redo, branching conversations, and custom persistence."
 ---
 
-Snapshots provide a point-in-time capture of agent state that can be saved and restored later. You control which fields are included, and serialization is left to you — snapshots are plain JSON-serializable objects that you can persist however you like.
+Snapshots capture agent state at a point in time so you can save and restore it later. You choose which fields to include — either by picking a preset (a preconfigured set of fields) or by specifying fields directly — and you can further refine with includes and excludes. Snapshots are plain JSON-serializable objects — persistence is up to you.
 
 ## Basic Usage
 
@@ -76,7 +76,7 @@ print(len(agent.messages))  # Only the messages from before the jokes
 </Tab>
 </Tabs>
 
-Only fields present in the snapshot are restored. If a field was excluded when the snapshot was taken, the agent's current value for that field is left unchanged.
+Only fields present in the snapshot are restored. If a field was not included when the snapshot was taken, the agent's current value for that field is left unchanged.
 
 ## Field Selection
 

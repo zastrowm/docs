@@ -34,6 +34,8 @@ The `"session"` preset captures `messages`, `state`, `conversation_manager_state
 <Tab label="TypeScript">
 
 ```typescript
+--8<-- "user-guide/concepts/agents/snapshots.ts:imports"
+
 --8<-- "user-guide/concepts/agents/snapshots.ts:take_snapshot"
 ```
 
@@ -71,6 +73,8 @@ print(len(agent.messages))  # Only the messages from before the jokes
 <Tab label="TypeScript">
 
 ```typescript
+--8<-- "user-guide/concepts/agents/snapshots.ts:imports"
+
 --8<-- "user-guide/concepts/agents/snapshots.ts:load_snapshot"
 ```
 </Tab>
@@ -80,7 +84,7 @@ Only fields present in the snapshot are restored. If a field was not included wh
 
 ## Field Selection
 
-Snapshots support flexible field selection through presets, includes, and excludes. The resolution order is: **preset → include → exclude**.
+Snapshots support flexible field selection through presets, includes, and excludes. The resolution order is: **preset → include → exclude** — start with the fields defined by the preset, add any fields listed in `include`, then remove any fields listed in `exclude`.
 
 <Tabs>
 <Tab label="Python">
@@ -130,6 +134,8 @@ snapshot = agent.take_snapshot(preset="session", exclude=["interrupt_state"])
 <Tab label="TypeScript">
 
 ```typescript
+--8<-- "user-guide/concepts/agents/snapshots.ts:imports"
+
 --8<-- "user-guide/concepts/agents/snapshots.ts:field_selection"
 ```
 </Tab>
@@ -162,6 +168,8 @@ print(snapshot.app_data["user_display_name"])  # "Alice"
 <Tab label="TypeScript">
 
 ```typescript
+--8<-- "user-guide/concepts/agents/snapshots.ts:imports"
+
 --8<-- "user-guide/concepts/agents/snapshots.ts:app_data"
 ```
 </Tab>
@@ -205,6 +213,8 @@ new_agent.load_snapshot(restored_snapshot)
 <Tab label="TypeScript">
 
 ```typescript
+--8<-- "user-guide/concepts/agents/snapshots.ts:imports_snapshot"
+
 --8<-- "user-guide/concepts/agents/snapshots.ts:serialization"
 ```
 </Tab>
@@ -240,6 +250,8 @@ agent("Focus specifically on multi-agent systems and summarize")
 <Tab label="TypeScript">
 
 ```typescript
+--8<-- "user-guide/concepts/agents/snapshots.ts:imports"
+
 --8<-- "user-guide/concepts/agents/snapshots.ts:checkpointing"
 ```
 </Tab>
@@ -261,19 +273,21 @@ agent("Write the opening paragraph of a mystery novel")
 # Save the branch point
 branch_point = agent.take_snapshot(preset="session")
 
-# Branch A: noir style
-agent("Continue in a noir detective style")
-noir_snapshot = agent.take_snapshot(preset="session")
+# Branch A: formal tone
+agent("Continue in a formal, academic tone")
+formal_snapshot = agent.take_snapshot(preset="session")
 
-# Branch B: go back and try cozy mystery
+# Branch B: go back and try casual tone
 agent.load_snapshot(branch_point)
-agent("Continue in a cozy mystery style")
-cozy_snapshot = agent.take_snapshot(preset="session")
+agent("Continue in a casual, conversational tone")
+casual_snapshot = agent.take_snapshot(preset="session")
 ```
 </Tab>
 <Tab label="TypeScript">
 
 ```typescript
+--8<-- "user-guide/concepts/agents/snapshots.ts:imports"
+
 --8<-- "user-guide/concepts/agents/snapshots.ts:branching"
 ```
 </Tab>

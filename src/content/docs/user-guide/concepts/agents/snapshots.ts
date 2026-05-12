@@ -1,5 +1,13 @@
 import { Agent, type Snapshot } from '@strands-agents/sdk'
 
+// --8<-- [start:imports]
+import { Agent } from '@strands-agents/sdk'
+// --8<-- [end:imports]
+
+// --8<-- [start:imports_snapshot]
+import { Agent, type Snapshot } from '@strands-agents/sdk'
+// --8<-- [end:imports_snapshot]
+
 // Take snapshot example
 async function takeSnapshotExample() {
   // --8<-- [start:take_snapshot]
@@ -122,13 +130,13 @@ async function branchingExample() {
   // Save the branch point
   const branchPoint = agent.takeSnapshot({ preset: 'session' })
 
-  // Branch A: noir style
-  await agent.invoke('Continue in a noir detective style')
-  const noirSnapshot = agent.takeSnapshot({ preset: 'session' })
+  // Branch A: formal tone
+  await agent.invoke('Continue in a formal, academic tone')
+  const formalSnapshot = agent.takeSnapshot({ preset: 'session' })
 
-  // Branch B: go back and try cozy mystery
+  // Branch B: go back and try casual tone
   agent.loadSnapshot(branchPoint)
-  await agent.invoke('Continue in a cozy mystery style')
-  const cozySnapshot = agent.takeSnapshot({ preset: 'session' })
+  await agent.invoke('Continue in a casual, conversational tone')
+  const casualSnapshot = agent.takeSnapshot({ preset: 'session' })
   // --8<-- [end:branching]
 }

@@ -1,4 +1,4 @@
-Defined in: [src/types/messages.ts:287](https://github.com/strands-agents/sdk-typescript/blob/5fc30c8099b8e6735d70c6ae2160f7c0dd7b23c7/src/types/messages.ts#L287)
+Defined in: [src/types/messages.ts:323](https://github.com/strands-agents/sdk-typescript/blob/6987b01d8ab113b5c0f336e0085579c60a7d0a57/strands-ts/src/types/messages.ts#L323)
 
 Data for a tool result block.
 
@@ -10,7 +10,7 @@ Data for a tool result block.
 toolUseId: string;
 ```
 
-Defined in: [src/types/messages.ts:291](https://github.com/strands-agents/sdk-typescript/blob/5fc30c8099b8e6735d70c6ae2160f7c0dd7b23c7/src/types/messages.ts#L291)
+Defined in: [src/types/messages.ts:327](https://github.com/strands-agents/sdk-typescript/blob/6987b01d8ab113b5c0f336e0085579c60a7d0a57/strands-ts/src/types/messages.ts#L327)
 
 The ID of the tool use that this result corresponds to.
 
@@ -22,7 +22,7 @@ The ID of the tool use that this result corresponds to.
 status: "success" | "error";
 ```
 
-Defined in: [src/types/messages.ts:296](https://github.com/strands-agents/sdk-typescript/blob/5fc30c8099b8e6735d70c6ae2160f7c0dd7b23c7/src/types/messages.ts#L296)
+Defined in: [src/types/messages.ts:332](https://github.com/strands-agents/sdk-typescript/blob/6987b01d8ab113b5c0f336e0085579c60a7d0a57/strands-ts/src/types/messages.ts#L332)
 
 Status of the tool execution.
 
@@ -34,7 +34,7 @@ Status of the tool execution.
 content: ToolResultContentData[];
 ```
 
-Defined in: [src/types/messages.ts:301](https://github.com/strands-agents/sdk-typescript/blob/5fc30c8099b8e6735d70c6ae2160f7c0dd7b23c7/src/types/messages.ts#L301)
+Defined in: [src/types/messages.ts:337](https://github.com/strands-agents/sdk-typescript/blob/6987b01d8ab113b5c0f336e0085579c60a7d0a57/strands-ts/src/types/messages.ts#L337)
 
 The content returned by the tool.
 
@@ -43,9 +43,9 @@ The content returned by the tool.
 ### error?
 
 ```ts
-optional error: Error;
+optional error?: Error;
 ```
 
-Defined in: [src/types/messages.ts:308](https://github.com/strands-agents/sdk-typescript/blob/5fc30c8099b8e6735d70c6ae2160f7c0dd7b23c7/src/types/messages.ts#L308)
+Defined in: [src/types/messages.ts:344](https://github.com/strands-agents/sdk-typescript/blob/6987b01d8ab113b5c0f336e0085579c60a7d0a57/strands-ts/src/types/messages.ts#L344)
 
 The original error object when status is ‘error’. Available for inspection by hooks, error handlers, and agent loop. Tools must wrap non-Error thrown values into Error objects.

@@ -20,14 +20,14 @@ The “Agents as Tools” pattern offers several advantages:
 
 When implementing the “Agents as Tools” pattern with Strands Agents SDK:
 
-1.  **Clear tool documentation**: Write descriptive docstrings that explain the agent’s expertise
+1.  **Clear tool documentation**: Write descriptive names and descriptions that explain the agent’s expertise
 2.  **Focused system prompts**: Keep each specialized agent tightly focused on its domain
 3.  **Proper response handling**: Use consistent patterns to extract and format responses
 4.  **Tool selection guidance**: Give the orchestrator clear criteria for when to use each specialized agent
 
 ## Implementing Agents as Tools with Strands Agents SDK
 
-Strands Agents SDK provides a powerful framework for implementing the “Agents as Tools” pattern through its `@tool` decorator. This allows you to transform specialized agents into callable functions that can be used by an orchestrator agent.
+Strands Agents SDK provides three ways to implement the “Agents as Tools” pattern: passing agents directly in the `tools` array for the simplest setup, `.as_tool()`/`.asTool()` when you need to customize tool name, description, or context behavior, and the `@tool` decorator or `tool()` function for full control over how the agent is invoked.
 
 ```mermaid
 flowchart TD
@@ -41,15 +41,158 @@ flowchart TD
     TA --> Orchestrator
 ```
 
-### Creating Specialized Tool Agents
+### Passing Agents Directly
 
-First, define specialized agents as tool functions using Strands Agents SDK’s `@tool` decorator:
+The simplest way to use an agent as a tool is to pass it directly in the `tools` array. The SDK automatically converts it into a tool that accepts an `input` string parameter and returns the agent’s text response.
 
+(( tab "Python" ))
+```python
+from strands import Agent
+from strands_tools import retrieve, http_request
+
+# Create specialized agents
+research_agent = Agent(
+    system_prompt="""You are a specialized research assistant. Focus only on providing
+    factual, well-sourced information in response to research questions.
+    Always cite your sources when possible.""",
+    tools=[retrieve, http_request],
+)
+
+product_agent = Agent(
+    system_prompt="""You are a specialized product recommendation assistant.
+    Provide personalized product suggestions based on user preferences.""",
+    tools=[retrieve, http_request],
+)
+
+travel_agent = Agent(
+    system_prompt="""You are a specialized travel planning assistant.
+    Create detailed travel itineraries based on user preferences.""",
+    tools=[retrieve, http_request],
+)
+
+# Create the orchestrator — agents are automatically converted to tools
+orchestrator = Agent(
+    system_prompt="""You are an assistant that routes queries to specialized agents:
+    - For research questions and factual information → Use the research_agent tool
+    - For product recommendations and shopping advice → Use the product_agent tool
+    - For travel planning and itineraries → Use the travel_agent tool
+    - For simple questions not requiring specialized knowledge → Answer directly
+
+    Always select the most appropriate tool based on the user's query.""",
+    tools=[research_agent, product_agent, travel_agent],
+)
+```
+(( /tab "Python" ))
+
+(( tab "TypeScript" ))
+```typescript
+// Create specialized agents
+const researchAgent = new Agent({
+  name: 'research_agent',
+  description:
+    'Provides factual, well-sourced information in response to research questions.',
+  systemPrompt: `You are a specialized research assistant. Focus only on providing
+factual, well-sourced information in response to research questions.
+Always cite your sources when possible.`,
+  printer: false,
+})
+
+const productAgent = new Agent({
+  name: 'product_agent',
+  description: 'Provides personalized product suggestions based on user preferences.',
+  systemPrompt: `You are a specialized product recommendation assistant.
+Provide personalized product suggestions based on user preferences.`,
+  printer: false,
+})
+
+const travelAgent = new Agent({
+  name: 'travel_agent',
+  description: 'Creates detailed travel itineraries based on user preferences.',
+  systemPrompt: `You are a specialized travel planning assistant.
+Create detailed travel itineraries based on user preferences.`,
+  printer: false,
+})
+
+// Create the orchestrator — agents are automatically converted to tools
+const orchestrator = new Agent({
+  systemPrompt: `You are an assistant that routes queries to specialized agents:
+- For research questions and factual information → Use the research_agent tool
+- For product recommendations and shopping advice → Use the product_agent tool
+- For travel planning and itineraries → Use the travel_agent tool
+- For simple questions not requiring specialized knowledge → Answer directly
+
+Always select the most appropriate tool based on the user's query.`,
+  tools: [researchAgent, productAgent, travelAgent],
+})
+```
+(( /tab "TypeScript" ))
+
+### Customizing Agent Tools
+
+When you need to customize the tool name, description, or context behavior, use `.as_tool()` (Python) or `.asTool()` (TypeScript) explicitly:
+
+(( tab "Python" ))
+```python
+orchestrator = Agent(
+    system_prompt="You are an assistant that routes queries to specialized agents.",
+    tools=[
+        research_agent.as_tool(
+            name="research_assistant",
+            description="Process and respond to research-related queries requiring factual information.",
+        ),
+    ],
+)
+```
+(( /tab "Python" ))
+
+(( tab "TypeScript" ))
+```typescript
+const orchestrator = new Agent({
+  systemPrompt: 'You are an assistant that routes queries to specialized agents.',
+  tools: [
+    researchAgent.asTool({
+      name: 'research_assistant',
+      description:
+        'Process and respond to research-related queries requiring factual information.',
+    }),
+  ],
+})
+```
+(( /tab "TypeScript" ))
+
+#### Context Management
+
+By default, both direct passing and `.as_tool()`/`.asTool()` reset the agent’s conversation context between invocations, ensuring every call starts from a clean baseline. To preserve the agent’s conversation history across invocations:
+
+(( tab "Python" ))
+```python
+# Agent will remember prior interactions within the same orchestrator session
+orchestrator = Agent(
+    system_prompt="You are an assistant that routes queries to specialized agents.",
+    tools=[research_agent.as_tool(preserve_context=True)],
+)
+```
+(( /tab "Python" ))
+
+(( tab "TypeScript" ))
+```typescript
+// Agent will remember prior interactions within the same orchestrator session
+const orchestrator = new Agent({
+  systemPrompt: 'You are an assistant that routes queries to specialized agents.',
+  tools: [researchAgent.asTool({ preserveContext: true })],
+})
+```
+(( /tab "TypeScript" ))
+
+### Creating Custom Agent Tools
+
+For more control over how the agent is invoked — such as custom pre/post-processing, error handling, or passing multiple parameters — you can create a custom tool that wraps an agent:
+
+(( tab "Python" ))
 ```python
 from strands import Agent, tool
 from strands_tools import retrieve, http_request
 
-# Define a specialized system prompt
 RESEARCH_ASSISTANT_PROMPT = """
 You are a specialized research assistant. Focus only on providing
 factual, well-sourced information in response to research questions.
@@ -68,21 +211,46 @@ def research_assistant(query: str) -> str:
         A detailed research answer with citations
     """
     try:
-        # Strands Agents SDK makes it easy to create a specialized agent
         research_agent = Agent(
             system_prompt=RESEARCH_ASSISTANT_PROMPT,
-            tools=[retrieve, http_request]  # Research-specific tools
+            tools=[retrieve, http_request]
         )
 
-        # Call the agent and return its response
         response = research_agent(query)
         return str(response)
     except Exception as e:
         return f"Error in research assistant: {str(e)}"
 ```
+(( /tab "Python" ))
+
+(( tab "TypeScript" ))
+```typescript
+const researchAssistant = tool({
+  name: 'research_assistant',
+  description:
+    'Process and respond to research-related queries requiring factual information.',
+  inputSchema: z.object({
+    query: z.string().describe('A research question requiring factual information'),
+  }),
+  callback: async (input) => {
+    const researchAgent = new Agent({
+      systemPrompt: `You are a specialized research assistant. Focus only on providing
+factual, well-sourced information in response to research questions.
+Always cite your sources when possible.`,
+    })
+
+    const response = await researchAgent.invoke(input.query)
+    return response.lastMessage.content
+      .map((block) => ('text' in block ? block.text : ''))
+      .join('')
+  },
+})
+```
+(( /tab "TypeScript" ))
 
 You can create multiple specialized agents following the same pattern:
 
+(( tab "Python" ))
 ```python
 @tool
 def product_recommendation_assistant(query: str) -> str:
@@ -99,7 +267,7 @@ def product_recommendation_assistant(query: str) -> str:
         product_agent = Agent(
             system_prompt="""You are a specialized product recommendation assistant.
             Provide personalized product suggestions based on user preferences.""",
-            tools=[retrieve, http_request, dialog],  # Tools for getting product data
+            tools=[retrieve, http_request, dialog],
         )
         # Implementation with response handling
         # ...
@@ -122,7 +290,7 @@ def trip_planning_assistant(query: str) -> str:
         travel_agent = Agent(
             system_prompt="""You are a specialized travel planning assistant.
             Create detailed travel itineraries based on user preferences.""",
-            tools=[retrieve, http_request],  # Travel information tools
+            tools=[retrieve, http_request],
         )
         # Implementation with response handling
         # ...
@@ -130,16 +298,62 @@ def trip_planning_assistant(query: str) -> str:
     except Exception as e:
         return f"Error in trip planning: {str(e)}"
 ```
+(( /tab "Python" ))
 
-### Creating the Orchestrator Agent
+(( tab "TypeScript" ))
+```typescript
+const productRecommendationAssistant = tool({
+  name: 'product_recommendation_assistant',
+  description:
+    'Handle product recommendation queries by suggesting appropriate products.',
+  inputSchema: z.object({
+    query: z.string().describe('A product inquiry with user preferences'),
+  }),
+  callback: async (input) => {
+    const productAgent = new Agent({
+      systemPrompt: `You are a specialized product recommendation assistant.
+Provide personalized product suggestions based on user preferences.`,
+    })
 
-Next, create an orchestrator agent that has access to all specialized agents as tools:
+    const response = await productAgent.invoke(input.query)
+    return response.lastMessage.content
+      .map((block) => ('text' in block ? block.text : ''))
+      .join('')
+  },
+})
 
+const tripPlanningAssistant = tool({
+  name: 'trip_planning_assistant',
+  description: 'Create travel itineraries and provide travel advice.',
+  inputSchema: z.object({
+    query: z
+      .string()
+      .describe('A travel planning request with destination and preferences'),
+  }),
+  callback: async (input) => {
+    const travelAgent = new Agent({
+      systemPrompt: `You are a specialized travel planning assistant.
+Create detailed travel itineraries based on user preferences.`,
+    })
+
+    const response = await travelAgent.invoke(input.query)
+    return response.lastMessage.content
+      .map((block) => ('text' in block ? block.text : ''))
+      .join('')
+  },
+})
+```
+(( /tab "TypeScript" ))
+
+#### Creating the Orchestrator Agent
+
+Create an orchestrator agent that has access to all specialized agents as tools:
+
+(( tab "Python" ))
 ```python
 from strands import Agent
 from .specialized_agents import research_assistant, product_recommendation_assistant, trip_planning_assistant
 
-# Define the orchestrator system prompt with clear tool selection guidance
 MAIN_SYSTEM_PROMPT = """
 You are an assistant that routes queries to specialized agents:
 - For research questions and factual information → Use the research_assistant tool
@@ -150,18 +364,32 @@ You are an assistant that routes queries to specialized agents:
 Always select the most appropriate tool based on the user's query.
 """
 
-# Strands Agents SDK allows easy integration of agent tools
 orchestrator = Agent(
     system_prompt=MAIN_SYSTEM_PROMPT,
     callback_handler=None,
     tools=[research_assistant, product_recommendation_assistant, trip_planning_assistant]
 )
 ```
+(( /tab "Python" ))
 
-### Real-World Example Scenario
+(( tab "TypeScript" ))
+```typescript
+const orchestrator = new Agent({
+    systemPrompt: `You are an assistant that routes queries to specialized agents:
+- For research questions and factual information → Use the research_assistant tool
+- For recommendations and advice → Use the product_recommendation_assistant tool
+- For travel planning and itineraries → Use the trip_planning_assistant tool
+- For simple questions not requiring specialized knowledge → Answer directly
+
+Always select the most appropriate tool based on the user's query.`,
+    tools: [researchAssistant, productRecommendationAssistant, tripPlanningAssistant],
+  })
+```
+(( /tab "TypeScript" ))
 
 Here’s how this multi-agent system might handle a complex user query:
 
+(( tab "Python" ))
 ```python
 # Example: E-commerce Customer Service System
 customer_query = "I'm looking for hiking boots for a trip to Patagonia next month"
@@ -180,8 +408,17 @@ response = orchestrator(customer_query)
 # 3. Combine these specialized responses into a cohesive answer that addresses both the
 #    travel planning and product recommendation aspects of the query
 ```
+(( /tab "Python" ))
 
-This example demonstrates how Strands Agents SDK enables specialized experts to collaborate on complex queries requiring multiple domains of knowledge. The orchestrator intelligently routes different aspects of the query to the appropriate specialized agents, then synthesizes their responses into a comprehensive answer. By following the best practices outlined earlier and leveraging Strands Agents SDK’s capabilities, you can build sophisticated multi-agent systems that handle complex tasks through specialized expertise and coordinated collaboration.
+(( tab "TypeScript" ))
+```typescript
+const response = await orchestrator.invoke(
+  "I'm looking for hiking boots for a trip to Patagonia next month"
+)
+```
+(( /tab "TypeScript" ))
+
+This example demonstrates how Strands Agents SDK enables specialized experts to collaborate on complex queries requiring multiple domains of knowledge. The orchestrator intelligently routes different aspects of the query to the appropriate specialized agents, then synthesizes their responses into a comprehensive answer.
 
 ## Remote Agents with A2A
 
@@ -189,4 +426,12 @@ You can also use remote agents as tools through the [Agent-to-Agent (A2A) protoc
 
 ## Complete Working Example
 
-For a fully implemented example of the “Agents as Tools” pattern, check out the [“Teacher’s Assistant”](https://github.com/strands-agents/docs/blob/main/docs/examples/python/multi_agent_example/multi_agent_example.md) example in our repository. This example demonstrates a practical implementation of the concepts discussed in this document, showing how multiple specialized agents can work together to provide comprehensive assistance in an educational context.
+For complete implementations of this pattern, see the following examples:
+
+(( tab "Python" ))
+The [Teacher’s Assistant](/docs/examples/python/multi_agent_example/multi_agent_example/index.md) example demonstrates an orchestrator agent that routes student queries to specialized agents for math, English, language translation, computer science, and general knowledge.
+(( /tab "Python" ))
+
+(( tab "TypeScript" ))
+The [Agents as Tools](https://github.com/strands-agents/sdk-typescript/tree/main/strands-ts/examples/agents-as-tools) example demonstrates an orchestrator agent that routes student queries to specialized tool agents for math, English, computer science, and general knowledge.
+(( /tab "TypeScript" ))

@@ -1,10 +1,30 @@
-Defined in: [src/models/streaming.ts:64](https://github.com/strands-agents/sdk-typescript/blob/5fc30c8099b8e6735d70c6ae2160f7c0dd7b23c7/src/models/streaming.ts#L64)
+Defined in: [src/models/streaming.ts:66](https://github.com/strands-agents/sdk-typescript/blob/6987b01d8ab113b5c0f336e0085579c60a7d0a57/strands-ts/src/models/streaming.ts#L66)
 
 Event emitted when a new message starts in the stream.
 
 ## Implements
 
 -   [`ModelMessageStartEventData`](/docs/api/typescript/ModelMessageStartEventData/index.md)
+
+## Constructors
+
+### Constructor
+
+```ts
+new ModelMessageStartEvent(data): ModelMessageStartEvent;
+```
+
+Defined in: [src/models/streaming.ts:77](https://github.com/strands-agents/sdk-typescript/blob/6987b01d8ab113b5c0f336e0085579c60a7d0a57/strands-ts/src/models/streaming.ts#L77)
+
+#### Parameters
+
+| Parameter | Type |
+| --- | --- |
+| `data` | [`ModelMessageStartEventData`](/docs/api/typescript/ModelMessageStartEventData/index.md) |
+
+#### Returns
+
+`ModelMessageStartEvent`
 
 ## Properties
 
@@ -14,15 +34,13 @@ Event emitted when a new message starts in the stream.
 readonly type: "modelMessageStartEvent";
 ```
 
-Defined in: [src/models/streaming.ts:68](https://github.com/strands-agents/sdk-typescript/blob/5fc30c8099b8e6735d70c6ae2160f7c0dd7b23c7/src/models/streaming.ts#L68)
+Defined in: [src/models/streaming.ts:70](https://github.com/strands-agents/sdk-typescript/blob/6987b01d8ab113b5c0f336e0085579c60a7d0a57/strands-ts/src/models/streaming.ts#L70)
 
 Discriminator for message start events.
 
 #### Implementation of
 
-```ts
-ModelMessageStartEventData.type
-```
+[`ModelMessageStartEventData`](/docs/api/typescript/ModelMessageStartEventData/index.md).[`type`](/docs/api/typescript/ModelMessageStartEventData/index.md#type)
 
 ---
 
@@ -32,12 +50,10 @@ ModelMessageStartEventData.type
 readonly role: Role;
 ```
 
-Defined in: [src/models/streaming.ts:73](https://github.com/strands-agents/sdk-typescript/blob/5fc30c8099b8e6735d70c6ae2160f7c0dd7b23c7/src/models/streaming.ts#L73)
+Defined in: [src/models/streaming.ts:75](https://github.com/strands-agents/sdk-typescript/blob/6987b01d8ab113b5c0f336e0085579c60a7d0a57/strands-ts/src/models/streaming.ts#L75)
 
 The role of the message being started.
 
 #### Implementation of
 
-```ts
-ModelMessageStartEventData.role
-```
+[`ModelMessageStartEventData`](/docs/api/typescript/ModelMessageStartEventData/index.md).[`role`](/docs/api/typescript/ModelMessageStartEventData/index.md#role)

@@ -112,7 +112,7 @@ In Python, Strands accepts the `structured_output_model` parameter in agent invo
 
 ### Error Handling
 
-When structured output validation fails, Strands throws a custom `StructuredOutputException` that can be caught and handled appropriately:
+When structured output validation fails, Strands throws a custom exception that can be caught and handled appropriately:
 
 (( tab "Python" ))
 ```python
@@ -131,7 +131,7 @@ except StructuredOutputException as e:
 try {
   const result = await agent.invoke('some prompt')
 } catch (error) {
-  if (error instanceof StructuredOutputException) {
+  if (error instanceof StructuredOutputError) {
     console.log(`Structured output failed: ${error.message}`)
   }
 }
@@ -405,8 +405,12 @@ type Task = z.infer<typeof TaskSchema>
 const personAgent = new Agent({ structuredOutputSchema: PersonSchema })
 const taskAgent = new Agent({ structuredOutputSchema: TaskSchema })
 
-const personResult = await personAgent.invoke('Extract person: John Doe, 35, john@test.com')
-const taskResult = await taskAgent.invoke('Create task: Review code, high priority, completed')
+const personResult = await personAgent.invoke(
+  'Extract person: John Doe, 35, john@test.com'
+)
+const taskResult = await taskAgent.invoke(
+  'Create task: Review code, high priority, completed'
+)
 ```
 (( /tab "TypeScript" ))
 
@@ -461,7 +465,9 @@ await agent.invoke('What do you know about Paris, France?')
 await agent.invoke('Tell me about the weather there in spring.')
 
 // Extract structured information from the conversation
-const result = await agent.invoke('Extract structured information about Paris from our conversation')
+const result = await agent.invoke(
+  'Extract structured information about Paris from our conversation'
+)
 
 const cityInfo = result.structuredOutput as CityInfo
 console.log(`City: ${cityInfo.city}`) // "Paris"
@@ -567,7 +573,9 @@ const personAgent = new Agent({ structuredOutputSchema: PersonSchema })
 
 // Create a new agent with CompanyInfo schema for this specific use case
 const companyAgent = new Agent({ structuredOutputSchema: CompanySchema })
-const result = await companyAgent.invoke('TechCorp is a software company with 500 employees')
+const result = await companyAgent.invoke(
+  'TechCorp is a software company with 500 employees'
+)
 
 const company = result.structuredOutput as Company
 console.log(`Company: ${company.name}`) // "TechCorp"

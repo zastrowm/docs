@@ -41,6 +41,8 @@
     -   [Swarm](/docs/api/python/strands.multiagent.swarm)
 -   **Plugins**
     -   [Decorator](/docs/api/python/strands.plugins.decorator)
+    -   [Multiagent Plugin](/docs/api/python/strands.plugins.multiagent_plugin)
+    -   [Multiagent Registry](/docs/api/python/strands.plugins.multiagent_registry)
     -   [Plugin](/docs/api/python/strands.plugins.plugin)
     -   [Registry](/docs/api/python/strands.plugins.registry)
 -   **Session**
@@ -87,6 +89,24 @@
     -   [Session](/docs/api/python/strands.types.session)
     -   [Streaming](/docs/api/python/strands.types.streaming)
     -   [Tools](/docs/api/python/strands.types.tools)
+-   **Vended Plugins**
+    -   **Context Offloader**
+        -   [Plugin](/docs/api/python/strands.vended_plugins.context_offloader.plugin)
+        -   [Storage](/docs/api/python/strands.vended_plugins.context_offloader.storage)
+    -   **Skills**
+        -   [Agent Skills](/docs/api/python/strands.vended_plugins.skills.agent_skills)
+        -   [Skill](/docs/api/python/strands.vended_plugins.skills.skill)
+    -   **Steering**
+        -   **Context Providers**
+            -   [Ledger Provider](/docs/api/python/strands.vended_plugins.steering.context_providers.ledger_provider)
+        -   **Core**
+            -   [Action](/docs/api/python/strands.vended_plugins.steering.core.action)
+            -   [Context](/docs/api/python/strands.vended_plugins.steering.core.context)
+            -   [Handler](/docs/api/python/strands.vended_plugins.steering.core.handler)
+        -   **Handlers**
+            -   **Llm**
+                -   [Llm Handler](/docs/api/python/strands.vended_plugins.steering.handlers.llm.llm_handler)
+                -   [Mappers](/docs/api/python/strands.vended_plugins.steering.handlers.llm.mappers)
 -   **Experimental**
     -   [Agent Config](/docs/api/python/strands.experimental.agent_config)
     -   **Bidi**
@@ -109,16 +129,7 @@
             -   [Events](/docs/api/python/strands.experimental.bidi.types.events)
             -   [Io](/docs/api/python/strands.experimental.bidi.types.io)
             -   [Model](/docs/api/python/strands.experimental.bidi.types.model)
+    -   **Checkpoint**
+        -   [Checkpoint](/docs/api/python/strands.experimental.checkpoint.checkpoint)
     -   **Hooks**
         -   [Events](/docs/api/python/strands.experimental.hooks.events)
-    -   **Steering**
-        -   **Context Providers**
-            -   [Ledger Provider](/docs/api/python/strands.experimental.steering.context_providers.ledger_provider)
-        -   **Core**
-            -   [Action](/docs/api/python/strands.experimental.steering.core.action)
-            -   [Context](/docs/api/python/strands.experimental.steering.core.context)
-            -   [Handler](/docs/api/python/strands.experimental.steering.core.handler)
-        -   **Handlers**
-            -   **Llm**
-                -   [Llm Handler](/docs/api/python/strands.experimental.steering.handlers.llm.llm_handler)
-                -   [Mappers](/docs/api/python/strands.experimental.steering.handlers.llm.mappers)

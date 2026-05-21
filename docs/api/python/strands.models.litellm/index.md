@@ -8,17 +8,17 @@ LiteLLM model provider.
 class LiteLLMModel(OpenAIModel)
 ```
 
-Defined in: [src/strands/models/litellm.py:31](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/litellm.py#L31)
+Defined in: [src/strands/models/litellm.py:36](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/litellm.py#L36)
 
 LiteLLM model provider implementation.
 
 ## LiteLLMConfig
 
 ```python
-class LiteLLMConfig(TypedDict)
+class LiteLLMConfig(BaseModelConfig)
 ```
 
-Defined in: [src/strands/models/litellm.py:34](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/litellm.py#L34)
+Defined in: [src/strands/models/litellm.py:39](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/litellm.py#L39)
 
 Configuration options for LiteLLM models.
 
@@ -34,7 +34,7 @@ def __init__(client_args: dict[str, Any] | None = None,
              **model_config: Unpack[LiteLLMConfig]) -> None
 ```
 
-Defined in: [src/strands/models/litellm.py:48](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/litellm.py#L48)
+Defined in: [src/strands/models/litellm.py:53](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/litellm.py#L53)
 
 Initialize provider instance.
 
@@ -50,7 +50,7 @@ Initialize provider instance.
 def update_config(**model_config: Unpack[LiteLLMConfig]) -> None
 ```
 
-Defined in: [src/strands/models/litellm.py:65](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/litellm.py#L65)
+Defined in: [src/strands/models/litellm.py:70](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/litellm.py#L70)
 
 Update the LiteLLM model configuration with the provided arguments.
 
@@ -65,7 +65,7 @@ Update the LiteLLM model configuration with the provided arguments.
 def get_config() -> LiteLLMConfig
 ```
 
-Defined in: [src/strands/models/litellm.py:76](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/litellm.py#L76)
+Defined in: [src/strands/models/litellm.py:81](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/litellm.py#L81)
 
 Get the LiteLLM model configuration.
 
@@ -82,7 +82,7 @@ def format_request_message_content(cls, content: ContentBlock,
                                    **kwargs: Any) -> dict[str, Any]
 ```
 
-Defined in: [src/strands/models/litellm.py:86](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/litellm.py#L86)
+Defined in: [src/strands/models/litellm.py:91](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/litellm.py#L91)
 
 Format a LiteLLM content block.
 
@@ -99,6 +99,30 @@ LiteLLM formatted content block.
 
 -   `TypeError` - If the content block type cannot be converted to a LiteLLM-compatible format.
 
+#### format\_request\_message\_tool\_call
+
+```python
+@override
+@classmethod
+def format_request_message_tool_call(cls, tool_use: ToolUse,
+                                     **kwargs: Any) -> dict[str, Any]
+```
+
+Defined in: [src/strands/models/litellm.py:124](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/litellm.py#L124)
+
+Format a LiteLLM compatible tool call, encoding thought signatures into the tool call ID.
+
+Gemini thinking models attach a thought\_signature to each function call. LiteLLM’s OpenAI-compatible interface embeds this signature inside the tool call ID using the `__thought__` separator. When `reasoningSignature` is present and the tool call ID does not already contain the separator, this method encodes it so LiteLLM can reconstruct the Gemini-native format on the next request.
+
+**Arguments**:
+
+-   `tool_use` - Tool use requested by the model.
+-   `**kwargs` - Additional keyword arguments for future extensibility.
+
+**Returns**:
+
+LiteLLM compatible tool call dict with thought signature encoded in the ID when present.
+
 #### format\_request\_messages
 
 ```python
@@ -113,7 +137,7 @@ def format_request_messages(cls,
                             **kwargs: Any) -> list[dict[str, Any]]
 ```
 
-Defined in: [src/strands/models/litellm.py:175](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/litellm.py#L175)
+Defined in: [src/strands/models/litellm.py:238](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/litellm.py#L238)
 
 Format a LiteLLM compatible messages array with cache point support.
 
@@ -135,11 +159,14 @@ A LiteLLM compatible messages array.
 def format_chunk(event: dict[str, Any], **kwargs: Any) -> StreamEvent
 ```
 
-Defined in: [src/strands/models/litellm.py:200](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/litellm.py#L200)
+Defined in: [src/strands/models/litellm.py:263](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/litellm.py#L263)
 
 Format a LiteLLM response event into a standardized message chunk.
 
-This method overrides OpenAI’s format\_chunk to handle the metadata case with prompt caching support. All other chunk types use the parent implementation.
+Extends OpenAI’s format\_chunk to:
+
+1.  Handle metadata with prompt caching support.
+2.  Extract thought signatures that LiteLLM embeds in tool call IDs for Gemini thinking models.
 
 **Arguments**:
 
@@ -167,7 +194,7 @@ async def stream(messages: Messages,
                  **kwargs: Any) -> AsyncGenerator[StreamEvent, None]
 ```
 
-Defined in: [src/strands/models/litellm.py:244](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/litellm.py#L244)
+Defined in: [src/strands/models/litellm.py:319](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/litellm.py#L319)
 
 Stream conversation with the LiteLLM model.
 
@@ -195,7 +222,7 @@ async def structured_output(
         **kwargs: Any) -> AsyncGenerator[dict[str, T | Any], None]
 ```
 
-Defined in: [src/strands/models/litellm.py:298](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/litellm.py#L298)
+Defined in: [src/strands/models/litellm.py:373](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/litellm.py#L373)
 
 Get structured output from the model.
 

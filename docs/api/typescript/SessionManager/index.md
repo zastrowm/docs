@@ -1,6 +1,8 @@
-Defined in: [src/session/session-manager.ts:56](https://github.com/strands-agents/sdk-typescript/blob/5fc30c8099b8e6735d70c6ae2160f7c0dd7b23c7/src/session/session-manager.ts#L56)
+Defined in: [src/session/session-manager.ts:92](https://github.com/strands-agents/sdk-typescript/blob/6987b01d8ab113b5c0f336e0085579c60a7d0a57/strands-ts/src/session/session-manager.ts#L92)
 
 Manages session persistence for agents, enabling conversation state to be saved and restored across invocations using pluggable storage backends.
+
+Also supports multi-agent orchestrators (Graph, Swarm) via the MultiAgentPlugin interface. Scope is auto-detected based on whether initAgent or initMultiAgent is called.
 
 ## Example
 
@@ -16,7 +18,8 @@ const agent = new Agent({ sessionManager: session })
 
 ## Implements
 
--   [`HookProvider`](/docs/api/typescript/HookProvider/index.md)
+-   [`Plugin`](/docs/api/typescript/Plugin/index.md)
+-   `MultiAgentPlugin`
 
 ## Constructors
 
@@ -26,7 +29,7 @@ const agent = new Agent({ sessionManager: session })
 new SessionManager(config): SessionManager;
 ```
 
-Defined in: [src/session/session-manager.ts:62](https://github.com/strands-agents/sdk-typescript/blob/5fc30c8099b8e6735d70c6ae2160f7c0dd7b23c7/src/session/session-manager.ts#L62)
+Defined in: [src/session/session-manager.ts:107](https://github.com/strands-agents/sdk-typescript/blob/6987b01d8ab113b5c0f336e0085579c60a7d0a57/strands-ts/src/session/session-manager.ts#L107)
 
 #### Parameters
 
@@ -38,23 +41,49 @@ Defined in: [src/session/session-manager.ts:62](https://github.com/strands-agent
 
 `SessionManager`
 
-## Methods
+## Accessors
 
-### registerCallbacks()
+### name
+
+#### Get Signature
 
 ```ts
-registerCallbacks(registry): void;
+get name(): string;
 ```
 
-Defined in: [src/session/session-manager.ts:70](https://github.com/strands-agents/sdk-typescript/blob/5fc30c8099b8e6735d70c6ae2160f7c0dd7b23c7/src/session/session-manager.ts#L70)
+Defined in: [src/session/session-manager.ts:103](https://github.com/strands-agents/sdk-typescript/blob/6987b01d8ab113b5c0f336e0085579c60a7d0a57/strands-ts/src/session/session-manager.ts#L103)
 
-Registers lifecycle hook callbacks on the provided registry.
+Unique identifier for this plugin.
+
+##### Returns
+
+`string`
+
+A stable string identifier for the plugin. Used for logging, duplicate detection, and plugin management.
+
+For strands-vended plugins, names should be prefixed with `strands:`.
+
+#### Implementation of
+
+[`Plugin`](/docs/api/typescript/Plugin/index.md).[`name`](/docs/api/typescript/Plugin/index.md#name)
+
+## Methods
+
+### initAgent()
+
+```ts
+initAgent(agent): void;
+```
+
+Defined in: [src/session/session-manager.ts:116](https://github.com/strands-agents/sdk-typescript/blob/6987b01d8ab113b5c0f336e0085579c60a7d0a57/strands-ts/src/session/session-manager.ts#L116)
+
+Initializes the plugin by registering lifecycle hook callbacks.
 
 #### Parameters
 
 | Parameter | Type |
 | --- | --- |
-| `registry` | `HookRegistry` |
+| `agent` | `LocalAgent` |
 
 #### Returns
 
@@ -62,25 +91,68 @@ Registers lifecycle hook callbacks on the provided registry.
 
 #### Implementation of
 
-[`HookProvider`](/docs/api/typescript/HookProvider/index.md).[`registerCallbacks`](/docs/api/typescript/HookProvider/index.md#registercallbacks)
+[`Plugin`](/docs/api/typescript/Plugin/index.md).[`initAgent`](/docs/api/typescript/Plugin/index.md#initagent)
 
 ---
 
 ### saveSnapshot()
 
+#### Call Signature
+
 ```ts
 saveSnapshot(params): Promise<void>;
 ```
 
-Defined in: [src/session/session-manager.ts:88](https://github.com/strands-agents/sdk-typescript/blob/5fc30c8099b8e6735d70c6ae2160f7c0dd7b23c7/src/session/session-manager.ts#L88)
+Defined in: [src/session/session-manager.ts:144](https://github.com/strands-agents/sdk-typescript/blob/6987b01d8ab113b5c0f336e0085579c60a7d0a57/strands-ts/src/session/session-manager.ts#L144)
 
-#### Parameters
+Saves a snapshot of the target’s current state.
+
+##### Parameters
 
 | Parameter | Type |
 | --- | --- |
-| `params` | { `target`: [`Agent`](/docs/api/typescript/Agent/index.md); `isLatest`: `boolean`; } |
-| `params.target` | [`Agent`](/docs/api/typescript/Agent/index.md) |
+| `params` | { `target`: `LocalAgent`; `isLatest`: `boolean`; } |
+| `params.target` | `LocalAgent` |
 | `params.isLatest` | `boolean` |
+
+##### Returns
+
+`Promise`<`void`\>
+
+#### Call Signature
+
+```ts
+saveSnapshot(params): Promise<void>;
+```
+
+Defined in: [src/session/session-manager.ts:145](https://github.com/strands-agents/sdk-typescript/blob/6987b01d8ab113b5c0f336e0085579c60a7d0a57/strands-ts/src/session/session-manager.ts#L145)
+
+Saves a snapshot of the target’s current state.
+
+##### Parameters
+
+| Parameter | Type |
+| --- | --- |
+| `params` | { `target`: [`Graph`](/docs/api/typescript/Graph/index.md) | [`Swarm`](/docs/api/typescript/Swarm/index.md); `state?`: `MultiAgentState`; `isLatest`: `boolean`; } |
+| `params.target` | [`Graph`](/docs/api/typescript/Graph/index.md) | [`Swarm`](/docs/api/typescript/Swarm/index.md) |
+| `params.state?` | `MultiAgentState` |
+| `params.isLatest` | `boolean` |
+
+##### Returns
+
+`Promise`<`void`\>
+
+---
+
+### deleteSession()
+
+```ts
+deleteSession(): Promise<void>;
+```
+
+Defined in: [src/session/session-manager.ts:163](https://github.com/strands-agents/sdk-typescript/blob/6987b01d8ab113b5c0f336e0085579c60a7d0a57/strands-ts/src/session/session-manager.ts#L163)
+
+Deletes all snapshots and manifests for this session from storage.
 
 #### Returns
 
@@ -88,24 +160,102 @@ Defined in: [src/session/session-manager.ts:88](https://github.com/strands-agent
 
 ---
 
-### restoreSnapshot()
+### listSnapshotIds()
 
 ```ts
-restoreSnapshot(params): Promise<boolean>;
+listSnapshotIds(params): Promise<string[]>;
 ```
 
-Defined in: [src/session/session-manager.ts:100](https://github.com/strands-agents/sdk-typescript/blob/5fc30c8099b8e6735d70c6ae2160f7c0dd7b23c7/src/session/session-manager.ts#L100)
+Defined in: [src/session/session-manager.ts:168](https://github.com/strands-agents/sdk-typescript/blob/6987b01d8ab113b5c0f336e0085579c60a7d0a57/strands-ts/src/session/session-manager.ts#L168)
 
-Loads a snapshot from storage and restores it into the target agent. Returns false if no snapshot exists.
+Lists all available immutable snapshot IDs for the given agent target.
 
 #### Parameters
 
 | Parameter | Type |
 | --- | --- |
-| `params` | { `target`: [`Agent`](/docs/api/typescript/Agent/index.md); `snapshotId?`: `string`; } |
-| `params.target` | [`Agent`](/docs/api/typescript/Agent/index.md) |
-| `params.snapshotId?` | `string` |
+| `params` | { `target`: `LocalAgent`; `limit?`: `number`; `startAfter?`: `string`; } |
+| `params.target` | `LocalAgent` |
+| `params.limit?` | `number` |
+| `params.startAfter?` | `string` |
 
 #### Returns
 
+`Promise`<`string`\[\]>
+
+---
+
+### restoreSnapshot()
+
+#### Call Signature
+
+```ts
+restoreSnapshot(params): Promise<boolean>;
+```
+
+Defined in: [src/session/session-manager.ts:177](https://github.com/strands-agents/sdk-typescript/blob/6987b01d8ab113b5c0f336e0085579c60a7d0a57/strands-ts/src/session/session-manager.ts#L177)
+
+Loads a snapshot from storage and restores it into the target. Returns false if no snapshot exists.
+
+##### Parameters
+
+| Parameter | Type |
+| --- | --- |
+| `params` | { `target`: `LocalAgent`; `snapshotId?`: `string`; } |
+| `params.target` | `LocalAgent` |
+| `params.snapshotId?` | `string` |
+
+##### Returns
+
 `Promise`<`boolean`\>
+
+#### Call Signature
+
+```ts
+restoreSnapshot(params): Promise<boolean>;
+```
+
+Defined in: [src/session/session-manager.ts:178](https://github.com/strands-agents/sdk-typescript/blob/6987b01d8ab113b5c0f336e0085579c60a7d0a57/strands-ts/src/session/session-manager.ts#L178)
+
+Loads a snapshot from storage and restores it into the target. Returns false if no snapshot exists.
+
+##### Parameters
+
+| Parameter | Type |
+| --- | --- |
+| `params` | { `target`: [`Graph`](/docs/api/typescript/Graph/index.md) | [`Swarm`](/docs/api/typescript/Swarm/index.md); `state?`: `MultiAgentState`; `snapshotId?`: `string`; } |
+| `params.target` | [`Graph`](/docs/api/typescript/Graph/index.md) | [`Swarm`](/docs/api/typescript/Swarm/index.md) |
+| `params.state?` | `MultiAgentState` |
+| `params.snapshotId?` | `string` |
+
+##### Returns
+
+`Promise`<`boolean`\>
+
+---
+
+### initMultiAgent()
+
+```ts
+initMultiAgent(orchestrator): void;
+```
+
+Defined in: [src/session/session-manager.ts:277](https://github.com/strands-agents/sdk-typescript/blob/6987b01d8ab113b5c0f336e0085579c60a7d0a57/strands-ts/src/session/session-manager.ts#L277)
+
+Initializes the multi-agent plugin by registering orchestrator lifecycle hooks.
+
+#### Parameters
+
+| Parameter | Type |
+| --- | --- |
+| `orchestrator` | `MultiAgent` |
+
+#### Returns
+
+`void`
+
+#### Implementation of
+
+```ts
+MultiAgentPlugin.initMultiAgent
+```

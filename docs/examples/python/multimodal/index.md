@@ -133,19 +133,19 @@ During its execution, the `artist` agent used the following prompts (which can b
 
 “A majestic blue whale swimming in deep ocean waters, sunlight filtering through the surface, photorealistic”
 
-![output/a_majestic_blue_whale_swimming.png](/_astro/whale_1.BbWHgxOK_10Bx4x.webp)
+![output/a\_majestic\_blue\_whale\_swimming.png](/_astro/whale_1.BbWHgxOK_10Bx4x.webp)
 
 “Humpback whale breaching from the water, dramatic splash, against sunset sky, wildlife photography”
 
-![output/humpback_whale_breaching_from_the.png](/_astro/whale_2.D8UUil-J_mkbbj.webp)
+![output/humpback\_whale\_breaching\_from\_the.png](/_astro/whale_2.D8UUil-J_mkbbj.webp)
 
 “Orca whale pod swimming together in arctic waters, aerial view, detailed, pristine environment”
 
-![output/orca_whale_pod_swimming_together.png](/_astro/whale_3.CBbgjVUn_1ANSGd.webp)
+![output/orca\_whale\_pod\_swimming\_together.png](/_astro/whale_3.CBbgjVUn_1ANSGd.webp)
 
 And the `critic` agent selected the humpback whale as the best image:
 
-![output/humpback_whale_breaching_from_the.png](/_astro/whale_2_large.DjeT7M9T_Z2ewWVS.webp)
+![output/humpback\_whale\_breaching\_from\_the.png](/_astro/whale_2_large.DjeT7M9T_Z2ewWVS.webp)
 
 ## Extending the Example
 

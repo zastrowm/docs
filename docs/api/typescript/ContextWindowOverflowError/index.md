@@ -1,4 +1,4 @@
-Defined in: [src/errors.ts:38](https://github.com/strands-agents/sdk-typescript/blob/5fc30c8099b8e6735d70c6ae2160f7c0dd7b23c7/src/errors.ts#L38)
+Defined in: [src/errors.ts:39](https://github.com/strands-agents/sdk-typescript/blob/6987b01d8ab113b5c0f336e0085579c60a7d0a57/strands-ts/src/errors.ts#L39)
 
 Error thrown when input exceeds the model’s context window.
 
@@ -16,7 +16,7 @@ This error indicates that the combined length of the input (prompt, messages, sy
 new ContextWindowOverflowError(message): ContextWindowOverflowError;
 ```
 
-Defined in: [src/errors.ts:44](https://github.com/strands-agents/sdk-typescript/blob/5fc30c8099b8e6735d70c6ae2160f7c0dd7b23c7/src/errors.ts#L44)
+Defined in: [src/errors.ts:45](https://github.com/strands-agents/sdk-typescript/blob/6987b01d8ab113b5c0f336e0085579c60a7d0a57/strands-ts/src/errors.ts#L45)
 
 Creates a new ContextWindowOverflowError.
 

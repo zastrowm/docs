@@ -14,10 +14,11 @@ type AgentStreamEvent =
   | BeforeToolCallEvent
   | AfterToolCallEvent
   | MessageAddedEvent
+  | InterruptEvent
   | AgentResultEvent;
 ```
 
-Defined in: [src/types/agent.ts:111](https://github.com/strands-agents/sdk-typescript/blob/5fc30c8099b8e6735d70c6ae2160f7c0dd7b23c7/src/types/agent.ts#L111)
+Defined in: [src/types/agent.ts:465](https://github.com/strands-agents/sdk-typescript/blob/6987b01d8ab113b5c0f336e0085579c60a7d0a57/strands-ts/src/types/agent.ts#L465)
 
 Union type representing all possible streaming events from an agent. This includes model events, tool events, and agent-specific lifecycle events.
 

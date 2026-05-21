@@ -1,4 +1,4 @@
-Defined in: [src/models/bedrock.ts:243](https://github.com/strands-agents/sdk-typescript/blob/5fc30c8099b8e6735d70c6ae2160f7c0dd7b23c7/src/models/bedrock.ts#L243)
+Defined in: [src/models/bedrock.ts:377](https://github.com/strands-agents/sdk-typescript/blob/6987b01d8ab113b5c0f336e0085579c60a7d0a57/strands-ts/src/models/bedrock.ts#L377)
 
 AWS Bedrock model provider implementation.
 
@@ -9,7 +9,7 @@ Implements the Model interface for AWS Bedrock using the Converse Stream API. Su
 ```typescript
 const provider = new BedrockModel({
   modelConfig: {
-    modelId: 'global.anthropic.claude-sonnet-4-5-20250929-v1:0',
+    modelId: 'global.anthropic.claude-sonnet-4-6',
     maxTokens: 1024,
     temperature: 0.7
   },
@@ -41,7 +41,7 @@ for await (const event of provider.stream(messages)) {
 new BedrockModel(options?): BedrockModel;
 ```
 
-Defined in: [src/models/bedrock.ts:277](https://github.com/strands-agents/sdk-typescript/blob/5fc30c8099b8e6735d70c6ae2160f7c0dd7b23c7/src/models/bedrock.ts#L277)
+Defined in: [src/models/bedrock.ts:421](https://github.com/strands-agents/sdk-typescript/blob/6987b01d8ab113b5c0f336e0085579c60a7d0a57/strands-ts/src/models/bedrock.ts#L421)
 
 Creates a new BedrockModel instance.
 
@@ -66,10 +66,10 @@ const provider = new BedrockModel({
 // With model configuration
 const provider = new BedrockModel({
   region: 'us-west-2',
-  modelId: 'global.anthropic.claude-sonnet-4-5-20250929-v1:0',
+  modelId: 'global.anthropic.claude-sonnet-4-6',
   maxTokens: 2048,
   temperature: 0.8,
-  cachePrompt: 'ephemeral'
+  cacheConfig: { strategy: 'auto' }
 })
 
 // With client configuration
@@ -95,7 +95,7 @@ const provider = new BedrockModel({
 get modelId(): string;
 ```
 
-Defined in: [src/models/model.ts:150](https://github.com/strands-agents/sdk-typescript/blob/5fc30c8099b8e6735d70c6ae2160f7c0dd7b23c7/src/models/model.ts#L150)
+Defined in: [src/models/model.ts:227](https://github.com/strands-agents/sdk-typescript/blob/6987b01d8ab113b5c0f336e0085579c60a7d0a57/strands-ts/src/models/model.ts#L227)
 
 The model ID from the current configuration, if configured.
 
@@ -107,6 +107,34 @@ The model ID from the current configuration, if configured.
 
 [`Model`](/docs/api/typescript/Model/index.md).[`modelId`](/docs/api/typescript/Model/index.md#modelid)
 
+---
+
+### stateful
+
+#### Get Signature
+
+```ts
+get stateful(): boolean;
+```
+
+Defined in: [src/models/model.ts:243](https://github.com/strands-agents/sdk-typescript/blob/6987b01d8ab113b5c0f336e0085579c60a7d0a57/strands-ts/src/models/model.ts#L243)
+
+Whether this model manages conversation state server-side.
+
+When `true`, the server tracks conversation context across turns, so the SDK sends only the latest message instead of the full history. After each invocation, the agent’s local message history is cleared automatically.
+
+Model providers that support server-side state management should override this to return `true`.
+
+##### Returns
+
+`boolean`
+
+`false` by default
+
+#### Inherited from
+
+[`Model`](/docs/api/typescript/Model/index.md).[`stateful`](/docs/api/typescript/Model/index.md#stateful)
+
 ## Methods
 
 ### updateConfig()
@@ -115,7 +143,7 @@ The model ID from the current configuration, if configured.
 updateConfig(modelConfig): void;
 ```
 
-Defined in: [src/models/bedrock.ts:323](https://github.com/strands-agents/sdk-typescript/blob/5fc30c8099b8e6735d70c6ae2160f7c0dd7b23c7/src/models/bedrock.ts#L323)
+Defined in: [src/models/bedrock.ts:513](https://github.com/strands-agents/sdk-typescript/blob/6987b01d8ab113b5c0f336e0085579c60a7d0a57/strands-ts/src/models/bedrock.ts#L513)
 
 Updates the model configuration. Merges the provided configuration with existing settings.
 
@@ -151,7 +179,7 @@ provider.updateConfig({
 getConfig(): BedrockModelConfig;
 ```
 
-Defined in: [src/models/bedrock.ts:338](https://github.com/strands-agents/sdk-typescript/blob/5fc30c8099b8e6735d70c6ae2160f7c0dd7b23c7/src/models/bedrock.ts#L338)
+Defined in: [src/models/bedrock.ts:528](https://github.com/strands-agents/sdk-typescript/blob/6987b01d8ab113b5c0f336e0085579c60a7d0a57/strands-ts/src/models/bedrock.ts#L528)
 
 Retrieves the current model configuration.
 
@@ -174,13 +202,44 @@ console.log(config.modelId)
 
 ---
 
+### countTokens()
+
+```ts
+countTokens(messages, options?): Promise<number>;
+```
+
+Defined in: [src/models/bedrock.ts:542](https://github.com/strands-agents/sdk-typescript/blob/6987b01d8ab113b5c0f336e0085579c60a7d0a57/strands-ts/src/models/bedrock.ts#L542)
+
+Count tokens using Bedrock’s native CountTokens API.
+
+Uses the same message format as the Converse API to get accurate token counts directly from the Bedrock service. Falls back to the base class heuristic on failure.
+
+#### Parameters
+
+| Parameter | Type | Description |
+| --- | --- | --- |
+| `messages` | [`Message`](/docs/api/typescript/Message/index.md)\[\] | Array of conversation messages to count tokens for |
+| `options?` | [`CountTokensOptions`](/docs/api/typescript/CountTokensOptions/index.md) | Optional options containing system prompt and tool specs |
+
+#### Returns
+
+`Promise`<`number`\>
+
+Total input token count
+
+#### Overrides
+
+[`Model`](/docs/api/typescript/Model/index.md).[`countTokens`](/docs/api/typescript/Model/index.md#counttokens)
+
+---
+
 ### stream()
 
 ```ts
 stream(messages, options?): AsyncIterable<ModelStreamEvent>;
 ```
 
-Defined in: [src/models/bedrock.ts:371](https://github.com/strands-agents/sdk-typescript/blob/5fc30c8099b8e6735d70c6ae2160f7c0dd7b23c7/src/models/bedrock.ts#L371)
+Defined in: [src/models/bedrock.ts:623](https://github.com/strands-agents/sdk-typescript/blob/6987b01d8ab113b5c0f336e0085579c60a7d0a57/strands-ts/src/models/bedrock.ts#L623)
 
 Streams a conversation with the Bedrock model. Returns an async iterable that yields streaming events as they occur.
 
@@ -238,7 +297,7 @@ streamAggregated(messages, options?): AsyncGenerator<
 | ModelStreamEvent, StreamAggregatedResult, undefined>;
 ```
 
-Defined in: [src/models/model.ts:216](https://github.com/strands-agents/sdk-typescript/blob/5fc30c8099b8e6735d70c6ae2160f7c0dd7b23c7/src/models/model.ts#L216)
+Defined in: [src/models/model.ts:329](https://github.com/strands-agents/sdk-typescript/blob/6987b01d8ab113b5c0f336e0085579c60a7d0a57/strands-ts/src/models/model.ts#L329)
 
 Streams a conversation with aggregated content blocks and messages. Returns an async generator that yields streaming events and content blocks, and returns the final message with stop reason and optional metadata.
 

@@ -27,10 +27,12 @@ All streaming methods yield the same set of events:
 Each event emitted from the TypeScript agent is a class with a `type` attribute that has a unique value. When determining an event, you can use `instanceof` on the class, or an equality check on the `event.type` value. All events extend `HookableEvent`, making them both streamable and subscribable via hook callbacks.
 
 -   **`BeforeInvocationEvent`**: Start of agent loop (before any iterations)
+    -   **`cancel`**: Set by hook callbacks to cancel the invocation (`boolean | string`)
 -   **`AfterInvocationEvent`**: End of agent loop (after all iterations complete)
     -   **`error?`**: Optional error if loop terminated due to exception
 -   **`BeforeModelCallEvent`**: Before model invocation
     -   **`messages`**: Array of messages being sent to model
+    -   **`cancel`**: Set by hook callbacks to cancel the model call (`boolean | string`)
 -   **`AfterModelCallEvent`**: After model invocation
     -   **`message`**: Assistant message returned by model
     -   **`stopReason`**: Why generation stopped
@@ -118,8 +120,118 @@ See [Graph streaming](/docs/user-guide/concepts/multi-agent/graph/index.md#strea
 (( /tab "Python" ))
 
 (( tab "TypeScript" ))
+Multi-agent systems ([Graph](/docs/user-guide/concepts/multi-agent/graph/index.md) and [Swarm](/docs/user-guide/concepts/multi-agent/swarm/index.md)) emit additional coordination events. Each event is a class with a `type` attribute, extending `HookableEvent` for both streaming and hook subscription.
+
+-   **`MultiAgentInitializedEvent`**: When a multi-agent orchestrator has finished initialization
+    -   **`orchestrator`**: The `MultiAgentBase` instance
+-   **`BeforeMultiAgentInvocationEvent`**: Before orchestrator execution starts
+    -   **`orchestrator`**: The `MultiAgentBase` instance
+    -   **`state`**: The current `MultiAgentState`
+-   **`BeforeNodeCallEvent`**: Before a node begins execution
+    -   **`nodeId`**: Unique identifier for the node
+    -   **`orchestrator`**: The `MultiAgentBase` instance
+    -   **`state`**: The current `MultiAgentState`
+    -   **`cancel`**: Set by hook callbacks to cancel node execution (`boolean | string`)
+-   **`NodeStreamUpdateEvent`**: Forwarded events from agents or nested orchestrators with node context
+    -   **`nodeId`**: Identifier of the node generating the event
+    -   **`nodeType`**: Type of node (`"agentNode"`, `"multiAgentNode"`)
+    -   **`state`**: The current `MultiAgentState`
+    -   **`event`**: The inner `AgentStreamEvent` or `MultiAgentStreamEvent`
+-   **`NodeCancelEvent`**: When a node is cancelled via `BeforeNodeCallEvent.cancel`
+    -   **`nodeId`**: Unique identifier for the node
+    -   **`state`**: The current `MultiAgentState`
+    -   **`message`**: Cancel reason
+-   **`AfterNodeCallEvent`**: After a node completes execution
+    -   **`nodeId`**: Unique identifier for the node
+    -   **`orchestrator`**: The `MultiAgentBase` instance
+    -   **`state`**: The current `MultiAgentState`
+    -   **`error?`**: Optional error if the node failed
+-   **`NodeResultEvent`**: When a node finishes execution
+    -   **`nodeId`**: Unique identifier for the node
+    -   **`nodeType`**: Type of node (`"agentNode"`, `"multiAgentNode"`)
+    -   **`state`**: The current `MultiAgentState`
+    -   **`result`**: The `NodeResult` with `status`, `duration`, `content`, and optional `error`
+-   **`MultiAgentHandoffEvent`**: When execution transitions between nodes
+    -   **`source`**: Node ID completing execution
+    -   **`targets`**: Array of node IDs beginning execution
+    -   **`state`**: The current `MultiAgentState`
+-   **`AfterMultiAgentInvocationEvent`**: After orchestrator execution completes
+    -   **`orchestrator`**: The `MultiAgentBase` instance
+    -   **`state`**: The current `MultiAgentState`
+-   **`MultiAgentResultEvent`**: Final event in the multi-agent stream
+    -   **`result`**: The `MultiAgentResult` with `status`, `results`, `content`, and `duration`
+
+See [Graph streaming](/docs/user-guide/concepts/multi-agent/graph/index.md#streaming-events) and [Swarm streaming](/docs/user-guide/concepts/multi-agent/swarm/index.md#streaming-events) for usage examples.
+(( /tab "TypeScript" ))
+
+### Event Serialization
+
+(( tab "Python" ))
+Python streaming events are plain dictionaries. The SDK does not include a built-in serialization filter — you have full control over which events and fields to forward from your processes and servers.
+
+When serving streamed responses (for example, over SSE or WebSockets), you can filter the yielded events to keep payloads compact:
+
+```python
+import json
+
+def filter_event(event: dict) -> dict | None:
+    """Filter streaming events to only forward relevant data over the wire."""
+    # Forward text deltas for real-time display
+    if "data" in event:
+        return {"type": "text", "data": event["data"]}
+
+    # Forward tool usage for progress indicators
+    if "current_tool_use" in event and event["current_tool_use"].get("name"):
+        return {"type": "tool", "name": event["current_tool_use"]["name"]}
+
+    # Forward the final result
+    if "result" in event:
+        return {"type": "result", "stop_reason": str(event["result"].stop_reason)}
+
+    # Skip everything else (lifecycle signals, raw deltas, reasoning, etc.)
+    return None
+
+
+async for event in agent.stream_async("Hello"):
+    filtered = filter_event(event)
+    if filtered:
+        await response.write(f"data: {json.dumps(filtered)}\n\n")
+```
+
+This approach lets you tailor the streamed output to your use case — for example, forwarding only text deltas for a chat UI or including tool events for a progress dashboard.
+(( /tab "Python" ))
+
+(( tab "TypeScript" ))
+Every event class implements a `toJSON()` method that `JSON.stringify()` calls automatically. Each serialized event retains its `type` discriminator and the relevant data fields — matching the general shape of the class — while excluding in-memory runtime references (`agent`, `orchestrator`, `state`, `tool`) and mutable hook properties (`cancel`, `retry`). `Error` objects are converted to `{ message: string }`. This applies to single-agent, multi-agent, and A2A events alike.
+
+You can filter which events to forward to the client:
+
 ```typescript
-Coming soon to Typescript!
+for await (const event of agent.stream('Hello')) {
+  switch (event.type) {
+    // Forward text deltas for real-time display
+    case 'modelStreamUpdateEvent':
+      if (
+        event.event.type === 'modelContentBlockDeltaEvent' &&
+        event.event.delta.type === 'textDelta'
+      ) {
+        console.log(
+          `data: ${JSON.stringify({ type: 'text', text: event.event.delta.text })}`
+        )
+      }
+      break
+
+    // Forward tool names for progress indicators
+    case 'beforeToolCallEvent':
+      console.log(`data: ${JSON.stringify({ type: 'tool', name: event.toolUse.name })}`)
+      break
+
+    // Forward the final result
+    case 'agentResultEvent':
+      console.log(`data: ${JSON.stringify(event)}`)
+      break
+  }
+}
 ```
 (( /tab "TypeScript" ))
 
@@ -248,7 +360,9 @@ function processEvent(event: AgentStreamEvent): void {
     process.stdout.write(event.event.delta.text)
   }
 }
-const responseGenerator = agent.stream('What is the capital of France and what is 42+7? Record in the notebook.')
+const responseGenerator = agent.stream(
+  'What is the capital of France and what is 42+7? Record in the notebook.'
+)
 for await (const event of responseGenerator) {
   processEvent(event)
 }
@@ -378,4 +492,4 @@ console.log('\nDone!')
 
 -   Learn about [Async Iterators](/docs/user-guide/concepts/streaming/async-iterators/index.md) for asynchronous streaming
 -   Explore [Callback Handlers](/docs/user-guide/concepts/streaming/callback-handlers/index.md) for synchronous event processing
--   See the [Agent API Reference](/docs/api/python/strands.agent.agent) for complete method documentation
+-   See the Agent API Reference for complete method documentation: [Python](/docs/api/python/strands.agent.agent) | [TypeScript](/docs/api/typescript/Agent/index.md)

@@ -1,4 +1,4 @@
-Defined in: [src/types/messages.ts:748](https://github.com/strands-agents/sdk-typescript/blob/5fc30c8099b8e6735d70c6ae2160f7c0dd7b23c7/src/types/messages.ts#L748)
+Defined in: [src/types/messages.ts:819](https://github.com/strands-agents/sdk-typescript/blob/6987b01d8ab113b5c0f336e0085579c60a7d0a57/strands-ts/src/types/messages.ts#L819)
 
 Data for a guard content block. Can contain either text or image content for guardrail evaluation.
 
@@ -7,10 +7,10 @@ Data for a guard content block. Can contain either text or image content for gua
 ### text?
 
 ```ts
-optional text: GuardContentText;
+optional text?: GuardContentText;
 ```
 
-Defined in: [src/types/messages.ts:752](https://github.com/strands-agents/sdk-typescript/blob/5fc30c8099b8e6735d70c6ae2160f7c0dd7b23c7/src/types/messages.ts#L752)
+Defined in: [src/types/messages.ts:823](https://github.com/strands-agents/sdk-typescript/blob/6987b01d8ab113b5c0f336e0085579c60a7d0a57/strands-ts/src/types/messages.ts#L823)
 
 Text content with evaluation qualifiers.
 
@@ -19,9 +19,9 @@ Text content with evaluation qualifiers.
 ### image?
 
 ```ts
-optional image: GuardContentImage;
+optional image?: GuardContentImage;
 ```
 
-Defined in: [src/types/messages.ts:757](https://github.com/strands-agents/sdk-typescript/blob/5fc30c8099b8e6735d70c6ae2160f7c0dd7b23c7/src/types/messages.ts#L757)
+Defined in: [src/types/messages.ts:828](https://github.com/strands-agents/sdk-typescript/blob/6987b01d8ab113b5c0f336e0085579c60a7d0a57/strands-ts/src/types/messages.ts#L828)
 
 Image content with evaluation qualifiers.

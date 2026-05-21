@@ -1,4 +1,4 @@
-Defined in: [src/models/streaming.ts:412](https://github.com/strands-agents/sdk-typescript/blob/5fc30c8099b8e6735d70c6ae2160f7c0dd7b23c7/src/models/streaming.ts#L412)
+Defined in: [src/models/streaming.ts:493](https://github.com/strands-agents/sdk-typescript/blob/6987b01d8ab113b5c0f336e0085579c60a7d0a57/strands-ts/src/models/streaming.ts#L493)
 
 Token usage statistics for a model invocation. Tracks input, output, and total tokens, plus cache-related metrics.
 
@@ -10,7 +10,7 @@ Token usage statistics for a model invocation. Tracks input, output, and total t
 inputTokens: number;
 ```
 
-Defined in: [src/models/streaming.ts:416](https://github.com/strands-agents/sdk-typescript/blob/5fc30c8099b8e6735d70c6ae2160f7c0dd7b23c7/src/models/streaming.ts#L416)
+Defined in: [src/models/streaming.ts:497](https://github.com/strands-agents/sdk-typescript/blob/6987b01d8ab113b5c0f336e0085579c60a7d0a57/strands-ts/src/models/streaming.ts#L497)
 
 Number of tokens in the input (prompt).
 
@@ -22,7 +22,7 @@ Number of tokens in the input (prompt).
 outputTokens: number;
 ```
 
-Defined in: [src/models/streaming.ts:421](https://github.com/strands-agents/sdk-typescript/blob/5fc30c8099b8e6735d70c6ae2160f7c0dd7b23c7/src/models/streaming.ts#L421)
+Defined in: [src/models/streaming.ts:502](https://github.com/strands-agents/sdk-typescript/blob/6987b01d8ab113b5c0f336e0085579c60a7d0a57/strands-ts/src/models/streaming.ts#L502)
 
 Number of tokens in the output (completion).
 
@@ -34,7 +34,7 @@ Number of tokens in the output (completion).
 totalTokens: number;
 ```
 
-Defined in: [src/models/streaming.ts:426](https://github.com/strands-agents/sdk-typescript/blob/5fc30c8099b8e6735d70c6ae2160f7c0dd7b23c7/src/models/streaming.ts#L426)
+Defined in: [src/models/streaming.ts:507](https://github.com/strands-agents/sdk-typescript/blob/6987b01d8ab113b5c0f336e0085579c60a7d0a57/strands-ts/src/models/streaming.ts#L507)
 
 Total number of tokens (input + output).
 
@@ -43,10 +43,10 @@ Total number of tokens (input + output).
 ### cacheReadInputTokens?
 
 ```ts
-optional cacheReadInputTokens: number;
+optional cacheReadInputTokens?: number;
 ```
 
-Defined in: [src/models/streaming.ts:432](https://github.com/strands-agents/sdk-typescript/blob/5fc30c8099b8e6735d70c6ae2160f7c0dd7b23c7/src/models/streaming.ts#L432)
+Defined in: [src/models/streaming.ts:513](https://github.com/strands-agents/sdk-typescript/blob/6987b01d8ab113b5c0f336e0085579c60a7d0a57/strands-ts/src/models/streaming.ts#L513)
 
 Number of input tokens read from cache. This can reduce latency and cost.
 
@@ -55,9 +55,9 @@ Number of input tokens read from cache. This can reduce latency and cost.
 ### cacheWriteInputTokens?
 
 ```ts
-optional cacheWriteInputTokens: number;
+optional cacheWriteInputTokens?: number;
 ```
 
-Defined in: [src/models/streaming.ts:438](https://github.com/strands-agents/sdk-typescript/blob/5fc30c8099b8e6735d70c6ae2160f7c0dd7b23c7/src/models/streaming.ts#L438)
+Defined in: [src/models/streaming.ts:519](https://github.com/strands-agents/sdk-typescript/blob/6987b01d8ab113b5c0f336e0085579c60a7d0a57/strands-ts/src/models/streaming.ts#L519)
 
 Number of input tokens written to cache. These tokens can be reused in future requests.

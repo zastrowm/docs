@@ -1,7 +1,3 @@
-Experimental SDK
-
-The TypeScript SDK is currently experimental. It does not yet support all features available in the Python SDK, and breaking changes are expected as development continues. Use with caution in production environments.
-
 This quickstart guide shows you how to create your first basic Strands agent with TypeScript, add built-in and custom tools to your agent, use different model providers, emit debug logs, and run the agent locally.
 
 After completing this guide you can integrate your agent with a web server or browser, evaluate and improve your agent, along with deploying to production and running at scale.
@@ -30,25 +26,25 @@ npm install @strands-agents/sdk
 The Strands Agents SDK includes optional vended tools that are built-in and production-ready for your agents to use. These tools can be imported directly as follows:
 
 ```typescript
-import { bash } from '@strands-agents/sdk/vended_tools/bash'
+import { bash } from '@strands-agents/sdk/vended-tools/bash'
 ```
 
 ## Configuring Credentials
 
-Strands supports many different model providers. By default, agents use the Amazon Bedrock model provider with the Claude 4 model.
+Strands supports many different model providers. By default, agents use the Amazon Bedrock model provider with Claude Sonnet 4.6.
 
-To use the examples in this guide, you’ll need to configure your environment with AWS credentials that have permissions to invoke the Claude 4 model. You can set up your credentials in several ways:
+To use the examples in this guide, you’ll need to configure your environment with AWS credentials that have permissions to invoke Claude Sonnet 4.6. You can set up your credentials in several ways:
 
 1.  **Environment variables**: Set `AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY`, and optionally `AWS_SESSION_TOKEN`
 2.  **AWS credentials file**: Configure credentials using `aws configure` CLI command
 3.  **IAM roles**: If running on AWS services like EC2, ECS, or Lambda, use IAM roles
 4.  **Bedrock API keys**: Set the `AWS_BEARER_TOKEN_BEDROCK` environment variable
 
-Make sure your AWS credentials have the necessary permissions to access Amazon Bedrock and invoke the Claude 4 model.
+Make sure your AWS credentials have the necessary permissions to access Amazon Bedrock and invoke Claude Sonnet 4.6.
 
 ## Project Setup
 
-Now we’ll continuing building out the nodejs project by adding TypeScript to the project where our agent will reside. We’ll use this directory structure:
+Now we’ll continue building out the nodejs project by adding TypeScript to the project where our agent will reside. We’ll use this directory structure:
 
 ```plaintext
 my-agent/
@@ -75,7 +71,8 @@ import z from 'zod'
 
 const letterCounter = tool({
   name: 'letter_counter',
-  description: 'Count occurrences of a specific letter in a word. Performs case-insensitive matching.',
+  description:
+    'Count occurrences of a specific letter in a word. Performs case-insensitive matching.',
   // Zod schema for letter counter input validation
   inputSchema: z
     .object({
@@ -118,6 +115,10 @@ console.log(result.lastMessage)
 
 This basic quickstart agent can now count letters in words. The agent automatically determines when to use tools based on the input query and context.
 
+Note
+
+The `tool()` function also accepts plain JSON Schema objects instead of Zod. See [Creating Custom Tools](/docs/user-guide/concepts/tools/custom-tools/index.md) for details.
+
 ```mermaid
 flowchart LR
     A[Input & Context] --> Loop
@@ -148,7 +149,7 @@ And that’s it! We now have a running agent with powerful tools and abilities i
 
 ## Understanding What Agents Did
 
-After running an agent, you can understand what happened during execution by examining the agent’s messages and through traces and metrics. Every agent invocation returns an `AgentResult` object that contains the data the agent used along with (comming soon) comprehensive observability data.
+After running an agent, you can understand what happened during execution by examining the agent’s messages, traces, and metrics. Every agent invocation returns an `AgentResult` object that contains the data the agent used along with comprehensive observability data including [local execution traces](/docs/user-guide/observability-evaluation/metrics/index.md#local-execution-traces) and [metrics](/docs/user-guide/observability-evaluation/metrics/index.md).
 
 ```typescript
 // Access the agent's message array
@@ -171,13 +172,13 @@ const quietAgent = new Agent({
 
 ### Identifying a configured model
 
-Strands defaults to the Bedrock model provider using Claude 4 Sonnet. The model your agent is using can be retrieved by accessing `model.config`:
+Strands defaults to the Bedrock model provider using Claude Sonnet 4.6. The model your agent is using can be retrieved by accessing `model.config`:
 
 ```typescript
 // Check the model configuration
 const myAgent = new Agent()
 console.log(myAgent['model'].getConfig().modelId)
-// Output: { modelId: 'global.anthropic.claude-sonnet-4-5-20250929-v1:0' }
+// Output: { modelId: 'global.anthropic.claude-sonnet-4-6' }
 ```
 
 You can specify a different model by creating a model provider instance with specific configurations
@@ -191,7 +192,7 @@ import { BedrockModel } from '@strands-agents/sdk'
 
 // Create a BedrockModel with custom configuration
 const bedrockModel = new BedrockModel({
-  modelId: 'anthropic.claude-sonnet-4-20250514-v1:0',
+  modelId: 'global.anthropic.claude-opus-4-6-v1',
   region: 'us-west-2',
   temperature: 0.3,
 })
@@ -210,7 +211,7 @@ More details in the [Amazon Bedrock Model Provider](/docs/user-guide/concepts/mo
 Strands Agents supports several other model providers beyond Amazon Bedrock:
 
 -   **[OpenAI](/docs/user-guide/concepts/model-providers/openai/index.md)** - Access to OpenAI or OpenAI-compatible models
--   **[Gemini](/docs/user-guide/concepts/model-providers/gemini/index.md)** - Access to Google’s Gemini models
+-   **[Google](/docs/user-guide/concepts/model-providers/google/index.md)** - Access to Google’s Gemini models
 
 ## Capturing Streamed Data & Events
 
@@ -243,7 +244,7 @@ See the [Async Iterators](/docs/user-guide/concepts/streaming/async-iterators/in
 
 Ready to learn more? Check out these resources:
 
--   [Examples](https://github.com/strands-agents/sdk-typescript/tree/main/examples) - Examples for many use cases
+-   [Examples](https://github.com/strands-agents/sdk-typescript/tree/main/strands-ts/examples) - Examples for many use cases
 -   [TypeScript SDK Repository](https://github.com/strands-agents/sdk-typescript/blob/main) - Explore the TypeScript SDK source code and contribute
 -   [Agent Loop](/docs/user-guide/concepts/agents/agent-loop/index.md) - Learn how Strands agents work under the hood
 -   [State](/docs/user-guide/concepts/agents/state/index.md) - Understand how agents maintain context and state across a conversation

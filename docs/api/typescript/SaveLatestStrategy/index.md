@@ -2,9 +2,9 @@
 type SaveLatestStrategy = "message" | "invocation" | "trigger";
 ```
 
-Defined in: [src/session/session-manager.ts:26](https://github.com/strands-agents/sdk-typescript/blob/5fc30c8099b8e6735d70c6ae2160f7c0dd7b23c7/src/session/session-manager.ts#L26)
+Defined in: [src/session/session-manager.ts:43](https://github.com/strands-agents/sdk-typescript/blob/6987b01d8ab113b5c0f336e0085579c60a7d0a57/strands-ts/src/session/session-manager.ts#L43)
 
-Controls when `snapshot_latest` is saved automatically.
+Controls when `snapshot_latest` is saved automatically for agents.
 
 There are two kinds of snapshots:
 
@@ -14,5 +14,7 @@ There are two kinds of snapshots:
 `SaveLatestStrategy` controls how frequently `snapshot_latest` is updated:
 
 -   `'invocation'`: after every agent invocation completes (default; balances durability and I/O)
--   `'message'`: after every message added to the conversation (most durable, highest I/O)
+-   `'message'`: after every message added (most durable, highest I/O)
 -   `'trigger'`: only when a `snapshotTrigger` fires (or manually via `saveSnapshot`)
+
+Under `'invocation'` and `'message'`, guardrail redactions are persisted immediately so pre-redaction content never sits at rest. Under `'trigger'`, the caller’s `snapshotTrigger` stays in control; redactions are only flushed if the trigger fires or `saveSnapshot` is called.

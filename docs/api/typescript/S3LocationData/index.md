@@ -1,8 +1,28 @@
-Defined in: [src/types/media.ts:116](https://github.com/strands-agents/sdk-typescript/blob/5fc30c8099b8e6735d70c6ae2160f7c0dd7b23c7/src/types/media.ts#L116)
+Defined in: [src/types/media.ts:81](https://github.com/strands-agents/sdk-typescript/blob/6987b01d8ab113b5c0f336e0085579c60a7d0a57/strands-ts/src/types/media.ts#L81)
 
-Data for an S3 location. Used by Bedrock for referencing media and documents stored in S3.
+Data for an S3 location.
+
+## Extends
+
+-   [`LocationData`](/docs/api/typescript/LocationData/index.md)
 
 ## Properties
+
+### type
+
+```ts
+type: "s3";
+```
+
+Defined in: [src/types/media.ts:85](https://github.com/strands-agents/sdk-typescript/blob/6987b01d8ab113b5c0f336e0085579c60a7d0a57/strands-ts/src/types/media.ts#L85)
+
+Location type — always “s3”.
+
+#### Overrides
+
+[`LocationData`](/docs/api/typescript/LocationData/index.md).[`type`](/docs/api/typescript/LocationData/index.md#type)
+
+---
 
 ### uri
 
@@ -10,7 +30,7 @@ Data for an S3 location. Used by Bedrock for referencing media and documents sto
 uri: string;
 ```
 
-Defined in: [src/types/media.ts:120](https://github.com/strands-agents/sdk-typescript/blob/5fc30c8099b8e6735d70c6ae2160f7c0dd7b23c7/src/types/media.ts#L120)
+Defined in: [src/types/media.ts:90](https://github.com/strands-agents/sdk-typescript/blob/6987b01d8ab113b5c0f336e0085579c60a7d0a57/strands-ts/src/types/media.ts#L90)
 
 S3 URI in format: s3://bucket-name/key-name
 
@@ -19,9 +39,9 @@ S3 URI in format: s3://bucket-name/key-name
 ### bucketOwner?
 
 ```ts
-optional bucketOwner: string;
+optional bucketOwner?: string;
 ```
 
-Defined in: [src/types/media.ts:126](https://github.com/strands-agents/sdk-typescript/blob/5fc30c8099b8e6735d70c6ae2160f7c0dd7b23c7/src/types/media.ts#L126)
+Defined in: [src/types/media.ts:96](https://github.com/strands-agents/sdk-typescript/blob/6987b01d8ab113b5c0f336e0085579c60a7d0a57/strands-ts/src/types/media.ts#L96)
 
 AWS account ID of the S3 bucket owner (12-digit). Required if the bucket belongs to another AWS account.

@@ -1,4 +1,4 @@
-Defined in: [src/errors.ts:102](https://github.com/strands-agents/sdk-typescript/blob/5fc30c8099b8e6735d70c6ae2160f7c0dd7b23c7/src/errors.ts#L102)
+Defined in: [src/errors.ts:103](https://github.com/strands-agents/sdk-typescript/blob/6987b01d8ab113b5c0f336e0085579c60a7d0a57/strands-ts/src/errors.ts#L103)
 
 Error thrown when attempting to invoke an agent that is already processing an invocation.
 
@@ -16,7 +16,7 @@ This error indicates that invoke() or stream() was called while the agent is alr
 new ConcurrentInvocationError(message): ConcurrentInvocationError;
 ```
 
-Defined in: [src/errors.ts:108](https://github.com/strands-agents/sdk-typescript/blob/5fc30c8099b8e6735d70c6ae2160f7c0dd7b23c7/src/errors.ts#L108)
+Defined in: [src/errors.ts:109](https://github.com/strands-agents/sdk-typescript/blob/6987b01d8ab113b5c0f336e0085579c60a7d0a57/strands-ts/src/errors.ts#L109)
 
 Creates a new ConcurrentInvocationError.
 

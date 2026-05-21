@@ -1,4 +1,4 @@
-Defined in: [src/tools/function-tool.ts:51](https://github.com/strands-agents/sdk-typescript/blob/5fc30c8099b8e6735d70c6ae2160f7c0dd7b23c7/src/tools/function-tool.ts#L51)
+Defined in: [src/tools/function-tool.ts:60](https://github.com/strands-agents/sdk-typescript/blob/6987b01d8ab113b5c0f336e0085579c60a7d0a57/strands-ts/src/tools/function-tool.ts#L60)
 
 Configuration options for creating a FunctionTool.
 
@@ -10,7 +10,7 @@ Configuration options for creating a FunctionTool.
 name: string;
 ```
 
-Defined in: [src/tools/function-tool.ts:53](https://github.com/strands-agents/sdk-typescript/blob/5fc30c8099b8e6735d70c6ae2160f7c0dd7b23c7/src/tools/function-tool.ts#L53)
+Defined in: [src/tools/function-tool.ts:62](https://github.com/strands-agents/sdk-typescript/blob/6987b01d8ab113b5c0f336e0085579c60a7d0a57/strands-ts/src/tools/function-tool.ts#L62)
 
 The unique name of the tool
 
@@ -22,7 +22,7 @@ The unique name of the tool
 description: string;
 ```
 
-Defined in: [src/tools/function-tool.ts:55](https://github.com/strands-agents/sdk-typescript/blob/5fc30c8099b8e6735d70c6ae2160f7c0dd7b23c7/src/tools/function-tool.ts#L55)
+Defined in: [src/tools/function-tool.ts:64](https://github.com/strands-agents/sdk-typescript/blob/6987b01d8ab113b5c0f336e0085579c60a7d0a57/strands-ts/src/tools/function-tool.ts#L64)
 
 Human-readable description of the tool’s purpose
 
@@ -31,10 +31,10 @@ Human-readable description of the tool’s purpose
 ### inputSchema?
 
 ```ts
-optional inputSchema: JSONSchema7;
+optional inputSchema?: JSONSchema7;
 ```
 
-Defined in: [src/tools/function-tool.ts:57](https://github.com/strands-agents/sdk-typescript/blob/5fc30c8099b8e6735d70c6ae2160f7c0dd7b23c7/src/tools/function-tool.ts#L57)
+Defined in: [src/tools/function-tool.ts:66](https://github.com/strands-agents/sdk-typescript/blob/6987b01d8ab113b5c0f336e0085579c60a7d0a57/strands-ts/src/tools/function-tool.ts#L66)
 
 JSON Schema defining the expected input structure. If omitted, defaults to an empty object schema.
 
@@ -46,6 +46,6 @@ JSON Schema defining the expected input structure. If omitted, defaults to an em
 callback: FunctionToolCallback;
 ```
 
-Defined in: [src/tools/function-tool.ts:59](https://github.com/strands-agents/sdk-typescript/blob/5fc30c8099b8e6735d70c6ae2160f7c0dd7b23c7/src/tools/function-tool.ts#L59)
+Defined in: [src/tools/function-tool.ts:68](https://github.com/strands-agents/sdk-typescript/blob/6987b01d8ab113b5c0f336e0085579c60a7d0a57/strands-ts/src/tools/function-tool.ts#L68)
 
 Function that implements the tool logic

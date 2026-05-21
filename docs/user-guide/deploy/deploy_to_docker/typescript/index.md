@@ -66,13 +66,13 @@ npm pkg set scripts.build="tsc" scripts.start="node dist/index.js" scripts.dev="
 cat > index.ts << 'EOF'
 import { Agent } from '@strands-agents/sdk'
 import express, { type Request, type Response } from 'express'
-import { OpenAIModel } from '@strands-agents/sdk/openai'
+import { OpenAIModel } from '@strands-agents/sdk/models/openai'
 
 const PORT = Number(process.env.PORT) || 8080
 
 // Note: Any supported model provider can be configured
 // Automatically uses process.env.OPENAI_API_KEY
-const model = new OpenAIModel()
+const model = new OpenAIModel({ api: 'chat' })
 
 const agent = new Agent({ model })
 
@@ -208,12 +208,12 @@ Step 5: Create index.ts
 ```typescript
 import { Agent } from '@strands-agents/sdk'
 import express, { type Request, type Response } from 'express'
-import { OpenAIModel } from '@strands-agents/sdk/openai'
+import { OpenAIModel } from '@strands-agents/sdk/models/openai'
 const PORT = Number(process.env.PORT) || 8080
 
 // Note: Any supported model provider can be configured
 // Automatically uses process.env.OPENAI_API_KEY
-const model = new OpenAIModel()
+const model = new OpenAIModel({ api: 'chat' })
 
 const agent = new Agent({ model })
 
@@ -237,7 +237,7 @@ app.post('/invocations', async (req: Request, res: Response) => {
 
     if (!prompt) {
       return res.status(400).json({
-        detail: 'No prompt found in input. Please provide a "prompt" key in the input.'
+        detail: 'No prompt found in input. Please provide a "prompt" key in the input.',
       })
     }
 
@@ -254,7 +254,7 @@ app.post('/invocations', async (req: Request, res: Response) => {
   } catch (err) {
     console.error('Error processing request:', err)
     return res.status(500).json({
-      detail: `Agent processing failed: ${err instanceof Error ? err.message : 'Unknown error'}`
+      detail: `Agent processing failed: ${err instanceof Error ? err.message : 'Unknown error'}`,
     })
   }
 })

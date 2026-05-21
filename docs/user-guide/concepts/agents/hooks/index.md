@@ -21,17 +21,26 @@ Hook callbacks are registered against specific event types and receive strongly-
 
 ### Registering Individual Hook Callbacks
 
-You can register callbacks for specific events using `agent.hooks` after the fact:
+The simplest way to register a hook callback is using the `agent.add_hook()` method:
 
 (( tab "Python" ))
 ```python
+from strands import Agent
+from strands.hooks import BeforeInvocationEvent, BeforeToolCallEvent
+
 agent = Agent()
 
 # Register individual callbacks
 def my_callback(event: BeforeInvocationEvent) -> None:
     print("Custom callback triggered")
 
-agent.hooks.add_callback(BeforeInvocationEvent, my_callback)
+agent.add_hook(my_callback, BeforeInvocationEvent)
+
+# Type inference: If your callback has a type hint, the event type is inferred
+def typed_callback(event: BeforeToolCallEvent) -> None:
+    print(f"Tool called: {event.tool_use['name']}")
+
+agent.add_hook(typed_callback)  # Event type inferred from type hint
 ```
 (( /tab "Python" ))
 
@@ -44,7 +53,7 @@ const myCallback = (event: BeforeInvocationEvent) => {
   console.log('Custom callback triggered')
 }
 
-agent.hooks.addCallback(BeforeInvocationEvent, myCallback)
+agent.addHook(BeforeInvocationEvent, myCallback)
 ```
 (( /tab "TypeScript" ))
 
@@ -64,60 +73,78 @@ orchestrator.hooks.add_callback(BeforeNodeCallEvent, my_callback)
 (( /tab "Python" ))
 
 (( tab "TypeScript" ))
-```ts
-// This feature is not yet available in TypeScript SDK
+```typescript
+const researcher = new Agent({
+  id: 'researcher',
+  systemPrompt: 'You are a research specialist.',
+})
+const writer = new Agent({
+  id: 'writer',
+  systemPrompt: 'You are a writing specialist.',
+})
+
+const graph = new Graph({
+  nodes: [researcher, writer],
+  edges: [['researcher', 'writer']],
+})
+
+// Register individual callbacks on the orchestrator
+graph.addHook(BeforeNodeCallEvent, (event) => {
+  console.log(`Node ${event.nodeId} starting`)
+})
+
+graph.addHook(AfterNodeCallEvent, (event) => {
+  console.log(`Node ${event.nodeId} completed`)
+})
 ```
 (( /tab "TypeScript" ))
 
-### Creating a Hook Provider
+### Using Plugins for Multiple Hooks
 
-The `HookProvider` protocol allows a single object to register callbacks for multiple events. This pattern works for both single-agent and multi-agent orchestrators:
+For packaging multiple related hooks together, [Plugins](/docs/user-guide/concepts/plugins/index.md) provide a convenient way to bundle hooks with configuration and tools:
 
 (( tab "Python" ))
 ```python
-class LoggingHook(HookProvider):
-    def register_hooks(self, registry: HookRegistry) -> None:
-        registry.add_callback(BeforeInvocationEvent, self.log_start)
-        registry.add_callback(AfterInvocationEvent, self.log_end)
+from strands import Agent
+from strands.plugins import Plugin, hook
+from strands.hooks import BeforeToolCallEvent, AfterToolCallEvent
 
-    def log_start(self, event: BeforeInvocationEvent) -> None:
-        print(f"Request started for agent: {event.agent.name}")
+class LoggingPlugin(Plugin):
+    name = "logging-plugin"
 
-    def log_end(self, event: AfterInvocationEvent) -> None:
-        print(f"Request completed for agent: {event.agent.name}")
+    @hook
+    def log_before(self, event: BeforeToolCallEvent) -> None:
+        print(f"Calling: {event.tool_use['name']}")
 
-# Passed in via the hooks parameter
-agent = Agent(hooks=[LoggingHook()])
+    @hook
+    def log_after(self, event: AfterToolCallEvent) -> None:
+        print(f"Completed: {event.tool_use['name']}")
 
-# Or added after the fact
-agent.hooks.add_hook(LoggingHook())
+agent = Agent(plugins=[LoggingPlugin()])
 ```
 (( /tab "Python" ))
 
 (( tab "TypeScript" ))
 ```typescript
-class LoggingHook implements HookProvider {
-  registerCallbacks(registry: HookRegistry): void {
-    registry.addCallback(BeforeInvocationEvent, (ev) => this.logStart(ev))
-    registry.addCallback(AfterInvocationEvent, (ev) => this.logEnd(ev))
-  }
+class LoggingPlugin implements Plugin {
+  name = 'logging-plugin'
 
-  private logStart(event: BeforeInvocationEvent): void {
-    console.log('Request started')
-  }
+  initAgent(agent: LocalAgent): void {
+    agent.addHook(BeforeToolCallEvent, (event) => {
+      console.log(`Calling: ${event.toolUse.name}`)
+    })
 
-  private logEnd(event: AfterInvocationEvent): void {
-    console.log('Request completed')
+    agent.addHook(AfterToolCallEvent, (event) => {
+      console.log(`Completed: ${event.toolUse.name}`)
+    })
   }
 }
 
-// Passed in via the hooks parameter
-const agent = new Agent({ hooks: [new LoggingHook()] })
-
-// Or added after the fact
-agent.hooks.addHook(new LoggingHook())
+const agent = new Agent({ plugins: [new LoggingPlugin()] })
 ```
 (( /tab "TypeScript" ))
+
+See [Plugins](/docs/user-guide/concepts/plugins/index.md) for more information on creating and using plugins.
 
 ## Hook Event Lifecycle
 
@@ -236,8 +263,34 @@ Init --> Invocation
 (( /tab "Python" ))
 
 (( tab "TypeScript" ))
-```ts
-// Multi-agent orchestration is not yet available in TypeScript SDK
+```mermaid
+flowchart LR
+subgraph Init["Initialization"]
+    direction TB
+    MultiAgentInitializedEvent["MultiAgentInitializedEvent"]
+end
+subgraph Invocation["Invocation Lifecycle"]
+    direction TB
+    BeforeMultiAgentInvocationEvent["BeforeMultiAgentInvocationEvent"]
+    AfterMultiAgentInvocationEvent["AfterMultiAgentInvocationEvent"]
+    MultiAgentResultEvent["MultiAgentResultEvent"]
+    BeforeMultiAgentInvocationEvent --> NodeExecution
+    NodeExecution --> AfterMultiAgentInvocationEvent
+    AfterMultiAgentInvocationEvent --> MultiAgentResultEvent
+end
+subgraph NodeExecution["Node Execution (Repeated)"]
+    direction TB
+    BeforeNodeCallEvent["BeforeNodeCallEvent"]
+    NodeStreamUpdateEvent["NodeStreamUpdateEvent"]
+    AfterNodeCallEvent["AfterNodeCallEvent"]
+    NodeResultEvent["NodeResultEvent"]
+    MultiAgentHandoffEvent["MultiAgentHandoffEvent"]
+    BeforeNodeCallEvent --> NodeStreamUpdateEvent
+    NodeStreamUpdateEvent --> AfterNodeCallEvent
+    AfterNodeCallEvent --> NodeResultEvent
+    NodeResultEvent --> MultiAgentHandoffEvent
+end
+Init --> Invocation
 ```
 (( /tab "TypeScript" ))
 
@@ -282,6 +335,16 @@ All events extend `HookableEvent`, making them both streamable via `agent.stream
 | `ToolStreamUpdateEvent` | Wraps streaming progress events from tool execution. Access via `.event` |
 | `ToolResultEvent` | Wraps a completed tool result. Access via `.result` |
 | `AgentResultEvent` | Wraps the final agent result at the end of the invocation. Access via `.result` |
+| `MultiAgentInitializedEvent` | Triggered when a multi-agent orchestrator has finished initialization |
+| `BeforeMultiAgentInvocationEvent` | Triggered before orchestrator execution starts |
+| `AfterMultiAgentInvocationEvent` | Triggered after orchestrator execution completes. Uses reverse callback ordering |
+| `BeforeNodeCallEvent` | Triggered before individual node execution starts |
+| `NodeStreamUpdateEvent` | Wraps an inner streaming event from a node with the node’s identity. Access via `.event` |
+| `NodeCancelEvent` | Triggered when a node is cancelled via `BeforeNodeCallEvent.cancel` |
+| `AfterNodeCallEvent` | Triggered after individual node execution completes. Uses reverse callback ordering |
+| `NodeResultEvent` | Wraps a completed node result. Access via `.result` |
+| `MultiAgentHandoffEvent` | Triggered when execution transitions between nodes |
+| `MultiAgentResultEvent` | Wraps the final multi-agent result at the end of orchestration. Access via `.result` |
 (( /tab "TypeScript" ))
 
 ## Hook Behaviors
@@ -303,9 +366,25 @@ Most event properties are read-only to prevent unintended modifications. However
     
     -   `result` - Modify the tool result. See [Result Modification](#result-modification).
     -   `retry` - Request a retry of the tool invocation. See [Tool Call Retry](#tool-call-retry).
+    -   `exception` *(read-only)* - The original exception if the tool raised one, otherwise `None`. See [Exception Handling](#exception-handling).
+-   [`AfterInvocationEvent`](/docs/api/python/strands.hooks.events#AfterInvocationEvent)
+    
+    -   `resume` - Trigger a follow-up agent invocation with new input. See [Invocation resume](#invocation-resume).
 (( /tab "Python" ))
 
 (( tab "TypeScript" ))
+-   `BeforeInvocationEvent`
+    
+    -   `cancel` - Cancel the agent invocation with a message.
+-   `BeforeModelCallEvent`
+    
+    -   `cancel` - Cancel the model call with a message.
+-   `BeforeToolsEvent`
+    
+    -   `cancel` - Cancel all tool calls in a batch with a message. See [Limit Tool Counts](#limit-tool-counts).
+-   `BeforeToolCallEvent`
+    
+    -   `cancel` - Cancel tool execution with a message. See [Limit Tool Counts](#limit-tool-counts).
 -   `AfterModelCallEvent`
     
     -   `retry` - Request a retry of the model invocation.
@@ -316,7 +395,52 @@ Most event properties are read-only to prevent unintended modifications. However
 
 ### Callback Ordering
 
-Some events come in pairs, such as Before/After events. The After event callbacks are always called in reverse order from the Before event callbacks to ensure proper cleanup semantics.
+(( tab "Python" ))
+After event callbacks run in reverse registration order for cleanup symmetry:
+
+-   **Before**: A, B, C (registration order)
+-   **After**: C, B, A (reverse registration order)
+(( /tab "Python" ))
+
+(( tab "TypeScript" ))
+By default, After event callbacks run in reverse registration order for cleanup symmetry. You can override this with explicit priority using the `order` option — lower values run first.
+
+The SDK exports convenience presets that mark where the SDK’s own hooks run, so you can position yours relative to them:
+
+-   `HookOrder.SDK_FIRST` (-100) — where the SDK’s earliest hooks run
+-   `HookOrder.DEFAULT` (0) — implicit when no order is specified
+-   `HookOrder.SDK_LAST` (100) — where the SDK’s latest hooks run
+
+These are not enforced bounds — any numeric value works. Use values beyond them (e.g. `SDK_FIRST - 1`) to run before or after the SDK’s hooks, or `-Infinity`/`Infinity` for guaranteed absolute ordering.
+
+```typescript
+import { Agent, HookOrder, BeforeToolCallEvent } from '@strands-agents/sdk'
+
+const agent = new Agent()
+
+agent.addHook(BeforeToolCallEvent, (event) => {
+  console.log('[logging] Tool called:', event.toolUse.name)
+})  // HookOrder.DEFAULT (0)
+
+// Run before the SDK's earliest hooks
+agent.addHook(BeforeToolCallEvent, (event) => {
+  console.log('[guardrail] Runs before SDK hooks')
+}, { order: HookOrder.SDK_FIRST - 1 })
+
+
+// Arbitrary numbers for fine-grained control
+agent.addHook(BeforeToolCallEvent, (event) => {
+  console.log('[validation] Validating input')
+}, { order: -50 })
+
+// Use -Infinity/Infinity for guaranteed absolute first/last
+agent.addHook(BeforeToolCallEvent, (event) => {
+  console.log('[absolute] Always runs first, no matter what')
+}, { order: -Infinity })
+```
+
+Within the same order group, Before events preserve registration order and After events reverse it.
+(( /tab "TypeScript" ))
 
 ## Advanced Usage
 
@@ -373,18 +497,45 @@ result = agent(
 (( /tab "Python" ))
 
 (( tab "TypeScript" ))
-```ts
-// This feature is not yet available in TypeScript SDK
+```typescript
+const agent = new Agent()
+
+agent.addHook(BeforeToolCallEvent, (event) => {
+  // Read caller-provided context
+  const userId = event.invocationState.userId as string | undefined
+  const sessionId = event.invocationState.sessionId as string | undefined
+
+  console.log(
+    `User ${userId} (session ${sessionId}) ` + `invoking tool: ${event.toolUse.name}`
+  )
+})
+
+// Pass invocation state when invoking the agent
+const result = await agent.invoke('Process the data', {
+  invocationState: {
+    userId: 'user123',
+    sessionId: 'sess456',
+  },
+})
+
+// The same object is returned on the result
+console.log(result.invocationState.userId) // 'user123'
 ```
 (( /tab "TypeScript" ))
 
 Multi-agent hook events provide access to:
 
+(( tab "Python" ))
 -   **source**: The multi-agent orchestrator instance (for example: Graph/Swarm)
 -   **node\_id**: Identifier of the node being executed (for node-level events)
 -   **invocation\_state**: Configuration and context data passed through the orchestrator invocation
+(( /tab "Python" ))
 
-Multi-agent hooks provide configuration and context data passed through the orchestrator’s lifecycle.
+(( tab "TypeScript" ))
+-   **orchestrator**: The multi-agent orchestrator instance (for example: Graph/Swarm)
+-   **nodeId**: Identifier of the node being executed (for node-level events)
+-   **state**: The `MultiAgentState` for the current invocation, including an `app` field for custom consumer state
+(( /tab "TypeScript" ))
 
 ### Tool Interception
 
@@ -458,8 +609,35 @@ class ConditionalExecutionHook(HookProvider):
 (( /tab "Python" ))
 
 (( tab "TypeScript" ))
-```ts
-// This feature is not yet available in TypeScript SDK
+```typescript
+const researcher = new Agent({
+  id: 'researcher',
+  systemPrompt: 'You are a research specialist.',
+})
+const writer = new Agent({
+  id: 'writer',
+  systemPrompt: 'You are a writing specialist.',
+})
+const reviewer = new Agent({
+  id: 'reviewer',
+  systemPrompt: 'You are a review specialist.',
+})
+
+const graph = new Graph({
+  nodes: [researcher, writer, reviewer],
+  edges: [
+    ['researcher', 'writer'],
+    ['writer', 'reviewer'],
+  ],
+})
+
+// Cancel specific nodes based on custom conditions
+graph.addHook(BeforeNodeCallEvent, (event) => {
+  if (event.nodeId === 'reviewer') {
+    // Cancel with a custom message
+    event.cancel = 'Skipping review for this run'
+  }
+})
 ```
 (( /tab "TypeScript" ))
 
@@ -483,25 +661,16 @@ class RequestLoggingHook(HookProvider):
 
 (( tab "TypeScript" ))
 ```typescript
-class RequestLoggingHook implements HookProvider {
-  registerCallbacks(registry: HookRegistry): void {
-    registry.addCallback(BeforeInvocationEvent, (ev) => this.logRequest(ev))
-    registry.addCallback(AfterInvocationEvent, (ev) => this.logResponse(ev))
-    registry.addCallback(BeforeToolCallEvent, (ev) => this.logToolUse(ev))
+class RequestLoggingHook implements Plugin {
+  name = 'request-logging'
+
+  initAgent(agent: LocalAgent): void {
+    agent.addHook(BeforeInvocationEvent, (ev) => this.logRequest(ev))
+    agent.addHook(AfterInvocationEvent, (ev) => this.logResponse(ev))
+    agent.addHook(BeforeToolCallEvent, (ev) => this.logToolUse(ev))
   }
 
-  private logRequest(event: BeforeInvocationEvent): void {
-    // ...
-  }
-
-  private logResponse(event: AfterInvocationEvent): void {
-    // ...
-  }
-
-  private logToolUse(event: BeforeToolCallEvent): void {
-    // ...
-  }
-}
+  // ...
 ```
 (( /tab "TypeScript" ))
 
@@ -560,8 +729,31 @@ class UniversalMultiAgentHook(HookProvider):
 (( /tab "Python" ))
 
 (( tab "TypeScript" ))
-```ts
-// This feature is not yet available in TypeScript SDK
+```typescript
+class UniversalMultiAgentPlugin implements MultiAgentPlugin {
+  readonly name = 'universal-multi-agent'
+
+  initMultiAgent(orchestrator: MultiAgent): void {
+    orchestrator.addHook(BeforeNodeCallEvent, (event) => {
+      console.log(`Executing node ${event.nodeId} in ${orchestrator.id} orchestrator`)
+
+      // Handle orchestrator-specific logic if needed
+      if (orchestrator instanceof Graph) {
+        this.handleGraphNode(event)
+      } else if (orchestrator instanceof Swarm) {
+        this.handleSwarmNode(event)
+      }
+    })
+  }
+
+  private handleGraphNode(event: BeforeNodeCallEvent): void {
+    // Graph-specific handling
+  }
+
+  private handleSwarmNode(event: BeforeNodeCallEvent): void {
+    // Swarm-specific handling
+  }
+}
 ```
 (( /tab "TypeScript" ))
 
@@ -600,8 +792,39 @@ orchestrator = Graph(
 (( /tab "Python" ))
 
 (( tab "TypeScript" ))
-```ts
-// This feature is not yet available in TypeScript SDK
+```typescript
+// Agent-level hooks via plugins
+class AgentLoggingPlugin implements Plugin {
+  name = 'agent-logging'
+
+  initAgent(agent: LocalAgent): void {
+    agent.addHook(BeforeToolCallEvent, (event) => {
+      console.log(`Agent tool call: ${event.toolUse.name}`)
+    })
+  }
+}
+
+// Create agents with individual hooks
+const agent1 = new Agent({ id: 'agent1', plugins: [new AgentLoggingPlugin()] })
+const agent2 = new Agent({ id: 'agent2', plugins: [new AgentLoggingPlugin()] })
+
+// Orchestrator-level hooks via MultiAgentPlugin
+class OrchestratorLoggingPlugin implements MultiAgentPlugin {
+  readonly name = 'orchestrator-logging'
+
+  initMultiAgent(orchestrator: MultiAgent): void {
+    orchestrator.addHook(BeforeNodeCallEvent, (event) => {
+      console.log(`Orchestrator node execution: ${event.nodeId}`)
+    })
+  }
+}
+
+// Create orchestrator with multi-agent hooks
+const graph = new Graph({
+  nodes: [agent1, agent2],
+  edges: [['agent1', 'agent2']],
+  plugins: [new OrchestratorLoggingPlugin()],
+})
 ```
 (( /tab "TypeScript" ))
 
@@ -647,7 +870,7 @@ class ConstantToolArguments(HookProvider):
 
 (( tab "TypeScript" ))
 ```typescript
-class ConstantToolArguments implements HookProvider {
+class ConstantToolArguments implements Plugin {
   private fixedToolArguments: Record<string, Record<string, unknown>>
 
   /**
@@ -661,8 +884,10 @@ class ConstantToolArguments implements HookProvider {
     this.fixedToolArguments = fixedToolArguments
   }
 
-  registerCallbacks(registry: HookRegistry): void {
-    registry.addCallback(BeforeToolCallEvent, (ev) => this.fixToolArguments(ev))
+  name = 'constant-tool-arguments'
+
+  initAgent(agent: LocalAgent): void {
+    agent.addHook(BeforeToolCallEvent, (ev) => this.fixToolArguments(ev))
   }
 
   private fixToolArguments(event: BeforeToolCallEvent): void {
@@ -700,7 +925,7 @@ const fixParameters = new ConstantToolArguments({
   },
 })
 
-const agent = new Agent({ tools: [calculator], hooks: [fixParameters] })
+const agent = new Agent({ tools: [calculator], plugins: [fixParameters] })
 const result = await agent.invoke('What is 2 / 3?')
 ```
 (( /tab "TypeScript" ))
@@ -755,8 +980,45 @@ class LimitToolCounts(HookProvider):
 (( /tab "Python" ))
 
 (( tab "TypeScript" ))
-```ts
-// This feature is not yet available in TypeScript SDK
+```typescript
+class LimitToolCounts implements Plugin {
+  private maxToolCounts: Record<string, number>
+  private toolCounts: Record<string, number> = {}
+
+  /**
+   * Initialize with maximum allowed invocations per tool.
+   *
+   * @param maxToolCounts - A dictionary mapping tool names to their maximum
+   *     allowed invocation counts per agent invocation.
+   */
+  constructor(maxToolCounts: Record<string, number>) {
+    this.maxToolCounts = maxToolCounts
+  }
+
+  name = 'limit-tool-counts'
+
+  initAgent(agent: LocalAgent): void {
+    agent.addHook(BeforeInvocationEvent, () => this.resetCounts())
+    agent.addHook(BeforeToolCallEvent, (event) => this.interceptTool(event))
+  }
+
+  private resetCounts(): void {
+    this.toolCounts = {}
+  }
+
+  private interceptTool(event: BeforeToolCallEvent): void {
+    const toolName = event.toolUse.name
+    const maxToolCount = this.maxToolCounts[toolName]
+    const toolCount = (this.toolCounts[toolName] ?? 0) + 1
+    this.toolCounts[toolName] = toolCount
+
+    if (maxToolCount !== undefined && toolCount > maxToolCount) {
+      event.cancel =
+        `Tool '${toolName}' has been invoked too many times and is now being throttled. ` +
+        `DO NOT CALL THIS TOOL ANYMORE`
+    }
+  }
+}
 ```
 (( /tab "TypeScript" ))
 
@@ -776,8 +1038,15 @@ agent("Sleep once")
 (( /tab "Python" ))
 
 (( tab "TypeScript" ))
-```ts
-// This feature is not yet available in TypeScript SDK
+```typescript
+const limitPlugin = new LimitToolCounts({ sleep: 3 })
+
+const agent = new Agent({ tools: [sleep], plugins: [limitPlugin] })
+
+// This call will only have 3 successful sleeps
+await agent.invoke("Sleep 5 times for 10ms each or until you can't anymore")
+// This will sleep successfully again because the count resets every invocation
+await agent.invoke('Sleep once')
 ```
 (( /tab "TypeScript" ))
 
@@ -838,6 +1107,45 @@ retry_hook = RetryOnServiceUnavailable(max_retries=3)
 agent = Agent(hooks=[retry_hook])
 
 result = agent("What is the capital of France?")
+```
+(( /tab "Python" ))
+
+(( tab "TypeScript" ))
+```ts
+// This feature is not yet available in TypeScript SDK
+```
+(( /tab "TypeScript" ))
+
+### Exception Handling
+
+When a tool raises an exception, the agent converts it to an error result and returns it to the model, allowing the model to adjust its approach and retry. This works well for expected errors like validation failures, but for unexpected errors—assertion failures, configuration errors, or bugs—you may want to fail immediately rather than let the model retry futilely. The `exception` property on `AfterToolCallEvent` provides access to the original exception, enabling hooks to inspect error types and selectively propagate those that shouldn’t be retried:
+
+(( tab "Python" ))
+```python
+class PropagateUnexpectedExceptions(HookProvider):
+    """Re-raise unexpected exceptions instead of returning them to the model."""
+
+    def __init__(self, allowed_exceptions: tuple[type[Exception], ...] = (ValueError,)):
+        self.allowed_exceptions = allowed_exceptions
+
+    def register_hooks(self, registry: HookRegistry) -> None:
+        registry.add_callback(AfterToolCallEvent, self._check_exception)
+
+    def _check_exception(self, event: AfterToolCallEvent) -> None:
+        if event.exception is None:
+            return  # Tool succeeded
+        if isinstance(event.exception, self.allowed_exceptions):
+            return  # Let model retry these
+        raise event.exception  # Propagate unexpected errors
+```
+
+```python
+# Usage
+agent = Agent(
+    model=model,
+    tools=[my_tool],
+    hooks=[PropagateUnexpectedExceptions(allowed_exceptions=(ValueError, ValidationError))],
+)
 ```
 (( /tab "Python" ))
 
@@ -923,5 +1231,180 @@ result = agent("Look up the weather")
 (( tab "TypeScript" ))
 ```ts
 // This feature is not yet available in TypeScript SDK
+```
+(( /tab "TypeScript" ))
+
+### Invocation resume
+
+The `AfterInvocationEvent.resume` property enables a hook to trigger a follow-up agent invocation after the current one completes. When you set `resume` to any valid agent input (a string, content blocks, or messages), the agent automatically re-invokes itself with that input instead of returning to the caller. This starts a full new invocation cycle, including firing `BeforeInvocationEvent`.
+
+This is useful for building autonomous looping patterns where the agent continues processing based on its previous result—for example, re-evaluating after tool execution, injecting additional context, or implementing multi-step workflows within a single call.
+
+Resume input types
+
+The `resume` value accepts any valid `AgentInput`: a string, a list of content blocks, a list of messages, or interrupt responses. When the agent is in an interrupt state, you must provide interrupt responses (not a plain string) to resume correctly.
+
+The following example checks the agent result and triggers one follow-up invocation to ask the model to summarize its work:
+
+(( tab "Python" ))
+```python
+from strands import Agent
+from strands.hooks import AfterInvocationEvent
+
+resume_count = 0
+
+async def summarize_after_tools(event: AfterInvocationEvent):
+    """Resume once to ask the model to summarize its work."""
+    global resume_count
+    if resume_count == 0 and event.result and event.result.stop_reason == "end_turn":
+        resume_count += 1
+        event.resume = "Now summarize what you just did in one sentence."
+
+agent = Agent()
+agent.add_hook(summarize_after_tools)
+
+# The agent processes the initial request, then automatically
+# performs a second invocation to generate the summary
+result = agent("Look up the weather in Seattle")
+```
+(( /tab "Python" ))
+
+(( tab "TypeScript" ))
+```ts
+// This feature is not yet available in TypeScript SDK
+```
+(( /tab "TypeScript" ))
+
+You can also use `resume` to chain multiple re-invocations. Make sure to include a termination condition to avoid infinite loops:
+
+(( tab "Python" ))
+```python
+from strands import Agent
+from strands.hooks import AfterInvocationEvent
+
+MAX_ITERATIONS = 3
+iteration = 0
+
+async def iterative_refinement(event: AfterInvocationEvent):
+    """Re-invoke the agent up to MAX_ITERATIONS times for iterative refinement."""
+    global iteration
+    if iteration < MAX_ITERATIONS and event.result:
+        iteration += 1
+        event.resume = f"Review your previous response and improve it. Iteration {iteration} of {MAX_ITERATIONS}."
+
+agent = Agent()
+agent.add_hook(iterative_refinement)
+
+result = agent("Draft a haiku about programming")
+```
+(( /tab "Python" ))
+
+(( tab "TypeScript" ))
+```ts
+// This feature is not yet available in TypeScript SDK
+```
+(( /tab "TypeScript" ))
+
+#### Handling interrupts with resume
+
+The `resume` property integrates with the [interrupt](/docs/user-guide/concepts/tools/index.md) system. When an agent invocation ends because of an interrupt, a hook can automatically handle the interrupt by resuming with interrupt responses. This avoids returning the interrupt to the caller.
+
+When the agent is in an interrupt state, you must resume with a list of `interruptResponse` objects. Passing a plain string raises a `TypeError`.
+
+(( tab "Python" ))
+```python
+from strands import Agent, tool
+from strands.hooks import AfterInvocationEvent, BeforeToolCallEvent
+
+@tool
+def send_email(to: str, body: str) -> str:
+    """Send an email.
+
+    Args:
+        to: Recipient address.
+        body: Email body.
+    """
+    return f"Email sent to {to}"
+
+def require_approval(event: BeforeToolCallEvent):
+    """Interrupt before sending emails to require approval."""
+    if event.tool_use["name"] == "send_email":
+        event.interrupt("email_approval", reason="Approve this email?")
+
+async def auto_approve(event: AfterInvocationEvent):
+    """Automatically approve all interrupted tool calls."""
+    if event.result and event.result.stop_reason == "interrupt":
+        responses = [
+            {"interruptResponse": {"interruptId": intr.id, "response": "approved"}}
+            for intr in event.result.interrupts
+        ]
+        event.resume = responses
+
+agent = Agent(tools=[send_email])
+agent.add_hook(require_approval)
+agent.add_hook(auto_approve)
+
+# The interrupt is handled automatically by the hook—
+# the caller receives the final result directly
+result = agent("Send an email to alice@example.com saying hello")
+```
+(( /tab "Python" ))
+
+(( tab "TypeScript" ))
+```ts
+// This feature is not yet available in TypeScript SDK
+```
+(( /tab "TypeScript" ))
+
+## HookProvider Protocol
+
+For advanced use cases, you can implement the `HookProvider` protocol to create objects that register multiple callbacks at once. This is useful when building reusable hook collections without the full plugin infrastructure:
+
+(( tab "Python" ))
+```python
+from strands.hooks import HookProvider, HookRegistry, BeforeInvocationEvent, AfterInvocationEvent
+
+class RequestLogger(HookProvider):
+    def register_hooks(self, registry: HookRegistry) -> None:
+        registry.add_callback(BeforeInvocationEvent, self.log_start)
+        registry.add_callback(AfterInvocationEvent, self.log_end)
+
+    def log_start(self, event: BeforeInvocationEvent) -> None:
+        print(f"Request started for agent: {event.agent.name}")
+
+    def log_end(self, event: AfterInvocationEvent) -> None:
+        print(f"Request completed for agent: {event.agent.name}")
+
+# Pass via hooks parameter
+agent = Agent(hooks=[RequestLogger()])
+
+# Or add after creation
+agent.hooks.add_hook(RequestLogger())
+```
+
+For most use cases, [Plugins](/docs/user-guide/concepts/plugins/index.md) provide a more convenient way to bundle multiple hooks with additional features like auto-discovery and tool registration.
+(( /tab "Python" ))
+
+(( tab "TypeScript" ))
+TypeScript SDK
+
+The TypeScript SDK does not export a `HookProvider` interface. Instead, use the [Plugin](/docs/user-guide/concepts/plugins/index.md) class to bundle multiple hooks together. The `Plugin` class provides `initAgent()` for registering hooks and `getTools()` for providing tools.
+
+```typescript
+class LoggingPlugin implements Plugin {
+  name = 'logging-plugin'
+
+  initAgent(agent: LocalAgent): void {
+    agent.addHook(BeforeToolCallEvent, (event) => {
+      console.log(`Calling: ${event.toolUse.name}`)
+    })
+
+    agent.addHook(AfterToolCallEvent, (event) => {
+      console.log(`Completed: ${event.toolUse.name}`)
+    })
+  }
+}
+
+const agent = new Agent({ plugins: [new LoggingPlugin()] })
 ```
 (( /tab "TypeScript" ))

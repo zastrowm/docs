@@ -64,6 +64,54 @@ Evaluators operate at different levels of granularity:
 -   **Purpose**: Assess factual accuracy and groundedness
 -   **Use Case**: Verify responses are truthful and well-supported
 
+**[CorrectnessEvaluator](/docs/user-guide/evals-sdk/evaluators/correctness_evaluator/index.md)**
+
+-   **Level**: TRACE\_LEVEL
+-   **Purpose**: Evaluate factual correctness with optional reference comparison
+-   **Use Case**: Verify agent answers are correct, with or without ground truth
+
+**[CoherenceEvaluator](/docs/user-guide/evals-sdk/evaluators/coherence_evaluator/index.md)**
+
+-   **Level**: TRACE\_LEVEL
+-   **Purpose**: Assess logical consistency and reasoning quality
+-   **Use Case**: Detect contradictions, logical gaps, and disorganized responses
+
+**[ConcisenessEvaluator](/docs/user-guide/evals-sdk/evaluators/conciseness_evaluator/index.md)**
+
+-   **Level**: TRACE\_LEVEL
+-   **Purpose**: Evaluate response brevity and efficiency
+-   **Use Case**: Ensure agents communicate without unnecessary verbosity
+
+**[ResponseRelevanceEvaluator](/docs/user-guide/evals-sdk/evaluators/response_relevance_evaluator/index.md)**
+
+-   **Level**: TRACE\_LEVEL
+-   **Purpose**: Evaluate relevance of responses to user questions
+-   **Use Case**: Detect off-topic or tangential responses
+
+**[HarmfulnessEvaluator](/docs/user-guide/evals-sdk/evaluators/harmfulness_evaluator/index.md)**
+
+-   **Level**: TRACE\_LEVEL
+-   **Purpose**: Binary evaluation for harmful content detection
+-   **Use Case**: Screen responses for dangerous or offensive content
+
+**[RefusalEvaluator](/docs/user-guide/evals-sdk/evaluators/refusal_evaluator/index.md)**
+
+-   **Level**: TRACE\_LEVEL
+-   **Purpose**: Binary evaluation for refusal detection
+-   **Use Case**: Detect when agents inappropriately refuse to address valid requests
+
+**[StereotypingEvaluator](/docs/user-guide/evals-sdk/evaluators/stereotyping_evaluator/index.md)**
+
+-   **Level**: TRACE\_LEVEL
+-   **Purpose**: Binary evaluation for bias and stereotyping detection
+-   **Use Case**: Screen responses for biased or stereotypical content against groups
+
+**[InstructionFollowingEvaluator](/docs/user-guide/evals-sdk/evaluators/instruction_following_evaluator/index.md)**
+
+-   **Level**: TRACE\_LEVEL
+-   **Purpose**: Binary evaluation for instruction compliance
+-   **Use Case**: Verify that agents follow explicit format, length, style, and content constraints
+
 ### Tool Usage Evaluators
 
 **[ToolSelectionEvaluator](/docs/user-guide/evals-sdk/evaluators/tool_selection_evaluator/index.md)**
@@ -99,6 +147,15 @@ Evaluators operate at different levels of granularity:
 -   **Level**: SESSION\_LEVEL
 -   **Purpose**: Determine if user goals were successfully achieved
 -   **Use Case**: Measure end-to-end task completion success
+
+### Deterministic Evaluators
+
+**[Deterministic Evaluators](/docs/user-guide/evals-sdk/evaluators/deterministic_evaluators/index.md)**
+
+-   **Level**: OUTPUT\_LEVEL / SESSION\_LEVEL
+-   **Purpose**: Fast, code-based evaluation without LLM judges
+-   **Use Case**: Regression testing, CI/CD pipelines, exact match checks
+-   **Includes**: `Equals`, `Contains`, `StartsWith`, `ToolCalled`, `StateEquals`
 
 ## Custom Evaluators
 
@@ -310,9 +367,11 @@ def compare_agent_versions(cases: list, agents: dict) -> dict:
 -   [OutputEvaluator](/docs/user-guide/evals-sdk/evaluators/output_evaluator/index.md): Start with flexible custom evaluation
 -   [HelpfulnessEvaluator](/docs/user-guide/evals-sdk/evaluators/helpfulness_evaluator/index.md): Assess response helpfulness
 -   [CustomEvaluator](/docs/user-guide/evals-sdk/evaluators/custom_evaluator/index.md): Create domain-specific evaluators
+-   [Detectors](/docs/user-guide/evals-sdk/detectors/index.md): Understand *why* cases fail with automatic failure detection and root cause analysis
 
 ## Related Documentation
 
--   [Quickstart Guide](/docs/user-guide/quickstart/index.md): Get started with Strands Evals
+-   [Quickstart Guide](/docs/user-guide/evals-sdk/quickstart/index.md): Get started with Strands Evals
 -   [Simulators Overview](/docs/user-guide/evals-sdk/simulators/index.md): Learn about simulators
+-   [Detectors Overview](/docs/user-guide/evals-sdk/detectors/index.md): Automatic failure diagnosis for agent traces
 -   [Experiment Generator](/docs/user-guide/evals-sdk/experiment_generator/index.md): Generate test cases automatically

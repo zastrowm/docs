@@ -2,7 +2,7 @@
 type GuardQualifier = "grounding_source" | "query" | "guard_content";
 ```
 
-Defined in: [src/types/messages.ts:700](https://github.com/strands-agents/sdk-typescript/blob/5fc30c8099b8e6735d70c6ae2160f7c0dd7b23c7/src/types/messages.ts#L700)
+Defined in: [src/types/messages.ts:771](https://github.com/strands-agents/sdk-typescript/blob/6987b01d8ab113b5c0f336e0085579c60a7d0a57/strands-ts/src/types/messages.ts#L771)
 
 Qualifier for guard content. Specifies how the content should be evaluated by guardrails.
 

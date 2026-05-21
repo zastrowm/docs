@@ -1,4 +1,4 @@
-Defined in: [src/types/messages.ts:19](https://github.com/strands-agents/sdk-typescript/blob/5fc30c8099b8e6735d70c6ae2160f7c0dd7b23c7/src/types/messages.ts#L19)
+Defined in: [src/types/messages.ts:35](https://github.com/strands-agents/sdk-typescript/blob/6987b01d8ab113b5c0f336e0085579c60a7d0a57/strands-ts/src/types/messages.ts#L35)
 
 Data for a message.
 
@@ -10,7 +10,7 @@ Data for a message.
 role: Role;
 ```
 
-Defined in: [src/types/messages.ts:23](https://github.com/strands-agents/sdk-typescript/blob/5fc30c8099b8e6735d70c6ae2160f7c0dd7b23c7/src/types/messages.ts#L23)
+Defined in: [src/types/messages.ts:39](https://github.com/strands-agents/sdk-typescript/blob/6987b01d8ab113b5c0f336e0085579c60a7d0a57/strands-ts/src/types/messages.ts#L39)
 
 The role of the message sender.
 
@@ -22,6 +22,18 @@ The role of the message sender.
 content: ContentBlockData[];
 ```
 
-Defined in: [src/types/messages.ts:28](https://github.com/strands-agents/sdk-typescript/blob/5fc30c8099b8e6735d70c6ae2160f7c0dd7b23c7/src/types/messages.ts#L28)
+Defined in: [src/types/messages.ts:44](https://github.com/strands-agents/sdk-typescript/blob/6987b01d8ab113b5c0f336e0085579c60a7d0a57/strands-ts/src/types/messages.ts#L44)
 
 Array of content blocks that make up this message.
+
+---
+
+### metadata?
+
+```ts
+optional metadata?: MessageMetadata;
+```
+
+Defined in: [src/types/messages.ts:49](https://github.com/strands-agents/sdk-typescript/blob/6987b01d8ab113b5c0f336e0085579c60a7d0a57/strands-ts/src/types/messages.ts#L49)
+
+Optional metadata, not sent to model providers.

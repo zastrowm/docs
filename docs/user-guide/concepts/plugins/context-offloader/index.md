@@ -1,0 +1,271 @@
+The `ContextOffloader` plugin prevents large tool results from consuming your agent’s context window. When a tool returns a result that exceeds a configurable token threshold, the plugin stores each content block individually in an external storage backend and replaces it in the conversation with a truncated preview plus per-block references. Each offloaded result includes inline guidance telling the agent to use its available tools to selectively access the data it needs.
+
+## The Problem
+
+Tools like file readers, API clients, and database queries can return results that are tens or hundreds of thousands of characters long. When these large results enter the conversation, they crowd out other context and can exceed the model’s token limits.
+
+The default [`SlidingWindowConversationManager`](/docs/user-guide/concepts/agents/conversation-management/index.md) handles this reactively — after the context overflows, it truncates tool results to the first and last 200 characters. This works as a safety net, but the truncation is lossy (the middle content is gone permanently) and happens after a failed API call has already been wasted.
+
+`ContextOffloader` takes a proactive approach: it intercepts results at tool execution time, **before** they enter the conversation, so the overflow never happens in the first place.
+
+## How It Works
+
+After each tool call, the plugin estimates the result’s token count and compares it against the `max_result_tokens` threshold (default: 2,500 tokens). If the result exceeds it, the plugin:
+
+1.  Stores each content block individually in the configured storage backend, preserving its content type
+2.  Replaces the in-context result with the first `preview_tokens` tokens (default: 1,000) plus per-block storage references
+
+Token estimation uses `model.count_tokens()`, which delegates to the model provider’s native counting API if available, otherwise falling back to a character-based heuristic (chars/4 for text, chars/2 for JSON).
+
+Results under the threshold pass through unchanged.
+
+### What the agent sees
+
+For a tool that returns 150KB of JSON, the agent would see something like:
+
+```plaintext
+{"users": [{"id": 1, "name": "Alice", ...}, {"id": 2, "name": "Bob", ...},
+... (first ~1,000 tokens of the result) ...
+
+[Full content offloaded to storage - reference: a1b2c3d4]
+```
+
+For non-text content, the plugin replaces the result with a descriptive placeholder plus a reference:
+
+| Content Type | What the agent sees |
+| --- | --- |
+| Text / JSON | First `preview_tokens` tokens + storage reference |
+| Image | `[image: format, N bytes]` placeholder + storage reference |
+| Document | `[document: format, name, N bytes]` placeholder + storage reference |
+
+### Retrieval tool
+
+The plugin includes a `retrieve_offloaded_content` tool that lets the agent fetch offloaded content by reference, returning it in its native format — text as a string, JSON as a JSON block, images as image blocks, and documents as document blocks. This tool is registered by default.
+
+The inline guidance in offloaded results tells the agent to use its available tools to selectively access the data it needs, and mentions `retrieve_offloaded_content` as a fallback. If the agent already has tools that can access the storage backend directly (file readers, shell, etc.), you can disable it:
+
+(( tab "Python" ))
+```python
+agent = Agent(plugins=[
+    ContextOffloader(
+        storage=FileStorage("./artifacts"),
+        include_retrieval_tool=False,
+    )
+])
+```
+(( /tab "Python" ))
+
+(( tab "TypeScript" ))
+```typescript
+import { Agent } from '@strands-agents/sdk'
+import { ContextOffloader, FileStorage } from '@strands-agents/sdk/vended-plugins/context-offloader'
+
+const agent = new Agent({
+  plugins: [
+    new ContextOffloader({
+      storage: new FileStorage('./artifacts'),
+      includeRetrievalTool: false,
+    }),
+  ],
+})
+```
+(( /tab "TypeScript" ))
+
+## Getting Started
+
+Pass a `ContextOffloader` instance to your agent’s `plugins` list with your choice of storage backend:
+
+(( tab "Python" ))
+```python
+from strands import Agent
+from strands.vended_plugins.context_offloader import (
+    ContextOffloader,
+    InMemoryStorage,
+)
+
+agent = Agent(plugins=[
+    ContextOffloader(storage=InMemoryStorage())
+])
+```
+(( /tab "Python" ))
+
+(( tab "TypeScript" ))
+```typescript
+import { Agent } from '@strands-agents/sdk'
+import { ContextOffloader, InMemoryStorage } from '@strands-agents/sdk/vended-plugins/context-offloader'
+
+const agent = new Agent({
+  plugins: [new ContextOffloader({ storage: new InMemoryStorage() })],
+})
+```
+(( /tab "TypeScript" ))
+
+To customize the token thresholds:
+
+(( tab "Python" ))
+```python
+agent = Agent(plugins=[
+    ContextOffloader(
+        storage=InMemoryStorage(),
+        max_result_tokens=5_000,
+        preview_tokens=2_000,
+    )
+])
+```
+(( /tab "Python" ))
+
+(( tab "TypeScript" ))
+```typescript
+import { Agent } from '@strands-agents/sdk'
+import { ContextOffloader, InMemoryStorage } from '@strands-agents/sdk/vended-plugins/context-offloader'
+
+const agent = new Agent({
+  plugins: [
+    new ContextOffloader({
+      storage: new InMemoryStorage(),
+      maxResultTokens: 5_000,
+      previewTokens: 2_000,
+    }),
+  ],
+})
+```
+(( /tab "TypeScript" ))
+
+### Storage Backends
+
+Choose a storage backend based on your needs:
+
+| Backend | Persistence | Best for |
+| --- | --- | --- |
+| `InMemoryStorage` | Process lifetime only (call `clear()` to free manually) | Development, testing, reducing context without side effects |
+| `FileStorage` | Disk | Local development, debugging, inspecting stored artifacts |
+| `S3Storage` | Amazon S3 | Production workloads, shared or durable artifact retention |
+
+All backends implement the `Storage` protocol and preserve content type metadata, so you can also build your own.
+
+**In-memory storage** — stores content in process memory, useful for development and testing:
+
+(( tab "Python" ))
+```python
+from strands.vended_plugins.context_offloader import (
+    ContextOffloader,
+    InMemoryStorage,
+)
+
+agent = Agent(plugins=[
+    ContextOffloader(
+        storage=InMemoryStorage(),
+    )
+])
+```
+(( /tab "Python" ))
+
+(( tab "TypeScript" ))
+```typescript
+import { Agent } from '@strands-agents/sdk'
+import { ContextOffloader, InMemoryStorage } from '@strands-agents/sdk/vended-plugins/context-offloader'
+
+const agent = new Agent({
+  plugins: [
+    new ContextOffloader({
+      storage: new InMemoryStorage(),
+    }),
+  ],
+})
+```
+(( /tab "TypeScript" ))
+
+**File storage** — persists to a local directory with `.metadata.json` sidecars for content type tracking:
+
+(( tab "Python" ))
+```python
+from strands.vended_plugins.context_offloader import (
+    ContextOffloader,
+    FileStorage,
+)
+
+agent = Agent(plugins=[
+    ContextOffloader(
+        storage=FileStorage("./artifacts"),
+    )
+])
+```
+(( /tab "Python" ))
+
+(( tab "TypeScript" ))
+```typescript
+import { Agent } from '@strands-agents/sdk'
+import { ContextOffloader, FileStorage } from '@strands-agents/sdk/vended-plugins/context-offloader'
+
+const agent = new Agent({
+  plugins: [
+    new ContextOffloader({
+      storage: new FileStorage('./artifacts'),
+    }),
+  ],
+})
+```
+(( /tab "TypeScript" ))
+
+**S3 storage** — persists to an Amazon S3 bucket with content type preserved via S3 object metadata:
+
+(( tab "Python" ))
+```python
+from strands.vended_plugins.context_offloader import (
+    ContextOffloader,
+    S3Storage,
+)
+
+agent = Agent(plugins=[
+    ContextOffloader(
+        storage=S3Storage(
+            bucket="my-agent-artifacts",
+            prefix="tool-results/",
+        ),
+    )
+])
+```
+(( /tab "Python" ))
+
+(( tab "TypeScript" ))
+```typescript
+import { Agent } from '@strands-agents/sdk'
+import { ContextOffloader, S3Storage } from '@strands-agents/sdk/vended-plugins/context-offloader'
+
+const agent = new Agent({
+  plugins: [
+    new ContextOffloader({
+      storage: new S3Storage('my-agent-artifacts', {
+        prefix: 'tool-results/',
+      }),
+    }),
+  ],
+})
+```
+(( /tab "TypeScript" ))
+
+## Configuration
+
+(( tab "Python" ))
+| Parameter | Default | Description |
+| --- | --- | --- |
+| `storage` | *(required)* | Storage backend instance |
+| `max_result_tokens` | `2_500` | Results whose estimated token count exceeds this are offloaded |
+| `preview_tokens` | `1_000` | Number of tokens to keep as an in-context preview |
+| `include_retrieval_tool` | `True` | Registers a `retrieve_offloaded_content` tool the agent can use to fetch full content by reference. Enabled by default; set to `False` to disable |
+(( /tab "Python" ))
+
+(( tab "TypeScript" ))
+| Parameter | Default | Description |
+| --- | --- | --- |
+| `storage` | *(required)* | Storage backend instance |
+| `maxResultTokens` | `2_500` | Results whose estimated token count exceeds this are offloaded |
+| `previewTokens` | `1_000` | Number of tokens to keep as an in-context preview |
+| `includeRetrievalTool` | `true` | Registers a `retrieve_offloaded_content` tool the agent can use to fetch full content by reference. Enabled by default; set to `false` to disable |
+(( /tab "TypeScript" ))
+
+## Tradeoffs
+
+-   **Preview vs. full content**: The agent reasons over the preview, not the full result. If the answer is buried deep in a large result, the agent may miss it. Tune `preview_tokens` to balance context usage against information loss for your use case. The `retrieve_offloaded_content` tool is enabled by default so the agent can fetch full offloaded content as a fallback. If the agent already has tools that can access the storage backend directly (file readers, shell, etc.), you can disable it with `include_retrieval_tool=False`.
+-   **Storage costs**: `S3Storage` incurs S3 PUT/GET and storage charges. `FileStorage` writes to disk on every large result.
+-   **Not a replacement for conversation management**: This plugin handles individual large results. You still need a conversation manager like `SlidingWindowConversationManager` to handle overall context growth across many turns.

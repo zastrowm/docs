@@ -47,11 +47,12 @@ print(response)
 (( tab "TypeScript" ))
 ```typescript
 import { Agent } from '@strands-agents/sdk'
-import { OpenAIModel } from '@strands-agents/sdk/openai'
+import { OpenAIModel } from '@strands-agents/sdk/models/openai'
 
 const model = new OpenAIModel({
+  api: 'chat',
   apiKey: process.env.OPENAI_API_KEY || '<KEY>',
-  modelId: 'gpt-4o',
+  modelId: 'gpt-5.4',
   maxTokens: 1000,
   temperature: 0.7,
 })
@@ -79,11 +80,12 @@ model = OpenAIModel(
 (( tab "TypeScript" ))
 ```typescript
 const model = new OpenAIModel({
+  api: 'chat',
   apiKey: '<KEY>',
   clientConfig: {
     baseURL: '<URL>',
   },
-  modelId: 'gpt-4o',
+  modelId: 'gpt-5.4',
 })
 
 const agent = new Agent({ model })
@@ -117,7 +119,7 @@ The model configuration sets parameters for inference:
 (( tab "TypeScript" ))
 | Parameter | Description | Example | Options |
 | --- | --- | --- | --- |
-| `modelId` | ID of a model to use | `gpt-4o` | [reference](https://platform.openai.com/docs/models) |
+| `modelId` | ID of a model to use | `gpt-5.4` | [reference](https://platform.openai.com/docs/models) |
 | `maxTokens` | Maximum tokens to generate | `1000` | [reference](https://platform.openai.com/docs/api-reference/chat/create) |
 | `temperature` | Controls randomness (0-2) | `0.7` | [reference](https://platform.openai.com/docs/api-reference/chat/create) |
 | `topP` | Nucleus sampling (0-1) | `0.9` | [reference](https://platform.openai.com/docs/api-reference/chat/create) |
@@ -132,12 +134,53 @@ The model configuration sets parameters for inference:
 **Module Not Found**
 
 If you encounter the error `ModuleNotFoundError: No module named 'openai'`, this means you haven’t installed the `openai` dependency in your environment. To fix, run `pip install 'strands-agents[openai]'`.
+
+**GPT-OSS Tool Calling Fails on Non-Managed Endpoints**
+
+If you are running GPT-OSS on an endpoint that isn’t a managed inference provider and you see errors like `Unexpected token ... while expecting start token ...` during tool calling, your endpoint likely doesn’t have the correct stop tokens configured.
+
+As an immediate workaround, pass the GPT-OSS stop sequences explicitly via `params`:
+
+```python
+model = OpenAIModel(
+    client_args={
+        "api_key": "<KEY>",
+        "base_url": "http://localhost:8000/v1",
+    },
+    model_id="<MODEL_ID>",
+    params={"stop": ["<|call|>", "<|return|>", "<|end|>"]}
+)
+```
+
+See the [OpenAI Harmony message format](https://cookbook.openai.com/articles/openai-harmony#message-format) for details on GPT-OSS stop tokens.
 (( /tab "Python" ))
 
 (( tab "TypeScript" ))
 **Authentication Errors**
 
 If you encounter authentication errors, ensure your OpenAI API key is properly configured. Set the `OPENAI_API_KEY` environment variable or pass it via the `apiKey` parameter in the model configuration.
+
+**GPT-OSS Tool Calling Fails on Non-Managed Endpoints**
+
+If you are running GPT-OSS on an endpoint that isn’t a managed inference provider and you see errors like `Unexpected token ... while expecting start token ...` during tool calling, your endpoint likely doesn’t have the correct stop tokens configured.
+
+As an immediate workaround, pass the GPT-OSS stop sequences explicitly via `params`:
+
+```typescript
+import { OpenAIModel } from '@strands-agents/sdk/models/openai'
+
+const model = new OpenAIModel({
+  api: 'chat',
+  apiKey: '<KEY>',
+  clientConfig: {
+    baseURL: 'http://localhost:8000/v1',
+  },
+  modelId: '<MODEL_ID>',
+  params: { stop: ['<|call|>', '<|return|>', '<|end|>'] },
+})
+```
+
+See the [OpenAI Harmony message format](https://cookbook.openai.com/articles/openai-harmony#message-format) for details on GPT-OSS stop tokens.
 (( /tab "TypeScript" ))
 
 ## Advanced Features
@@ -226,5 +269,5 @@ if __name__ == "__main__":
 
 ## References
 
--   [API](/docs/api/python/strands.models.model)
+-   [Python API](/docs/api/python/strands.models.model)
 -   [OpenAI](https://platform.openai.com/docs/overview)

@@ -167,7 +167,9 @@ const agent = new Agent({
 })
 
 // Find the tool by name and cast to InvokableTool
-const notebookTool = agent.tools.find((t: { name: string }) => t.name === 'notebook') as InvokableTool<any, any>
+const notebookTool = agent.tools.find(
+  (t: { name: string }) => t.name === 'notebook'
+) as InvokableTool<any, any>
 
 // Directly invoke the tool
 const result = await notebookTool.invoke(
@@ -179,6 +181,10 @@ const result = await notebookTool.invoke(
       input: { mode: 'read', name: 'default' },
     },
     agent: agent,
+    invocationState: {},
+    interrupt: () => {
+      throw new Error('not supported')
+    },
   }
 )
 
@@ -188,7 +194,7 @@ console.log(result)
 
 ## Tool Executors
 
-When models return multiple tool requests, you can control whether they execute concurrently or sequentially.
+When models return multiple tool requests, you can control whether they execute concurrently or sequentially. Both SDKs default to concurrent execution.
 
 (( tab "Python" ))
 Agents use concurrent execution by default, but you can specify sequential execution for cases where order matters:
@@ -213,9 +219,26 @@ For more details, see [Tool Executors](/docs/user-guide/concepts/tools/executors
 (( /tab "Python" ))
 
 (( tab "TypeScript" ))
-```ts
-// Not supported in TypeScript
+```typescript
+import { Agent } from '@strands-agents/sdk'
+import { notebook } from '@strands-agents/sdk/vended-tools/notebook'
+import { fileEditor } from '@strands-agents/sdk/vended-tools/file-editor'
+
+// Concurrent execution (default)
+const agent = new Agent({
+  tools: [notebook, fileEditor],
+})
+await agent.invoke('List the notebooks and edit a file')
+
+// Sequential execution for order-dependent tools
+const sequentialAgent = new Agent({
+  tools: [notebook, fileEditor],
+  toolExecutor: 'sequential',
+})
+await sequentialAgent.invoke('Create a notebook entry, then edit a file based on it')
 ```
+
+For more details, see [Tool Executors](/docs/user-guide/concepts/tools/executors/index.md).
 (( /tab "TypeScript" ))
 
 ## Building & Loading Tools
@@ -282,7 +305,7 @@ def main():
 (( /tab "Python" ))
 
 (( tab "TypeScript" ))
-Use the `tool()` function to create tools with [Zod](https://zod.dev/) schema validation. These tools can then be passed directly to your agents.
+Use the `tool()` function to create tools with [Zod](https://zod.dev/) schema validation or plain JSON Schema objects. These tools can then be passed directly to your agents.
 
 ```typescript
 const weatherTool = tool({
@@ -403,9 +426,13 @@ For a complete list of available tools, see [Community Tools Package](/docs/user
 (( tab "TypeScript" ))
 **Vended Tools**
 
-TypeScript vended tools are included in the SDK at [`vended-tools/`](https://github.com/strands-agents/sdk-typescript/blob/main/src/vended-tools). The Community Tools Package (`strands-agents-tools`) is Python-only.
+TypeScript [vended tools](/docs/user-guide/concepts/tools/vended-tools/index.md) are included directly in the SDK. The Community Tools Package (`strands-agents-tools`) is Python-only.
 
 ```typescript
+import { Agent } from '@strands-agents/sdk'
+import { notebook } from '@strands-agents/sdk/vended-tools/notebook'
+import { fileEditor } from '@strands-agents/sdk/vended-tools/file-editor'
+
 const agent = new Agent({
   tools: [notebook, fileEditor],
 })
@@ -458,6 +485,41 @@ await agentOverview.invoke('Calculate the square root of 144')
 (( /tab "TypeScript" ))
 
 For more information on using MCP tools, see [MCP Tools](/docs/user-guide/concepts/tools/mcp-tools/index.md).
+
+### 4\. Agents as Tools
+
+Agents can be passed directly in another agent’s `tools` array — the SDK automatically converts them into tools. Use `.as_tool()` (Python) or `.asTool()` (TypeScript) when you need to customize the tool name, description, or context behavior. For full details, see [Agents as Tools](/docs/user-guide/concepts/multi-agent/agents-as-tools/index.md).
+
+(( tab "Python" ))
+```python
+from strands import Agent
+
+research_agent = Agent(
+    system_prompt="You are a specialized research assistant.",
+)
+
+orchestrator = Agent(
+    system_prompt="You are an assistant that routes queries to specialized agents.",
+    tools=[research_agent],
+)
+```
+(( /tab "Python" ))
+
+(( tab "TypeScript" ))
+```typescript
+const researchAgent = new Agent({
+  name: 'research_agent',
+  description: 'A specialized research assistant.',
+  systemPrompt: 'You are a specialized research assistant.',
+  printer: false,
+})
+
+const orchestrator = new Agent({
+  systemPrompt: 'You are an assistant that routes queries to specialized agents.',
+  tools: [researchAgent],
+})
+```
+(( /tab "TypeScript" ))
 
 ## Tool Design Best Practices
 
@@ -562,8 +624,13 @@ Notes:
     inputSchema: z.object({
       query: z
         .string()
-        .describe('The search string (product name, category, or keywords). Example: "red running shoes"'),
-      maxResults: z.number().default(10).describe('Maximum number of results to return (default: 10, range: 1-100)'),
+        .describe(
+          'The search string (product name, category, or keywords). Example: "red running shoes"'
+        ),
+      maxResults: z
+        .number()
+        .default(10)
+        .describe('Maximum number of results to return (default: 10, range: 1-100)'),
     }),
     callback: () => {
       // Implementation would go here

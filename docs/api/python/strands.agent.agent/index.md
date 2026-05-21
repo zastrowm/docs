@@ -13,7 +13,7 @@ The Agent interface supports two complementary interaction patterns:
 class Agent(AgentBase)
 ```
 
-Defined in: [src/strands/agent/agent.py:98](https://github.com/strands-agents/sdk-python/blob/main/src/strands/agent/agent.py#L98)
+Defined in: [src/strands/agent/agent.py:109](https://github.com/strands-agents/sdk-python/blob/main/src/strands/agent/agent.py#L109)
 
 Core Agent implementation.
 
@@ -47,7 +47,7 @@ def __init__(
     description: str | None = None,
     state: AgentState | dict | None = None,
     plugins: list[Plugin] | None = None,
-    hooks: list[HookProvider] | None = None,
+    hooks: list[HookProvider | HookCallback] | None = None,
     session_manager: SessionManager | None = None,
     structured_output_prompt: str | None = None,
     tool_executor: ToolExecutor | None = None,
@@ -57,7 +57,7 @@ def __init__(
     ConcurrentInvocationMode = ConcurrentInvocationMode.THROW)
 ```
 
-Defined in: [src/strands/agent/agent.py:114](https://github.com/strands-agents/sdk-python/blob/main/src/strands/agent/agent.py#L114)
+Defined in: [src/strands/agent/agent.py:125](https://github.com/strands-agents/sdk-python/blob/main/src/strands/agent/agent.py#L125)
 
 Initialize the Agent with the specified configuration.
 
@@ -74,7 +74,8 @@ Initialize the Agent with the specified configuration.
     -   Imported Python modules (e.g., from strands\_tools import current\_time)
     -   Dictionaries with name/path keys (e.g., {“name”: “tool\_name”, “path”: “/path/to/tool.py”})
     -   ToolProvider instances for managed tool collections
-    -   Functions decorated with `@strands.tool` decorator.
+    -   Functions decorated with `@strands.tool` decorator
+    -   Agent instances (auto-wrapped via `agent.as_tool()` with defaults)
     
     If provided, only these tools will be available. If None, all tools will be available.
     
@@ -102,7 +103,7 @@ Initialize the Agent with the specified configuration.
     
 -   `plugins` - List of Plugin instances to extend agent functionality. Plugins are initialized with the agent instance after construction and can register hooks, modify agent attributes, or perform other setup tasks. Defaults to None.
     
--   `hooks` - hooks to be added to the agent hook registry Defaults to None.
+-   `hooks` - Hooks to be added to the agent hook registry. Accepts HookProvider instances or plain callable hook callbacks (functions with typed event parameters). Defaults to None.
     
 -   `session_manager` - Manager for handling agent sessions including conversation history and state. If provided, enables session-based persistence and state management.
     
@@ -127,7 +128,7 @@ Initialize the Agent with the specified configuration.
 def cancel() -> None
 ```
 
-Defined in: [src/strands/agent/agent.py:333](https://github.com/strands-agents/sdk-python/blob/main/src/strands/agent/agent.py#L333)
+Defined in: [src/strands/agent/agent.py:371](https://github.com/strands-agents/sdk-python/blob/main/src/strands/agent/agent.py#L371)
 
 Cancel the currently running agent invocation.
 
@@ -166,7 +167,7 @@ Multiple calls to cancel() are safe and idempotent.
 def system_prompt() -> str | None
 ```
 
-Defined in: [src/strands/agent/agent.py:365](https://github.com/strands-agents/sdk-python/blob/main/src/strands/agent/agent.py#L365)
+Defined in: [src/strands/agent/agent.py:403](https://github.com/strands-agents/sdk-python/blob/main/src/strands/agent/agent.py#L403)
 
 Get the system prompt as a string for backwards compatibility.
 
@@ -183,7 +184,7 @@ The system prompt as a string, or None if no text content exists.
 def system_prompt(value: str | list[SystemContentBlock] | None) -> None
 ```
 
-Defined in: [src/strands/agent/agent.py:378](https://github.com/strands-agents/sdk-python/blob/main/src/strands/agent/agent.py#L378)
+Defined in: [src/strands/agent/agent.py:416](https://github.com/strands-agents/sdk-python/blob/main/src/strands/agent/agent.py#L416)
 
 Set the system prompt and update internal content representation.
 
@@ -196,6 +197,23 @@ Accepts either a string or list of SystemContentBlock objects. When set, both th
     -   list\[SystemContentBlock\]: Content blocks with features like caching
     -   None: Clear the system prompt
 
+#### system\_prompt\_content
+
+```python
+@property
+def system_prompt_content() -> list[SystemContentBlock] | None
+```
+
+Defined in: [src/strands/agent/agent.py:432](https://github.com/strands-agents/sdk-python/blob/main/src/strands/agent/agent.py#L432)
+
+Get the system prompt as a list of content blocks.
+
+Returns the structured content block representation, preserving cache points and other non-text blocks. Returns None if no system prompt is set.
+
+**Returns**:
+
+The system prompt as a list of content blocks, or None if no system prompt is set.
+
 #### tool
 
 ```python
@@ -203,7 +221,7 @@ Accepts either a string or list of SystemContentBlock objects. When set, both th
 def tool() -> _ToolCaller
 ```
 
-Defined in: [src/strands/agent/agent.py:394](https://github.com/strands-agents/sdk-python/blob/main/src/strands/agent/agent.py#L394)
+Defined in: [src/strands/agent/agent.py:444](https://github.com/strands-agents/sdk-python/blob/main/src/strands/agent/agent.py#L444)
 
 Call tool as a function.
 
@@ -225,7 +243,7 @@ agent.tool.calculator(...)
 def tool_names() -> list[str]
 ```
 
-Defined in: [src/strands/agent/agent.py:409](https://github.com/strands-agents/sdk-python/blob/main/src/strands/agent/agent.py#L409)
+Defined in: [src/strands/agent/agent.py:459](https://github.com/strands-agents/sdk-python/blob/main/src/strands/agent/agent.py#L459)
 
 Get a list of all registered tool names.
 
@@ -244,7 +262,7 @@ def __call__(prompt: AgentInput = None,
              **kwargs: Any) -> AgentResult
 ```
 
-Defined in: [src/strands/agent/agent.py:418](https://github.com/strands-agents/sdk-python/blob/main/src/strands/agent/agent.py#L418)
+Defined in: [src/strands/agent/agent.py:468](https://github.com/strands-agents/sdk-python/blob/main/src/strands/agent/agent.py#L468)
 
 Process a natural language prompt through the agent’s event loop.
 
@@ -288,7 +306,7 @@ async def invoke_async(prompt: AgentInput = None,
                        **kwargs: Any) -> AgentResult
 ```
 
-Defined in: [src/strands/agent/agent.py:465](https://github.com/strands-agents/sdk-python/blob/main/src/strands/agent/agent.py#L465)
+Defined in: [src/strands/agent/agent.py:515](https://github.com/strands-agents/sdk-python/blob/main/src/strands/agent/agent.py#L515)
 
 Process a natural language prompt through the agent’s event loop.
 
@@ -326,7 +344,7 @@ This method implements the conversational interface with multiple input patterns
 def structured_output(output_model: type[T], prompt: AgentInput = None) -> T
 ```
 
-Defined in: [src/strands/agent/agent.py:513](https://github.com/strands-agents/sdk-python/blob/main/src/strands/agent/agent.py#L513)
+Defined in: [src/strands/agent/agent.py:563](https://github.com/strands-agents/sdk-python/blob/main/src/strands/agent/agent.py#L563)
 
 This method allows you to get structured output from the agent.
 
@@ -354,7 +372,7 @@ async def structured_output_async(output_model: type[T],
                                   prompt: AgentInput = None) -> T
 ```
 
-Defined in: [src/strands/agent/agent.py:544](https://github.com/strands-agents/sdk-python/blob/main/src/strands/agent/agent.py#L544)
+Defined in: [src/strands/agent/agent.py:594](https://github.com/strands-agents/sdk-python/blob/main/src/strands/agent/agent.py#L594)
 
 This method allows you to get structured output from the agent.
 
@@ -372,13 +390,44 @@ For smaller models, you may want to use the optional prompt to add additional in
 -   ## `ValueError` - If no conversation history or prompt is provided.
     
 
+#### as\_tool
+
+```python
+def as_tool(*,
+            name: str | None = None,
+            description: str | None = None,
+            preserve_context: bool = False) -> AgentTool
+```
+
+Defined in: [src/strands/agent/agent.py:665](https://github.com/strands-agents/sdk-python/blob/main/src/strands/agent/agent.py#L665)
+
+Convert this agent into a tool for use by another agent.
+
+**Arguments**:
+
+-   `name` - Tool name. Must match the pattern `[a-zA-Z0-9_\\-]\{1,64}`. Defaults to the agent’s name.
+-   `description` - Tool description. Defaults to the agent’s description, or a generic description if the agent has no description set.
+-   `preserve_context` - Whether to preserve the agent’s conversation history across invocations. When False, the agent’s messages and state are reset to the values they had at construction time before each call, ensuring every invocation starts from the same baseline regardless of any external interactions with the agent. Defaults to False.
+
+**Returns**:
+
+A tool wrapping this agent.
+
+**Example**:
+
+```python
+researcher = Agent(name="researcher", description="Finds information")
+writer = Agent(name="writer", tools=[researcher.as_tool()])
+writer("Write about AI agents")
+```
+
 #### cleanup
 
 ```python
 def cleanup() -> None
 ```
 
-Defined in: [src/strands/agent/agent.py:615](https://github.com/strands-agents/sdk-python/blob/main/src/strands/agent/agent.py#L615)
+Defined in: [src/strands/agent/agent.py:699](https://github.com/strands-agents/sdk-python/blob/main/src/strands/agent/agent.py#L699)
 
 Clean up resources used by the agent.
 
@@ -394,7 +443,7 @@ def add_hook(
         event_type: type[TEvent] | list[type[TEvent]] | None = None) -> None
 ```
 
-Defined in: [src/strands/agent/agent.py:627](https://github.com/strands-agents/sdk-python/blob/main/src/strands/agent/agent.py#L627)
+Defined in: [src/strands/agent/agent.py:711](https://github.com/strands-agents/sdk-python/blob/main/src/strands/agent/agent.py#L711)
 
 Register a callback function for a specific event type.
 
@@ -450,7 +499,7 @@ Docs: [https://strandsagents.com/latest/documentation/docs/user-guide/concepts/a
 def __del__() -> None
 ```
 
-Defined in: [src/strands/agent/agent.py:681](https://github.com/strands-agents/sdk-python/blob/main/src/strands/agent/agent.py#L681)
+Defined in: [src/strands/agent/agent.py:765](https://github.com/strands-agents/sdk-python/blob/main/src/strands/agent/agent.py#L765)
 
 Clean up resources when agent is garbage collected.
 
@@ -465,7 +514,7 @@ async def stream_async(prompt: AgentInput = None,
                        **kwargs: Any) -> AsyncIterator[Any]
 ```
 
-Defined in: [src/strands/agent/agent.py:688](https://github.com/strands-agents/sdk-python/blob/main/src/strands/agent/agent.py#L688)
+Defined in: [src/strands/agent/agent.py:772](https://github.com/strands-agents/sdk-python/blob/main/src/strands/agent/agent.py#L772)
 
 Process a natural language prompt and yield events as an async iterator.
 
@@ -509,3 +558,52 @@ async for event in agent.stream_async("Analyze this data"):
     if "data" in event:
         yield event["data"]
 ```
+
+#### take\_snapshot
+
+```python
+def take_snapshot(*,
+                  preset: SnapshotPreset | None = None,
+                  include: list[SnapshotField] | None = None,
+                  exclude: list[SnapshotField] | None = None,
+                  app_data: dict[str, Any] | None = None) -> Snapshot
+```
+
+Defined in: [src/strands/agent/agent.py:1126](https://github.com/strands-agents/sdk-python/blob/main/src/strands/agent/agent.py#L1126)
+
+Capture current agent state as an in-memory snapshot.
+
+**Arguments**:
+
+-   `preset` - Named preset of fields to capture. Currently only “session” is supported, which captures messages, state, conversation\_manager\_state, and interrupt\_state.
+-   `include` - Additional fields to capture on top of the preset.
+-   `exclude` - Fields to remove after applying preset and include.
+-   `app_data` - Application-owned arbitrary JSON stored verbatim in the snapshot.
+
+**Returns**:
+
+A Snapshot containing the captured agent state.
+
+**Raises**:
+
+-   `SnapshotException` - If no fields are resolved or an invalid field name is provided.
+
+#### load\_snapshot
+
+```python
+def load_snapshot(snapshot: Snapshot) -> None
+```
+
+Defined in: [src/strands/agent/agent.py:1172](https://github.com/strands-agents/sdk-python/blob/main/src/strands/agent/agent.py#L1172)
+
+Restore agent state from a previously captured snapshot.
+
+Only fields present in snapshot.data are restored; absent fields are left unchanged.
+
+**Arguments**:
+
+-   `snapshot` - The snapshot to restore from.
+
+**Raises**:
+
+-   `SnapshotException` - If snapshot.schema\_version is not “1.0”.

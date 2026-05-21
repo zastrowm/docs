@@ -38,85 +38,43 @@ The `metrics` attribute of `AgentResult` (an instance of [`EventLoopMetrics`](/d
 (( /tab "Python" ))
 
 (( tab "TypeScript" ))
-The TypeScript SDK provides basic metrics tracking through streaming events. Metrics are available via the `ModelMetadataEvent` that is emitted during agent execution:
+The TypeScript SDK automatically tracks key metrics during agent execution through the `AgentMetrics` class:
 
--   **Token usage**: Input tokens, output tokens, and total tokens consumed
--   **Performance metrics**: Latency measurements
+-   **Token usage**: Input tokens, output tokens, total tokens consumed, and cache metrics
+-   **Performance metrics**: Latency and execution time measurements
+-   **Tool usage**: Call counts, success rates, and execution times for each tool
+-   **Event loop cycles**: Number of reasoning cycles and their durations
 
-```typescript
-const agent = new Agent({
-  tools: [notebook],
-})
-
-// Metrics are only available via streaming
-for await (const event of agent.stream('Calculate 2+2')) {
-  if (event.type === 'modelStreamUpdateEvent' && event.event.type === 'modelMetadataEvent') {
-    console.log('Token usage:', event.event.usage)
-    console.log('Latency:', event.event.metrics?.latencyMs)
-  }
-}
-```
-
-The `ModelMetadataEvent` contains two optional properties:
-
--   `usage`: Token usage statistics including input, output, and cache metrics
--   `metrics`: Performance metrics including latency
-
-### Available Metrics
-
-**Usage**:
-
--   `inputTokens: number` - Tokens in the input
--   `outputTokens: number` - Tokens in the output
--   `totalTokens: number` - Total tokens used
--   `cacheReadInputTokens?: number` - Tokens read from cache
--   `cacheWriteInputTokens?: number` - Tokens written to cache
-
-**Metrics**:
-
--   `latencyMs: number` - Request latency in milliseconds
-
-### Detailed Tracking Example
+All these metrics are accessible through the `AgentResult` object returned when you invoke an agent:
 
 ```typescript
 const agent = new Agent({
   tools: [notebook],
 })
 
-let totalInputTokens = 0
-let totalOutputTokens = 0
-let totalLatency = 0
+const result = await agent.invoke('What is the square root of 144?')
 
-for await (const event of agent.stream('What is the square root of 144?')) {
-  if (event.type === 'modelStreamUpdateEvent' && event.event.type === 'modelMetadataEvent') {
-    const metadata = event.event
-    if (metadata.usage) {
-      totalInputTokens += metadata.usage.inputTokens
-      totalOutputTokens += metadata.usage.outputTokens
-      console.log(`Input tokens: ${metadata.usage.inputTokens}`)
-      console.log(`Output tokens: ${metadata.usage.outputTokens}`)
-      console.log(`Total tokens: ${metadata.usage.totalTokens}`)
+// Access metrics through the AgentResult
+if (result.metrics) {
+  console.log(`Total tokens: ${result.metrics.accumulatedUsage.totalTokens}`)
+  console.log(`Total duration: ${result.metrics.totalDuration}ms`)
+  console.log(`Tools used: ${Object.keys(result.metrics.toolMetrics)}`)
 
-      // Cache metrics (when available)
-      if (metadata.usage.cacheReadInputTokens) {
-        console.log(`Cache read tokens: ${metadata.usage.cacheReadInputTokens}`)
-      }
-      if (metadata.usage.cacheWriteInputTokens) {
-        console.log(`Cache write tokens: ${metadata.usage.cacheWriteInputTokens}`)
-      }
-    }
-
-    if (metadata.metrics) {
-      totalLatency += metadata.metrics.latencyMs
-      console.log(`Latency: ${metadata.metrics.latencyMs}ms`)
-    }
+  // Cache metrics (when available)
+  if (result.metrics.accumulatedUsage.cacheReadInputTokens) {
+    console.log(
+      `Cache read tokens: ${result.metrics.accumulatedUsage.cacheReadInputTokens}`
+    )
+  }
+  if (result.metrics.accumulatedUsage.cacheWriteInputTokens) {
+    console.log(
+      `Cache write tokens: ${result.metrics.accumulatedUsage.cacheWriteInputTokens}`
+    )
   }
 }
-
-console.log(`\nTotal input tokens: ${totalInputTokens}`)
-console.log(`Total output tokens: ${totalOutputTokens}`)
-console.log(`Total latency: ${totalLatency}ms`)
 ```
+
+The `metrics` property on `AgentResult` is an instance of `AgentMetrics` that provides comprehensive performance data about the agent’s execution.
 (( /tab "TypeScript" ))
 
 ## Agent Loop Metrics
@@ -173,8 +131,59 @@ For a complete list of attributes and their types, see the [`EventLoopMetrics` A
 (( /tab "Python" ))
 
 (( tab "TypeScript" ))
-```ts
-// Not supported in TypeScript
+The `AgentMetrics` class aggregates metrics across the entire agent loop execution, providing a complete picture of your agent’s performance. It tracks cycle counts, tool usage, execution durations, and token consumption across all model invocations.
+
+Key metrics include:
+
+-   **Cycle tracking**: Number of event loop cycles and their individual durations via `cycleCount`, `totalDuration`, and `averageCycleTime`
+-   **Tool metrics**: Detailed performance data for each tool used during execution
+-   **Agent invocations**: List of agent invocations, each containing cycles and usage data for that specific invocation
+-   **Accumulated usage**: Aggregated token counts (input, output, total, and cache metrics) across all agent invocations
+-   **Accumulated metrics**: Latency measurements in milliseconds for all model requests
+
+### Agent Invocations
+
+The `agentInvocations` property is a list of `InvocationMetricsData` objects that track metrics for each agent invocation (request). Each invocation contains:
+
+-   **cycles**: A list of `AgentLoopMetricsData` objects, each representing a single event loop cycle with its ID, duration, and token usage
+-   **usage**: Accumulated token usage for this specific invocation across all its cycles
+
+This allows you to track metrics at both the individual invocation level and across all invocations:
+
+```typescript
+const agent = new Agent({
+  tools: [notebook],
+})
+
+// First invocation
+const _result1 = await agent.invoke('What is 5 + 3?')
+
+// Second invocation
+const result2 = await agent.invoke('What is the square root of 144?')
+
+// Access metrics for the latest invocation
+if (result2.metrics) {
+  const latest = result2.metrics.latestAgentInvocation
+  if (latest) {
+    console.log(`Invocation usage: ${JSON.stringify(latest.usage)}`)
+    for (const cycle of latest.cycles) {
+      console.log(`  Cycle ${cycle.cycleId}: ${JSON.stringify(cycle.usage)}`)
+    }
+  }
+
+  // Access all invocations
+  for (const invocation of result2.metrics.agentInvocations) {
+    console.log(`Invocation usage: ${JSON.stringify(invocation.usage)}`)
+    for (const cycle of invocation.cycles) {
+      console.log(`  Cycle ${cycle.cycleId}: ${JSON.stringify(cycle.usage)}`)
+    }
+  }
+
+  // Computed metrics
+  console.log(`Cycle count: ${result2.metrics.cycleCount}`)
+  console.log(`Total duration: ${result2.metrics.totalDuration}ms`)
+  console.log(`Average cycle time: ${result2.metrics.averageCycleTime}ms`)
+}
 ```
 (( /tab "TypeScript" ))
 
@@ -194,9 +203,15 @@ These metrics help you identify performance bottlenecks, tools with high error r
 (( /tab "Python" ))
 
 (( tab "TypeScript" ))
-```ts
-// Not supported in TypeScript
-```
+For each tool used by the agent, detailed metrics are collected in the `toolMetrics` dictionary. Each entry is a `ToolMetricsData` object that tracks the tool’s performance throughout the agent’s execution.
+
+Tool metrics provide insights into:
+
+-   **Call statistics**: Total number of calls, successful executions, and errors
+-   **Execution time**: Total time spent executing the tool
+-   **Computed statistics**: The `toolUsage` getter adds computed `averageTime` and `successRate` fields
+
+These metrics help you identify performance bottlenecks, tools with high error rates, and opportunities for optimization.
 (( /tab "TypeScript" ))
 
 ## Example Metrics Summary Output
@@ -275,9 +290,111 @@ This summary provides a complete picture of the agent’s execution, including c
 (( /tab "Python" ))
 
 (( tab "TypeScript" ))
-```ts
-// Not supported in TypeScript
+The `AgentMetrics` class implements `toJSON()`, so you can serialize the complete metrics snapshot with `JSON.stringify()`. This gives you a comprehensive overview of your agent’s performance in a single call:
+
+```typescript
+const agent = new Agent({
+  tools: [notebook],
+})
+
+const result = await agent.invoke('What is the square root of 144?')
+
+// Serialize metrics to JSON
+console.log(JSON.stringify(result?.metrics, null, 2))
 ```
+
+```json
+{
+  "cycleCount": 1,
+  "accumulatedUsage": {
+    "inputTokens": 16,
+    "outputTokens": 29,
+    "totalTokens": 45
+  },
+  "accumulatedMetrics": {
+    "latencyMs": 1799
+  },
+  "agentInvocations": [
+    {
+      "usage": {
+        "inputTokens": 16,
+        "outputTokens": 29,
+        "totalTokens": 45
+      },
+      "cycles": [
+        {
+          "cycleId": "cycle-1",
+          "duration": 2694,
+          "usage": {
+            "inputTokens": 16,
+            "outputTokens": 29,
+            "totalTokens": 45
+          }
+        }
+      ]
+    }
+  ],
+  "toolMetrics": {}
+}
+```
+
+This summary provides a complete picture of the agent’s execution, including cycle information, token usage, and tool performance.
+(( /tab "TypeScript" ))
+
+## Local Execution Traces
+
+(( tab "Python" ))
+In addition to aggregate metrics, the Strands Agents SDK automatically collects **local execution traces** — lightweight, in-memory timing trees that capture the hierarchy and duration of operations within the agent loop. These traces are always collected regardless of OpenTelemetry configuration and are returned directly in the `AgentResult`.
+
+Each trace represents a cycle in the agent loop, with child traces for model invocations and tool calls:
+
+```python
+from strands import Agent
+from strands_tools import calculator
+
+agent = Agent(tools=[calculator])
+result = agent("What is 15 * 8 + 42?")
+
+# Traces are included in the summary output
+print(result.metrics.get_summary())
+```
+
+Each trace contains:
+
+-   **name**: Human-readable label (e.g., “Cycle 1”, “stream\_messages”, “Tool: calculator”)
+-   **duration**: Execution time in seconds
+-   **children**: Nested traces for operations within the cycle
+-   **metadata**: Associated data like `cycleId`, `toolUseId`, and `toolName`
+-   **message**: The model output message (for model invocation traces)
+
+Traces are included in the `get_summary()` output, giving you a complete hierarchical view of agent execution alongside aggregate metrics.
+(( /tab "Python" ))
+
+(( tab "TypeScript" ))
+In addition to aggregate metrics, the Strands Agents SDK automatically collects **local execution traces** — lightweight, in-memory timing trees that capture the hierarchy and duration of operations within the agent loop. These traces are always collected regardless of OpenTelemetry configuration and are returned directly in `AgentResult.traces`.
+
+Each trace is an `AgentTrace` instance representing a cycle in the agent loop, with child traces for model invocations and tool calls:
+
+```typescript
+const agent = new Agent({
+  tools: [notebook],
+})
+
+const result = await agent.invoke('What is 15 * 8 + 42?')
+
+// Access traces directly from the result
+console.log(JSON.stringify(result.traces))
+```
+
+Each `AgentTrace` contains:
+
+-   **name**: Human-readable label (e.g., “Cycle 1”, “stream\_messages”, “Tool: calculator”)
+-   **duration**: Execution time in milliseconds
+-   **children**: Nested `AgentTrace` instances for operations within the cycle
+-   **metadata**: Associated data like `cycleId`, `toolUseId`, and `toolName`
+-   **message**: The model output message (for model invocation traces)
+
+Traces are separate from `AgentMetrics` and are accessed via `result.traces`. Note that `AgentResult.toJSON()` excludes traces and metrics by default to keep API responses lean — access them directly via `result.traces` and `result.metrics`.
 (( /tab "TypeScript" ))
 
 ## Best Practices

@@ -6,10 +6,10 @@ type VideoSource =
 }
   | {
   type: "videoSourceS3Location";
-  s3Location: S3Location;
+  location: S3Location;
 };
 ```
 
-Defined in: [src/types/media.ts:308](https://github.com/strands-agents/sdk-typescript/blob/5fc30c8099b8e6735d70c6ae2160f7c0dd7b23c7/src/types/media.ts#L308)
+Defined in: [src/types/media.ts:270](https://github.com/strands-agents/sdk-typescript/blob/6987b01d8ab113b5c0f336e0085579c60a7d0a57/strands-ts/src/types/media.ts#L270)
 
 Source for a video (Class version).

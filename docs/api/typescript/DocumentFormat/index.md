@@ -13,6 +13,4 @@ type DocumentFormat =
   | "xml";
 ```
 
-Defined in: [src/types/media.ts:410](https://github.com/strands-agents/sdk-typescript/blob/5fc30c8099b8e6735d70c6ae2160f7c0dd7b23c7/src/types/media.ts#L410)
-
-Document format type.
+Defined in: [src/mime.ts:13](https://github.com/strands-agents/sdk-typescript/blob/6987b01d8ab113b5c0f336e0085579c60a7d0a57/strands-ts/src/mime.ts#L13)

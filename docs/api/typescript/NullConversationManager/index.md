@@ -1,45 +1,124 @@
-Defined in: [src/conversation-manager/null-conversation-manager.ts:16](https://github.com/strands-agents/sdk-typescript/blob/5fc30c8099b8e6735d70c6ae2160f7c0dd7b23c7/src/conversation-manager/null-conversation-manager.ts#L16)
+Defined in: [src/conversation-manager/null-conversation-manager.ts:17](https://github.com/strands-agents/sdk-typescript/blob/6987b01d8ab113b5c0f336e0085579c60a7d0a57/strands-ts/src/conversation-manager/null-conversation-manager.ts#L17)
 
-A no-op conversation manager that does not modify the conversation history. Implements HookProvider but registers zero hooks.
+A no-op conversation manager that does not modify the conversation history.
 
-## Implements
+Does not register any proactive hooks. Overflow errors will not be retried since `reduce` always returns `false`.
 
--   [`HookProvider`](/docs/api/typescript/HookProvider/index.md)
+## Extends
+
+-   [`ConversationManager`](/docs/api/typescript/ConversationManager/index.md)
 
 ## Constructors
 
 ### Constructor
 
 ```ts
-new NullConversationManager(): NullConversationManager;
+new NullConversationManager(options?): NullConversationManager;
 ```
 
-#### Returns
-
-`NullConversationManager`
-
-## Methods
-
-### registerCallbacks()
-
-```ts
-registerCallbacks(_registry): void;
-```
-
-Defined in: [src/conversation-manager/null-conversation-manager.ts:23](https://github.com/strands-agents/sdk-typescript/blob/5fc30c8099b8e6735d70c6ae2160f7c0dd7b23c7/src/conversation-manager/null-conversation-manager.ts#L23)
-
-Registers callbacks with the hook registry. This implementation registers no hooks, providing a complete no-op behavior.
+Defined in: [src/conversation-manager/conversation-manager.ts:121](https://github.com/strands-agents/sdk-typescript/blob/6987b01d8ab113b5c0f336e0085579c60a7d0a57/strands-ts/src/conversation-manager/conversation-manager.ts#L121)
 
 #### Parameters
 
 | Parameter | Type | Description |
 | --- | --- | --- |
-| `_registry` | `HookRegistry` | The hook registry to register callbacks with (unused) |
+| `options?` | [`ConversationManagerOptions`](/docs/api/typescript/ConversationManagerOptions/index.md) | Configuration options for the conversation manager. |
+
+#### Returns
+
+`NullConversationManager`
+
+#### Inherited from
+
+[`ConversationManager`](/docs/api/typescript/ConversationManager/index.md).[`constructor`](/docs/api/typescript/ConversationManager/index.md#constructor)
+
+## Properties
+
+### \_compressionThreshold
+
+```ts
+protected readonly _compressionThreshold: number;
+```
+
+Defined in: [src/conversation-manager/conversation-manager.ts:116](https://github.com/strands-agents/sdk-typescript/blob/6987b01d8ab113b5c0f336e0085579c60a7d0a57/strands-ts/src/conversation-manager/conversation-manager.ts#L116)
+
+#### Inherited from
+
+[`ConversationManager`](/docs/api/typescript/ConversationManager/index.md).[`_compressionThreshold`](/docs/api/typescript/ConversationManager/index.md#_compressionthreshold)
+
+---
+
+### name
+
+```ts
+readonly name: "strands:null-conversation-manager" = 'strands:null-conversation-manager';
+```
+
+Defined in: [src/conversation-manager/null-conversation-manager.ts:21](https://github.com/strands-agents/sdk-typescript/blob/6987b01d8ab113b5c0f336e0085579c60a7d0a57/strands-ts/src/conversation-manager/null-conversation-manager.ts#L21)
+
+Unique identifier for this conversation manager.
+
+#### Overrides
+
+[`ConversationManager`](/docs/api/typescript/ConversationManager/index.md).[`name`](/docs/api/typescript/ConversationManager/index.md#name)
+
+## Methods
+
+### initAgent()
+
+```ts
+initAgent(agent): void;
+```
+
+Defined in: [src/conversation-manager/conversation-manager.ts:170](https://github.com/strands-agents/sdk-typescript/blob/6987b01d8ab113b5c0f336e0085579c60a7d0a57/strands-ts/src/conversation-manager/conversation-manager.ts#L170)
+
+Initialize the conversation manager with the agent instance.
+
+Registers two hooks:
+
+1.  `AfterModelCallEvent`: Overflow recovery — when a [ContextWindowOverflowError](/docs/api/typescript/ContextWindowOverflowError/index.md) occurs, calls [ConversationManager.reduce](/docs/api/typescript/ConversationManager/index.md#reduce) with `error` set and retries if reduction succeeded.
+2.  `BeforeModelCallEvent`: Proactive compression — when projected input tokens exceed the configured compression threshold, calls [ConversationManager.reduce](/docs/api/typescript/ConversationManager/index.md#reduce) without `error`. The hook is always registered but only acts when proactive compression is enabled.
+
+Subclasses that override `initAgent` MUST call `super.initAgent(agent)` to preserve overflow recovery and proactive compression behavior.
+
+#### Parameters
+
+| Parameter | Type | Description |
+| --- | --- | --- |
+| `agent` | `LocalAgent` | The agent to register hooks with |
 
 #### Returns
 
 `void`
 
-#### Implementation of
+#### Inherited from
 
-[`HookProvider`](/docs/api/typescript/HookProvider/index.md).[`registerCallbacks`](/docs/api/typescript/HookProvider/index.md#registercallbacks)
+[`ConversationManager`](/docs/api/typescript/ConversationManager/index.md).[`initAgent`](/docs/api/typescript/ConversationManager/index.md#initagent)
+
+---
+
+### reduce()
+
+```ts
+reduce(_args): boolean;
+```
+
+Defined in: [src/conversation-manager/null-conversation-manager.ts:28](https://github.com/strands-agents/sdk-typescript/blob/6987b01d8ab113b5c0f336e0085579c60a7d0a57/strands-ts/src/conversation-manager/null-conversation-manager.ts#L28)
+
+No-op reduction — never modifies the conversation history.
+
+#### Parameters
+
+| Parameter | Type |
+| --- | --- |
+| `_args` | [`ConversationManagerReduceOptions`](/docs/api/typescript/ConversationManagerReduceOptions/index.md) |
+
+#### Returns
+
+`boolean`
+
+`false` always
+
+#### Overrides
+
+[`ConversationManager`](/docs/api/typescript/ConversationManager/index.md).[`reduce`](/docs/api/typescript/ConversationManager/index.md#reduce)

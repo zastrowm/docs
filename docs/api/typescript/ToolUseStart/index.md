@@ -1,4 +1,4 @@
-Defined in: [src/models/streaming.ts:298](https://github.com/strands-agents/sdk-typescript/blob/5fc30c8099b8e6735d70c6ae2160f7c0dd7b23c7/src/models/streaming.ts#L298)
+Defined in: [src/models/streaming.ts:379](https://github.com/strands-agents/sdk-typescript/blob/6987b01d8ab113b5c0f336e0085579c60a7d0a57/strands-ts/src/models/streaming.ts#L379)
 
 Information about a tool use that is starting.
 
@@ -10,7 +10,7 @@ Information about a tool use that is starting.
 type: "toolUseStart";
 ```
 
-Defined in: [src/models/streaming.ts:302](https://github.com/strands-agents/sdk-typescript/blob/5fc30c8099b8e6735d70c6ae2160f7c0dd7b23c7/src/models/streaming.ts#L302)
+Defined in: [src/models/streaming.ts:383](https://github.com/strands-agents/sdk-typescript/blob/6987b01d8ab113b5c0f336e0085579c60a7d0a57/strands-ts/src/models/streaming.ts#L383)
 
 Discriminator for tool use start.
 
@@ -22,7 +22,7 @@ Discriminator for tool use start.
 name: string;
 ```
 
-Defined in: [src/models/streaming.ts:307](https://github.com/strands-agents/sdk-typescript/blob/5fc30c8099b8e6735d70c6ae2160f7c0dd7b23c7/src/models/streaming.ts#L307)
+Defined in: [src/models/streaming.ts:388](https://github.com/strands-agents/sdk-typescript/blob/6987b01d8ab113b5c0f336e0085579c60a7d0a57/strands-ts/src/models/streaming.ts#L388)
 
 The name of the tool being used.
 
@@ -34,7 +34,7 @@ The name of the tool being used.
 toolUseId: string;
 ```
 
-Defined in: [src/models/streaming.ts:312](https://github.com/strands-agents/sdk-typescript/blob/5fc30c8099b8e6735d70c6ae2160f7c0dd7b23c7/src/models/streaming.ts#L312)
+Defined in: [src/models/streaming.ts:393](https://github.com/strands-agents/sdk-typescript/blob/6987b01d8ab113b5c0f336e0085579c60a7d0a57/strands-ts/src/models/streaming.ts#L393)
 
 Unique identifier for this tool use.
 
@@ -43,9 +43,9 @@ Unique identifier for this tool use.
 ### reasoningSignature?
 
 ```ts
-optional reasoningSignature: string;
+optional reasoningSignature?: string;
 ```
 
-Defined in: [src/models/streaming.ts:318](https://github.com/strands-agents/sdk-typescript/blob/5fc30c8099b8e6735d70c6ae2160f7c0dd7b23c7/src/models/streaming.ts#L318)
+Defined in: [src/models/streaming.ts:399](https://github.com/strands-agents/sdk-typescript/blob/6987b01d8ab113b5c0f336e0085579c60a7d0a57/strands-ts/src/models/streaming.ts#L399)
 
 Reasoning signature from thinking models (e.g., Gemini). Must be preserved and sent back to the model for multi-turn tool use.

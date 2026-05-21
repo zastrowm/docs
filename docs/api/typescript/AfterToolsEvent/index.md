@@ -1,4 +1,4 @@
-Defined in: [src/hooks/events.ts:410](https://github.com/strands-agents/sdk-typescript/blob/5fc30c8099b8e6735d70c6ae2160f7c0dd7b23c7/src/hooks/events.ts#L410)
+Defined in: [src/hooks/events.ts:778](https://github.com/strands-agents/sdk-typescript/blob/6987b01d8ab113b5c0f336e0085579c60a7d0a57/strands-ts/src/hooks/events.ts#L778)
 
 Event triggered after all tools complete execution. Fired after tool results are collected and ready to be added to conversation. Uses reverse callback ordering for proper cleanup semantics.
 
@@ -14,15 +14,16 @@ Event triggered after all tools complete execution. Fired after tool results are
 new AfterToolsEvent(data): AfterToolsEvent;
 ```
 
-Defined in: [src/hooks/events.ts:415](https://github.com/strands-agents/sdk-typescript/blob/5fc30c8099b8e6735d70c6ae2160f7c0dd7b23c7/src/hooks/events.ts#L415)
+Defined in: [src/hooks/events.ts:798](https://github.com/strands-agents/sdk-typescript/blob/6987b01d8ab113b5c0f336e0085579c60a7d0a57/strands-ts/src/hooks/events.ts#L798)
 
 #### Parameters
 
 | Parameter | Type |
 | --- | --- |
-| `data` | { `agent`: [`AgentData`](/docs/api/typescript/AgentData/index.md); `message`: [`Message`](/docs/api/typescript/Message/index.md); } |
-| `data.agent` | [`AgentData`](/docs/api/typescript/AgentData/index.md) |
+| `data` | { `agent`: `LocalAgent`; `message`: [`Message`](/docs/api/typescript/Message/index.md); `invocationState`: [`InvocationState`](/docs/api/typescript/InvocationState/index.md); } |
+| `data.agent` | `LocalAgent` |
 | `data.message` | [`Message`](/docs/api/typescript/Message/index.md) |
+| `data.invocationState` | [`InvocationState`](/docs/api/typescript/InvocationState/index.md) |
 
 #### Returns
 
@@ -40,17 +41,17 @@ Defined in: [src/hooks/events.ts:415](https://github.com/strands-agents/sdk-type
 readonly type: "afterToolsEvent";
 ```
 
-Defined in: [src/hooks/events.ts:411](https://github.com/strands-agents/sdk-typescript/blob/5fc30c8099b8e6735d70c6ae2160f7c0dd7b23c7/src/hooks/events.ts#L411)
+Defined in: [src/hooks/events.ts:779](https://github.com/strands-agents/sdk-typescript/blob/6987b01d8ab113b5c0f336e0085579c60a7d0a57/strands-ts/src/hooks/events.ts#L779)
 
 ---
 
 ### agent
 
 ```ts
-readonly agent: AgentData;
+readonly agent: LocalAgent;
 ```
 
-Defined in: [src/hooks/events.ts:412](https://github.com/strands-agents/sdk-typescript/blob/5fc30c8099b8e6735d70c6ae2160f7c0dd7b23c7/src/hooks/events.ts#L412)
+Defined in: [src/hooks/events.ts:780](https://github.com/strands-agents/sdk-typescript/blob/6987b01d8ab113b5c0f336e0085579c60a7d0a57/strands-ts/src/hooks/events.ts#L780)
 
 ---
 
@@ -60,4 +61,44 @@ Defined in: [src/hooks/events.ts:412](https://github.com/strands-agents/sdk-type
 readonly message: Message;
 ```
 
-Defined in: [src/hooks/events.ts:413](https://github.com/strands-agents/sdk-typescript/blob/5fc30c8099b8e6735d70c6ae2160f7c0dd7b23c7/src/hooks/events.ts#L413)
+Defined in: [src/hooks/events.ts:781](https://github.com/strands-agents/sdk-typescript/blob/6987b01d8ab113b5c0f336e0085579c60a7d0a57/strands-ts/src/hooks/events.ts#L781)
+
+---
+
+### invocationState
+
+```ts
+readonly invocationState: InvocationState;
+```
+
+Defined in: [src/hooks/events.ts:782](https://github.com/strands-agents/sdk-typescript/blob/6987b01d8ab113b5c0f336e0085579c60a7d0a57/strands-ts/src/hooks/events.ts#L782)
+
+---
+
+### endTurn
+
+```ts
+endTurn: string | boolean = false;
+```
+
+Defined in: [src/hooks/events.ts:796](https://github.com/strands-agents/sdk-typescript/blob/6987b01d8ab113b5c0f336e0085579c60a7d0a57/strands-ts/src/hooks/events.ts#L796)
+
+When set to `true`, the agent loop halts after this tool batch completes without calling the model again and a default message (`"Turn ended early by hook after tool execution"`) is appended as the final assistant message. When set to a string, that string is used instead of the default — the string becomes literal assistant content (a `TextBlock`), not a reason or label. Contrast with [cancel](/docs/api/typescript/BeforeToolCallEvent/index.md#cancel) fields on other events, where the string is a cancellation reason.
+
+In both cases `stopReason` on the returned `AgentResult` is `'endTurn'`.
+
+## Methods
+
+### toJSON()
+
+```ts
+toJSON(): Pick<AfterToolsEvent, "type" | "message">;
+```
+
+Defined in: [src/hooks/events.ts:814](https://github.com/strands-agents/sdk-typescript/blob/6987b01d8ab113b5c0f336e0085579c60a7d0a57/strands-ts/src/hooks/events.ts#L814)
+
+Serializes for wire transport, excluding the agent reference, invocationState, and mutable endTurn field. Called automatically by JSON.stringify().
+
+#### Returns
+
+`Pick`<`AfterToolsEvent`, `"type"` | `"message"`\>

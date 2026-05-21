@@ -143,7 +143,7 @@ export AWS_REGION="us-west-2"
 **Option 3: Custom Credentials**
 
 ```typescript
-import { BedrockModel } from '@strands-agents/sdk/bedrock'
+import { BedrockModel } from '@strands-agents/sdk/models/bedrock'
 
 // AWS credentials are configured through the clientConfig parameter
 // See AWS SDK for JavaScript documentation for all credential options:
@@ -191,7 +191,7 @@ response = agent("Tell me about Amazon Bedrock.")
 (( /tab "Python" ))
 
 (( tab "TypeScript" ))
-The [`BedrockModel`](/docs/api/typescript/BedrockModel/index.md) provider is used by default when creating a basic Agent, and uses the [Claude Sonnet 4.5](https://aws.amazon.com/blogs/aws/introducing-claude-sonnet-4-5-in-amazon-bedrock-anthropics-most-intelligent-model-best-for-coding-and-complex-agents/) model by default. This basic example creates an agent using this default setup:
+The [`BedrockModel`](/docs/api/typescript/BedrockModel/index.md) provider is used by default when creating a basic Agent, and uses [Claude Sonnet 4.6](https://www.anthropic.com/claude/sonnet) by default. This basic example creates an agent using this default setup:
 
 ```typescript
 import { Agent } from '@strands-agents/sdk'
@@ -270,7 +270,9 @@ Common configuration parameters include:
 -   `max_tokens` - Maximum number of tokens to generate
 -   `streaming` - Enable/disable streaming mode
 -   `guardrail_id` - ID of the guardrail to apply
--   `cache_prompt` / `cache_tools` - Enable prompt/tool caching
+-   `cache_prompt` - Cache point type for the system prompt (deprecated, use `cache_config`)
+-   `cache_config` - Configuration for prompt caching (e.g., `CacheConfig(strategy="auto")`)
+-   `cache_tools` - Enable tool caching
 -   `boto_session` - Custom boto3 session for AWS credentials
 -   `additional_request_fields` - Additional model-specific parameters
 (( /tab "Python" ))
@@ -283,10 +285,11 @@ Common configuration parameters include:
 -   `modelId` - The Bedrock model identifier
 -   `temperature` - Controls randomness (higher = more random)
 -   `maxTokens` - Maximum number of tokens to generate
--   `streaming` - Enable/disable streaming mode
--   `cacheTools` - Enable tool caching
+-   `stream` - Enable/disable streaming mode
+-   `cacheConfig` - Enable prompt caching with `{ strategy: 'auto' }` or `{ strategy: 'anthropic' }`
 -   `region` - AWS region to use
--   `credentials` - AWS credentials configuration
+-   `apiKey` - Bedrock API key for bearer token authentication (alternative to SigV4 signing)
+-   `clientConfig` - AWS SDK client configuration
 -   `additionalArgs` - Additional model-specific parameters
 (( /tab "TypeScript" ))
 
@@ -492,7 +495,8 @@ const response = await agent.invoke([
     format: 'pdf',
     name: 'report.pdf',
     source: {
-      s3Location: {
+      location: {
+        type: 's3',
         uri: 's3://my-bucket/documents/report.pdf',
         bucketOwner: '123456789012', // Optional: for cross-account access
       },
@@ -505,7 +509,7 @@ const response = await agent.invoke([
 
 Supported Media Types
 
-The same `s3Location` pattern also works for images and videos.
+The same `location` pattern also works for images and videos.
 
 ### Guardrails
 
@@ -549,9 +553,41 @@ When `guardrail_latest_message=True`, only the most recent user message is sent 
 (( /tab "Python" ))
 
 (( tab "TypeScript" ))
-```ts
-// Guardrails are not yet supported in the TypeScript SDK
+Amazon Bedrock supports guardrails to help ensure model outputs meet your requirements. Strands allows you to configure guardrails with your [`BedrockModel`](/docs/api/typescript/BedrockModel/index.md):
+
+```typescript
+// Using guardrails with BedrockModel
+const bedrockModel = new BedrockModel({
+  modelId: 'anthropic.claude-sonnet-4-20250514-v1:0',
+  guardrailConfig: {
+    guardrailIdentifier: 'your-guardrail-id',
+    guardrailVersion: 'DRAFT',
+    trace: 'enabled', // Options: 'enabled', 'disabled', 'enabled_full'
+    streamProcessingMode: 'sync', // Options: 'sync', 'async'
+    redaction: {
+      input: true, // Default: true
+      inputMessage: '[User input redacted.]', // Custom redaction message
+      output: false, // Default: false
+      outputMessage: '[Assistant output redacted.]', // Custom redaction message
+    },
+    guardLatestUserMessage: true, // Only evaluate the latest user message (default: false)
+  },
+})
+
+const guardrailAgent = new Agent({ model: bedrockModel })
+
+const response = await guardrailAgent.invoke('Can you tell me about the Strands SDK?')
 ```
+
+When a guardrail is triggered:
+
+-   Input redaction (enabled by default): If a guardrail policy is triggered, the input is redacted
+-   Output redaction (disabled by default): If a guardrail policy is triggered, the output is redacted
+-   Custom redaction messages can be specified for both input and output redactions
+
+Latest Message Evaluation
+
+When `guardLatestUserMessage: true`, only the most recent user message is sent to guardrails for evaluation instead of the entire conversation. This can improve performance and reduce costs in multi-turn conversations where earlier messages have already been validated.
 (( /tab "TypeScript" ))
 
 ### Caching
@@ -636,6 +672,8 @@ console.log(`Cache read tokens: ${cacheReadTokens}`)
 Tool caching allows you to reuse a cached tool definition across multiple requests:
 
 (( tab "Python" ))
+In Python, use the `cache_tools` parameter to enable tool caching independently:
+
 ```python
 from strands import Agent, tool
 from strands.models import BedrockModel
@@ -665,24 +703,41 @@ print(f"Cache read tokens: {response2.metrics.accumulated_usage.get('cacheReadIn
 (( /tab "Python" ))
 
 (( tab "TypeScript" ))
+In TypeScript, tool caching is enabled through `cacheConfig`. When `cacheConfig` is set, the SDK automatically appends a cache point after the tool definitions in each request. There is no separate `cacheTools` option — `cacheConfig` handles both tool and message caching together.
+
 ```typescript
 const bedrockModel = new BedrockModel({
   modelId: 'anthropic.claude-sonnet-4-20250514-v1:0',
-  cacheTools: 'default',
+  cacheConfig: { strategy: 'auto' },
 })
 
 const agent = new Agent({
   model: bedrockModel,
-  // Add your tools here when they become available
+  // Add your tools here
 })
 
 // First request will cache the tools
-await agent.invoke('What time is it?')
+let cacheWriteTokens = 0
+let cacheReadTokens = 0
+
+for await (const event of agent.stream('What time is it?')) {
+  if (event.type === 'modelMetadataEvent' && event.usage) {
+    cacheWriteTokens = event.usage.cacheWriteInputTokens || 0
+    cacheReadTokens = event.usage.cacheReadInputTokens || 0
+  }
+}
+console.log(`Cache write tokens: ${cacheWriteTokens}`)
+console.log(`Cache read tokens: ${cacheReadTokens}`)
 
 // Second request will reuse the cached tools
-await agent.invoke('What is the square root of 1764?')
-
-// Note: Cache metrics are not yet available in the TypeScript SDK
+for await (const event of agent.stream('What is the square root of 1764?')) {
+  if (event.type === 'modelMetadataEvent' && event.usage) {
+    cacheWriteTokens = event.usage.cacheWriteInputTokens || 0
+    cacheReadTokens = event.usage.cacheReadInputTokens || 0
+  }
+}
+console.log(`Cache write tokens: ${cacheWriteTokens}`)
+console.log(`Cache read tokens: ${cacheReadTokens}`)
 ```
 (( /tab "TypeScript" ))
 
@@ -692,7 +747,7 @@ Messages caching allows you to reuse cached conversation context across multiple
 
 **Option A: Automatic Cache Strategy (Claude models only)**
 
-Enable automatic cache point management for agent workflows with repeated tool calls and multi-turn conversations. The SDK automatically places a cache point at the end of each assistant message to maximize cache hits without requiring manual management.
+Enable automatic cache point management for agent workflows with multi-turn conversations. The SDK automatically places a cache point at the end of the last user message to maximize cache hits without requiring manual management.
 
 (( tab "Python" ))
 ```python
@@ -728,8 +783,38 @@ print(f"Cache read tokens: {response2.metrics.accumulated_usage.get('cacheReadIn
 (( /tab "Python" ))
 
 (( tab "TypeScript" ))
-```ts
-// Automatic cache strategy is not yet supported in the TypeScript SDK
+```typescript
+const bedrockModel = new BedrockModel({
+  modelId: 'us.anthropic.claude-sonnet-4-6',
+  cacheConfig: { strategy: 'auto' },
+})
+
+const agent = new Agent({ model: bedrockModel })
+
+// Agent call - cache write and read occur as context accumulates
+let cacheWriteTokens = 0
+let cacheReadTokens = 0
+
+for await (const event of agent.stream(
+  'Search for Python async patterns, then compare with error handling'
+)) {
+  if (event.type === 'modelMetadataEvent' && event.usage) {
+    cacheWriteTokens = event.usage.cacheWriteInputTokens || 0
+    cacheReadTokens = event.usage.cacheReadInputTokens || 0
+  }
+}
+console.log(`Cache write tokens: ${cacheWriteTokens}`)
+console.log(`Cache read tokens: ${cacheReadTokens}`)
+
+// Follow-up reuses cached context from previous conversation
+for await (const event of agent.stream('Summarize the key differences')) {
+  if (event.type === 'modelMetadataEvent' && event.usage) {
+    cacheWriteTokens = event.usage.cacheWriteInputTokens || 0
+    cacheReadTokens = event.usage.cacheReadInputTokens || 0
+  }
+}
+console.log(`Cache write tokens: ${cacheWriteTokens}`)
+console.log(`Cache read tokens: ${cacheReadTokens}`)
 ```
 (( /tab "TypeScript" ))
 
@@ -797,12 +882,27 @@ const agent = new Agent({
 })
 
 // First request will cache the message
-await agent.invoke('What is in that document?')
+let cacheWriteTokens = 0
+let cacheReadTokens = 0
+
+for await (const event of agent.stream('What is in that document?')) {
+  if (event.type === 'modelMetadataEvent' && event.usage) {
+    cacheWriteTokens = event.usage.cacheWriteInputTokens || 0
+    cacheReadTokens = event.usage.cacheReadInputTokens || 0
+  }
+}
+console.log(`Cache write tokens: ${cacheWriteTokens}`)
+console.log(`Cache read tokens: ${cacheReadTokens}`)
 
 // Second request will reuse the cached message
-await agent.invoke('How long is the document?')
-
-// Note: Cache metrics are not yet available in the TypeScript SDK
+for await (const event of agent.stream('How long is the document?')) {
+  if (event.type === 'modelMetadataEvent' && event.usage) {
+    cacheWriteTokens = event.usage.cacheWriteInputTokens || 0
+    cacheReadTokens = event.usage.cacheReadInputTokens || 0
+  }
+}
+console.log(`Cache write tokens: ${cacheWriteTokens}`)
+console.log(`Cache read tokens: ${cacheReadTokens}`)
 ```
 (( /tab "TypeScript" ))
 
@@ -1094,7 +1194,7 @@ const agent = new Agent({
 ```
 (( /tab "TypeScript" ))
 
-!!! note ""
+Default Inference Model
 
 Strands uses a default Claude 4 Sonnet inference model from the region of your credentials when no model is provided. So if you did not pass in any model id and are getting the above error, it’s very likely due to the `region` from the credentials not supporting inference profiles.
 

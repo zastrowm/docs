@@ -1,4 +1,4 @@
-Defined in: [src/hooks/events.ts:377](https://github.com/strands-agents/sdk-typescript/blob/5fc30c8099b8e6735d70c6ae2160f7c0dd7b23c7/src/hooks/events.ts#L377)
+Defined in: [src/hooks/events.ts:681](https://github.com/strands-agents/sdk-typescript/blob/6987b01d8ab113b5c0f336e0085579c60a7d0a57/strands-ts/src/hooks/events.ts#L681)
 
 Event triggered as the final event in the agent stream. Wraps the agent result containing the stop reason and last message.
 
@@ -14,15 +14,16 @@ Event triggered as the final event in the agent stream. Wraps the agent result c
 new AgentResultEvent(data): AgentResultEvent;
 ```
 
-Defined in: [src/hooks/events.ts:382](https://github.com/strands-agents/sdk-typescript/blob/5fc30c8099b8e6735d70c6ae2160f7c0dd7b23c7/src/hooks/events.ts#L382)
+Defined in: [src/hooks/events.ts:687](https://github.com/strands-agents/sdk-typescript/blob/6987b01d8ab113b5c0f336e0085579c60a7d0a57/strands-ts/src/hooks/events.ts#L687)
 
 #### Parameters
 
 | Parameter | Type |
 | --- | --- |
-| `data` | { `agent`: [`AgentData`](/docs/api/typescript/AgentData/index.md); `result`: [`AgentResult`](/docs/api/typescript/AgentResult/index.md); } |
-| `data.agent` | [`AgentData`](/docs/api/typescript/AgentData/index.md) |
+| `data` | { `agent`: `LocalAgent`; `result`: [`AgentResult`](/docs/api/typescript/AgentResult/index.md); `invocationState`: [`InvocationState`](/docs/api/typescript/InvocationState/index.md); } |
+| `data.agent` | `LocalAgent` |
 | `data.result` | [`AgentResult`](/docs/api/typescript/AgentResult/index.md) |
+| `data.invocationState` | [`InvocationState`](/docs/api/typescript/InvocationState/index.md) |
 
 #### Returns
 
@@ -40,17 +41,17 @@ Defined in: [src/hooks/events.ts:382](https://github.com/strands-agents/sdk-type
 readonly type: "agentResultEvent";
 ```
 
-Defined in: [src/hooks/events.ts:378](https://github.com/strands-agents/sdk-typescript/blob/5fc30c8099b8e6735d70c6ae2160f7c0dd7b23c7/src/hooks/events.ts#L378)
+Defined in: [src/hooks/events.ts:682](https://github.com/strands-agents/sdk-typescript/blob/6987b01d8ab113b5c0f336e0085579c60a7d0a57/strands-ts/src/hooks/events.ts#L682)
 
 ---
 
 ### agent
 
 ```ts
-readonly agent: AgentData;
+readonly agent: LocalAgent;
 ```
 
-Defined in: [src/hooks/events.ts:379](https://github.com/strands-agents/sdk-typescript/blob/5fc30c8099b8e6735d70c6ae2160f7c0dd7b23c7/src/hooks/events.ts#L379)
+Defined in: [src/hooks/events.ts:683](https://github.com/strands-agents/sdk-typescript/blob/6987b01d8ab113b5c0f336e0085579c60a7d0a57/strands-ts/src/hooks/events.ts#L683)
 
 ---
 
@@ -60,4 +61,30 @@ Defined in: [src/hooks/events.ts:379](https://github.com/strands-agents/sdk-type
 readonly result: AgentResult;
 ```
 
-Defined in: [src/hooks/events.ts:380](https://github.com/strands-agents/sdk-typescript/blob/5fc30c8099b8e6735d70c6ae2160f7c0dd7b23c7/src/hooks/events.ts#L380)
+Defined in: [src/hooks/events.ts:684](https://github.com/strands-agents/sdk-typescript/blob/6987b01d8ab113b5c0f336e0085579c60a7d0a57/strands-ts/src/hooks/events.ts#L684)
+
+---
+
+### invocationState
+
+```ts
+readonly invocationState: InvocationState;
+```
+
+Defined in: [src/hooks/events.ts:685](https://github.com/strands-agents/sdk-typescript/blob/6987b01d8ab113b5c0f336e0085579c60a7d0a57/strands-ts/src/hooks/events.ts#L685)
+
+## Methods
+
+### toJSON()
+
+```ts
+toJSON(): Pick<AgentResultEvent, "type" | "result">;
+```
+
+Defined in: [src/hooks/events.ts:698](https://github.com/strands-agents/sdk-typescript/blob/6987b01d8ab113b5c0f336e0085579c60a7d0a57/strands-ts/src/hooks/events.ts#L698)
+
+Serializes for wire transport, excluding the agent reference and invocationState. Called automatically by JSON.stringify().
+
+#### Returns
+
+`Pick`<`AgentResultEvent`, `"type"` | `"result"`\>

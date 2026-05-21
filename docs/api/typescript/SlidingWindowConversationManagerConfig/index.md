@@ -2,10 +2,11 @@
 type SlidingWindowConversationManagerConfig = {
   windowSize?: number;
   shouldTruncateResults?: boolean;
+  proactiveCompression?: boolean | ProactiveCompressionConfig;
 };
 ```
 
-Defined in: [src/conversation-manager/sliding-window-conversation-manager.ts:17](https://github.com/strands-agents/sdk-typescript/blob/5fc30c8099b8e6735d70c6ae2160f7c0dd7b23c7/src/conversation-manager/sliding-window-conversation-manager.ts#L17)
+Defined in: [src/conversation-manager/sliding-window-conversation-manager.ts:85](https://github.com/strands-agents/sdk-typescript/blob/6987b01d8ab113b5c0f336e0085579c60a7d0a57/strands-ts/src/conversation-manager/sliding-window-conversation-manager.ts#L85)
 
 Configuration for the sliding window conversation manager.
 
@@ -14,10 +15,10 @@ Configuration for the sliding window conversation manager.
 ### windowSize?
 
 ```ts
-optional windowSize: number;
+optional windowSize?: number;
 ```
 
-Defined in: [src/conversation-manager/sliding-window-conversation-manager.ts:22](https://github.com/strands-agents/sdk-typescript/blob/5fc30c8099b8e6735d70c6ae2160f7c0dd7b23c7/src/conversation-manager/sliding-window-conversation-manager.ts#L22)
+Defined in: [src/conversation-manager/sliding-window-conversation-manager.ts:90](https://github.com/strands-agents/sdk-typescript/blob/6987b01d8ab113b5c0f336e0085579c60a7d0a57/strands-ts/src/conversation-manager/sliding-window-conversation-manager.ts#L90)
 
 Maximum number of messages to keep in the conversation history. Defaults to 40 messages.
 
@@ -26,9 +27,25 @@ Maximum number of messages to keep in the conversation history. Defaults to 40 m
 ### shouldTruncateResults?
 
 ```ts
-optional shouldTruncateResults: boolean;
+optional shouldTruncateResults?: boolean;
 ```
 
-Defined in: [src/conversation-manager/sliding-window-conversation-manager.ts:28](https://github.com/strands-agents/sdk-typescript/blob/5fc30c8099b8e6735d70c6ae2160f7c0dd7b23c7/src/conversation-manager/sliding-window-conversation-manager.ts#L28)
+Defined in: [src/conversation-manager/sliding-window-conversation-manager.ts:96](https://github.com/strands-agents/sdk-typescript/blob/6987b01d8ab113b5c0f336e0085579c60a7d0a57/strands-ts/src/conversation-manager/sliding-window-conversation-manager.ts#L96)
 
 Whether to truncate tool results when a message is too large for the model’s context window. Defaults to true.
+
+---
+
+### proactiveCompression?
+
+```ts
+optional proactiveCompression?: boolean | ProactiveCompressionConfig;
+```
+
+Defined in: [src/conversation-manager/sliding-window-conversation-manager.ts:105](https://github.com/strands-agents/sdk-typescript/blob/6987b01d8ab113b5c0f336e0085579c60a7d0a57/strands-ts/src/conversation-manager/sliding-window-conversation-manager.ts#L105)
+
+Enable proactive context compression before the model call.
+
+-   `true`: compress when 70% of the context window is used (default threshold).
+-   `{ compressionThreshold: number }`: compress at the specified ratio (0, 1\].
+-   `false` or omitted: disabled, only reactive overflow recovery is used.

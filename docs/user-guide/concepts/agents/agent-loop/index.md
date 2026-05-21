@@ -81,6 +81,7 @@ Each model invocation ends with a stop reason that determines what happens next:
 
 -   **End turn**: The model has finished its response and has no further actions to take. This is the normal successful termination. The loop exits and returns the model’s final message.
 -   **Tool use**: The model wants to execute one or more tools before continuing. The loop executes the requested tools, appends the results to the conversation history, and invokes the model again.
+-   **Cancelled**: The agent was stopped externally via `agent.cancel()`. See [Cancellation](#cancellation) below.
 -   **Max tokens**: The model’s response was truncated because it hit the token limit. This is unrecoverable within the current loop. The model cannot continue from a partial response, and the loop terminates with an error.
 -   **Stop sequence**: The model encountered a configured stop sequence. Like end turn, this terminates the loop normally.
 -   **Content filtered**: The response was blocked by safety mechanisms.
@@ -91,6 +92,111 @@ Both content filtered and guardrail intervention terminate the loop and should b
 ### Extending the Loop
 
 The agent emits lifecycle events at key points: before and after each invocation, before and after each model call, and before and after each tool execution. These events enable observation, metrics collection, and behavior modification without changing the core loop logic. See [Hooks](/docs/user-guide/concepts/agents/hooks/index.md) for details on subscribing to these events.
+
+### Cancellation
+
+The `agent.cancel()` method provides a way to stop the loop from outside, such as on a client disconnect, a timeout, or a UI “Stop” button. Calling `cancel()` sets an internal signal that the agent checks at key checkpoints. The cancel signal clears automatically when the invocation completes, so the agent is immediately reusable.
+
+(( tab "Python" ))
+The agent checks for cancellation at two checkpoints:
+
+| Checkpoint | Behavior | Note |
+| --- | --- | --- |
+| Model response streaming | Partial output is discarded | Usage metrics may be inaccurate since the stream is closed before the model sends its final metadata event |
+| Before tool execution | Tool calls are skipped with error results added to maintain valid conversation state |  |
+
+The agent returns a result with `stop_reason="cancelled"`. `cancel()` is thread-safe and idempotent. Calling it multiple times or from different threads is safe.
+
+```python
+import threading
+import time
+
+from strands import Agent
+
+
+def timeout_watchdog(agent: Agent, timeout: float) -> None:
+    """Cancel the agent after a timeout period."""
+    time.sleep(timeout)
+    agent.cancel()
+
+
+agent = Agent()
+
+# Cancel from a background thread after 30 seconds
+watchdog = threading.Thread(target=timeout_watchdog, args=(agent, 30.0))
+watchdog.start()
+
+result = agent("Analyze this large dataset")
+watchdog.join()
+
+if result.stop_reason == "cancelled":
+    print("Agent was cancelled due to timeout")
+```
+
+Cancellation differs from [interrupts](/docs/user-guide/concepts/interrupts/index.md) in that it stops the agent entirely rather than pausing for human input. Interrupts allow the agent to resume from where it left off; cancellation does not.
+(( /tab "Python" ))
+
+(( tab "TypeScript" ))
+The agent checks for cancellation at four checkpoints:
+
+| Checkpoint | Behavior | Note |
+| --- | --- | --- |
+| Top of each loop cycle | Agent stops before the next model invocation |  |
+| During model response streaming | Partial output is discarded | Usage metrics may be inaccurate since the stream is closed before the model sends its final metadata event |
+| Before tool execution | All pending tool calls are skipped with error results |  |
+| Between sequential tool executions | Remaining tool calls are skipped with error results |  |
+
+The agent returns a result with `stopReason: 'cancelled'`. `cancel()` is idempotent — calling it multiple times is safe.
+
+```typescript
+const agent = new Agent()
+
+// Cancel after 30 seconds
+setTimeout(() => agent.cancel(), 30_000)
+
+const result = await agent.invoke('Analyze this large dataset')
+
+if (result.stopReason === 'cancelled') {
+  console.log('Agent was cancelled due to timeout')
+}
+```
+
+#### External cancellation signals
+
+You can also pass your own `AbortSignal` into `invoke()` or `stream()` via the `cancelSignal` option. The agent composes it with its internal controller using `AbortSignal.any()`, so both `agent.cancel()` and the external signal can trigger cancellation independently. This is useful for declarative timeouts, custom `AbortController` workflows, or framework-driven cancellation on client disconnect.
+
+```typescript
+// Timeout-based cancellation
+const timedResult = await agent.invoke('Analyze this large dataset', {
+  cancelSignal: AbortSignal.timeout(5000),
+})
+
+// Custom AbortController — call controller.abort() from anywhere to cancel
+const controller = new AbortController()
+const controllerResult = await agent.invoke('Hello', {
+  cancelSignal: controller.signal,
+})
+```
+
+#### Cancellation within tool execution
+
+The SDK automatically checks for cancellation before and between tool invocations (see checkpoints above). However, once a tool callback is running, cancellation is **cooperative** — only the tool itself can respond mid-execution. Tools can participate by forwarding the signal to APIs that accept `AbortSignal`, or by polling `cancelSignal.aborted` between steps. If a tool does neither, it runs to completion and the agent resumes cancellation handling after the tool returns.
+
+```typescript
+const myTool = tool({
+  name: 'long_running_task',
+  description: 'A task that respects cancellation',
+  inputSchema: z.object({ url: z.string() }),
+  callback: async (input, context) => {
+    // Forward the cancel signal to APIs that accept AbortSignal
+    const response = await fetch(input.url, {
+      signal: context?.agent.cancelSignal,
+    })
+    return response.text()
+  },
+})
+```
+(( /tab "TypeScript" ))
 
 ## Common Problems
 

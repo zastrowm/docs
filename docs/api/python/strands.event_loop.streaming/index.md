@@ -101,16 +101,20 @@ Updated state with finalized content block.
 #### handle\_message\_stop
 
 ```python
-def handle_message_stop(event: MessageStopEvent) -> StopReason
+def handle_message_stop(event: MessageStopEvent,
+                        content: list[dict[str, Any]]) -> StopReason
 ```
 
 Defined in: [src/strands/event\_loop/streaming.py:327](https://github.com/strands-agents/sdk-python/blob/main/src/strands/event_loop/streaming.py#L327)
 
 Handles the end of a message by returning the stop reason.
 
+Some models return “end\_turn” even when tool calls are present, which prevents the event loop from processing those tool calls. This function overrides to “tool\_use” so tool execution proceeds correctly.
+
 **Arguments**:
 
 -   `event` - Stop event.
+-   `content` - The message content blocks accumulated during streaming.
 
 **Returns**:
 
@@ -123,7 +127,7 @@ def handle_redact_content(event: RedactContentEvent, state: dict[str,
                                                                  Any]) -> None
 ```
 
-Defined in: [src/strands/event\_loop/streaming.py:339](https://github.com/strands-agents/sdk-python/blob/main/src/strands/event_loop/streaming.py#L339)
+Defined in: [src/strands/event\_loop/streaming.py:354](https://github.com/strands-agents/sdk-python/blob/main/src/strands/event_loop/streaming.py#L354)
 
 Handles redacting content from the input or output.
 
@@ -140,7 +144,7 @@ def extract_usage_metrics(
         time_to_first_byte_ms: int | None = None) -> tuple[Usage, Metrics]
 ```
 
-Defined in: [src/strands/event\_loop/streaming.py:350](https://github.com/strands-agents/sdk-python/blob/main/src/strands/event_loop/streaming.py#L350)
+Defined in: [src/strands/event\_loop/streaming.py:365](https://github.com/strands-agents/sdk-python/blob/main/src/strands/event_loop/streaming.py#L365)
 
 Extracts usage metrics from the metadata chunk.
 
@@ -163,7 +167,7 @@ async def process_stream(
 ) -> AsyncGenerator[TypedEvent, None]
 ```
 
-Defined in: [src/strands/event\_loop/streaming.py:371](https://github.com/strands-agents/sdk-python/blob/main/src/strands/event_loop/streaming.py#L371)
+Defined in: [src/strands/event\_loop/streaming.py:386](https://github.com/strands-agents/sdk-python/blob/main/src/strands/event_loop/streaming.py#L386)
 
 Processes the response stream from the API, constructing the final message and extracting usage metrics.
 
@@ -189,11 +193,12 @@ async def stream_messages(model: Model,
                           system_prompt_content: list[SystemContentBlock]
                           | None = None,
                           invocation_state: dict[str, Any] | None = None,
+                          model_state: dict[str, Any] | None = None,
                           cancel_signal: threading.Event | None = None,
                           **kwargs: Any) -> AsyncGenerator[TypedEvent, None]
 ```
 
-Defined in: [src/strands/event\_loop/streaming.py:442](https://github.com/strands-agents/sdk-python/blob/main/src/strands/event_loop/streaming.py#L442)
+Defined in: [src/strands/event\_loop/streaming.py:457](https://github.com/strands-agents/sdk-python/blob/main/src/strands/event_loop/streaming.py#L457)
 
 Streams messages to the model and processes the response.
 
@@ -206,6 +211,7 @@ Streams messages to the model and processes the response.
 -   `tool_choice` - Optional tool choice constraint for forcing specific tool usage.
 -   `system_prompt_content` - The authoritative system prompt content blocks that always contains the system prompt data.
 -   `invocation_state` - Caller-provided state/context that was passed to the agent when it was invoked.
+-   `model_state` - Runtime state for model providers (e.g., server-side response ids).
 -   `cancel_signal` - Optional threading.Event to check for cancellation during streaming.
 -   `**kwargs` - Additional keyword arguments for future extensibility.
 

@@ -93,7 +93,7 @@ Key features of the `SlidingWindowConversationManager`:
 -   **Maintains Window Size**: Automatically removes messages from the window if the number of messages exceeds the limit.
 -   **Dangling Message Cleanup**: Removes incomplete message sequences to maintain valid conversation state.
 -   **Overflow Trimming**: In the case of a context window overflow, it will trim the oldest messages from history until the request fits in the models context window.
--   **Configurable Tool Result Truncation**: Enable / disable truncation of tool results when the message exceeds context window limits. When `should_truncate_results=True` (default), large results are truncated with a placeholder message. When `False`, full results are preserved but more historical messages may be removed.
+-   **Configurable Tool Result Truncation**: Enable / disable truncation of tool results when the message exceeds context window limits. When `should_truncate_results=True` (default), large results are truncated with a placeholder message. When `False`, full results are preserved but more historical messages may be removed. For a proactive alternative that preserves full content externally, see the [Context Offloader](/docs/user-guide/concepts/plugins/context-offloader/index.md) plugin.
 -   **Per-Turn Management**: Optionally apply context management proactively during the agent loop execution, not just at the end.
 
 **Per-Turn Management**:
@@ -135,22 +135,31 @@ The `per_turn` parameter accepts:
 
 ### SummarizingConversationManager
 
-Not supported in TypeScript
+The [`SummarizingConversationManager`](/docs/api/python/strands.agent.conversation_manager.summarizing_conversation_manager#SummarizingConversationManager) (Python) / [`SummarizingConversationManager`](/docs/api/typescript/SummarizingConversationManager/index.md) (TypeScript) implements intelligent conversation context management by summarizing older messages instead of simply discarding them. This approach preserves important information while staying within context limits.
 
-The [`SummarizingConversationManager`](/docs/api/python/strands.agent.conversation_manager.summarizing_conversation_manager#SummarizingConversationManager) implements intelligent conversation context management by summarizing older messages instead of simply discarding them. This approach preserves important information while staying within context limits.
-
+(( tab "Python" ))
 Configuration parameters:
 
 -   **`summary_ratio`** (float, default: 0.3): Percentage of messages to summarize when reducing context (clamped between 0.1 and 0.8)
 -   **`preserve_recent_messages`** (int, default: 10): Minimum number of recent messages to always keep
 -   **`summarization_agent`** (Agent, optional): Custom agent for generating summaries. If not provided, uses the main agent instance. Cannot be used together with `summarization_system_prompt`.
 -   **`summarization_system_prompt`** (str, optional): Custom system prompt for summarization. If not provided, uses a default prompt that creates structured bullet-point summaries focusing on key topics, tools used, and technical information in third-person format. Cannot be used together with `summarization_agent`.
+(( /tab "Python" ))
+
+(( tab "TypeScript" ))
+Configuration parameters:
+
+-   **`model`** (Model, optional): Override model to use for generating summaries. When not provided, uses the agent’s own model.
+-   **`summaryRatio`** (number, default: 0.3): Ratio of messages to summarize when reducing context (clamped between 0.1 and 0.8)
+-   **`preserveRecentMessages`** (number, default: 10): Minimum number of recent messages to always keep
+-   **`summarizationSystemPrompt`** (string, optional): Custom system prompt for summarization. If not provided, uses a default prompt that creates structured bullet-point summaries focusing on key topics, tools used, and technical information in third-person format.
+(( /tab "TypeScript" ))
 
 **Basic Usage:**
 
+(( tab "Python" ))
 By default, the `SummarizingConversationManager` leverages the same model and configuration as your main agent to perform summarization.
 
-(( tab "Python" ))
 ```python
 from strands import Agent
 from strands.agent.conversation_manager import SummarizingConversationManager
@@ -162,8 +171,14 @@ agent = Agent(
 (( /tab "Python" ))
 
 (( tab "TypeScript" ))
-```ts
-// Not supported in TypeScript
+By default, the `SummarizingConversationManager` uses the agent’s own model for summarization. You can optionally provide a different model to override this behavior.
+
+```typescript
+import { Agent, SummarizingConversationManager } from '@strands-agents/sdk'
+
+const agent = new Agent({
+  conversationManager: new SummarizingConversationManager(),
+})
 ```
 (( /tab "TypeScript" ))
 
@@ -187,8 +202,23 @@ agent = Agent(
 (( /tab "Python" ))
 
 (( tab "TypeScript" ))
-```ts
-// Not supported in TypeScript
+```typescript
+import { Agent, SummarizingConversationManager, BedrockModel } from '@strands-agents/sdk'
+
+// Optionally use a different model for summarization
+const summarizationModel = new BedrockModel({
+  modelId: 'anthropic.claude-sonnet-4-20250514-v1:0',
+})
+
+const conversationManager = new SummarizingConversationManager({
+  model: summarizationModel, // Override the agent's model for summarization
+  summaryRatio: 0.3, // Summarize 30% of messages when context reduction is needed
+  preserveRecentMessages: 10, // Always keep 10 most recent messages
+})
+
+const agent = new Agent({
+  conversationManager,
+})
 ```
 (( /tab "TypeScript" ))
 
@@ -223,16 +253,36 @@ agent = Agent(
 (( /tab "Python" ))
 
 (( tab "TypeScript" ))
-```ts
-// Not supported in TypeScript
+```typescript
+import { Agent, SummarizingConversationManager } from '@strands-agents/sdk'
+
+// Custom system prompt for technical conversations
+  const customSystemPrompt = `
+You are summarizing a technical conversation.
+Create a concise bullet-point summary that:
+- Focuses on code changes, architectural decisions, and technical solutions
+- Preserves specific function names, file paths, and configuration details
+- Omits conversational elements and focuses on actionable information
+- Uses technical terminology appropriate for software development
+
+Format as bullet points without conversational language.
+`
+
+  const conversationManager = new SummarizingConversationManager({
+    summarizationSystemPrompt: customSystemPrompt,
+  })
+
+  const agent = new Agent({
+    conversationManager,
+  })
 ```
 (( /tab "TypeScript" ))
 
 **Advanced Configuration with Custom Summarization Agent:**
 
+(( tab "Python" ))
 For advanced use cases, you can provide a custom `summarization_agent` to handle the summarization process. This enables using a different model (such as a faster or a more cost-effective one), incorporating tools during summarization, or implementing specialized summarization logic tailored to your domain. The custom agent can leverage its own system prompt, tools, and model configuration to generate summaries that best preserve the essential context for your specific use case.
 
-(( tab "Python" ))
 ```python
 from strands import Agent
 from strands.agent.conversation_manager import SummarizingConversationManager
@@ -264,7 +314,7 @@ agent = Agent(
 ```
 (( /tab "TypeScript" ))
 
-Key features of the `SummarizingConversationManager`:
+#### Key Features
 
 -   **Context Window Management**: Automatically reduces context when token limits are exceeded
 -   **Intelligent Summarization**: Uses structured bullet-point summaries to capture key information
@@ -290,12 +340,68 @@ See the [SlidingWindowConversationManager](https://github.com/strands-agents/sdk
 (( /tab "Python" ))
 
 (( tab "TypeScript" ))
-In TypeScript, conversation managers don’t have a base interface. Instead, they are simply [HookProviders](/docs/user-guide/concepts/agents/hooks/index.md) that can subscribe to any event in the agent lifecycle.
+To create a custom conversation manager, extend the abstract [`ConversationManager`](/docs/api/typescript/ConversationManager/index.md) base class and implement the `reduce` method:
 
-For implementing custom conversation management, it’s recommended to:
+1.  **`reduce(options: ReduceOptions): boolean`**: Called automatically when a `ContextWindowOverflowError` occurs. Mutate `agent.messages` in place to reduce history, then return `true` if any reduction was made. Return `false` to let the error propagate out of the agent loop uncaught.
+    
+2.  **`initAgent(agent)` (optional)**: Override to add proactive management (e.g. trimming after each invocation). Always call `super.initAgent(agent)` to preserve the built-in overflow recovery hook.
+    
 
--   Register for the `AfterInvocationEvent` (or other After events) to perform proactive context trimming after each agent invocation completes
--   Register for the `AfterModelCallEvent` to handle reactive context trimming when the model’s context window is exceeded
+```typescript
+import {
+  Agent,
+  ConversationManager,
+  type ConversationManagerReduceOptions,
+} from '@strands-agents/sdk'
 
-See the [SlidingWindowConversationManager](https://github.com/strands-agents/sdk-typescript/blob/main/src/conversation-manager/sliding-window-conversation-manager.ts) implementation as a reference example.
+class Last10MessagesManager extends ConversationManager {
+  readonly name = 'my:last-10-messages'
+
+  reduce({ agent }: ConversationManagerReduceOptions): boolean {
+    if (agent.messages.length <= 10) return false
+    agent.messages.splice(0, agent.messages.length - 10)
+    return true
+  }
+}
+
+const agent = new Agent({
+  conversationManager: new Last10MessagesManager(),
+})
+```
+
+For proactive management alongside overflow recovery, override `initAgent`:
+
+```typescript
+import {
+  Agent,
+  ConversationManager,
+  AfterInvocationEvent,
+  type AgentData,
+  type ConversationManagerReduceOptions,
+} from '@strands-agents/sdk'
+
+class MyManager extends ConversationManager {
+  readonly name = 'my:manager'
+  private readonly _maxMessages = 5
+
+  reduce({ agent }: ConversationManagerReduceOptions): boolean {
+    return this._trim(agent.messages)
+  }
+
+  override initAgent(agent: LocalAgent): void {
+    super.initAgent(agent) // preserves overflow recovery
+    agent.addHook(AfterInvocationEvent, (event) => {
+      this._trim(event.agent.messages)
+    })
+  }
+
+  private _trim(messages: LocalAgent['messages']): boolean {
+    if (messages.length <= this._maxMessages) return false
+    messages.splice(0, messages.length - this._maxMessages)
+    return true
+  }
+}
+```
+
+See the [SlidingWindowConversationManager](https://github.com/strands-agents/sdk-typescript/blob/main/strands-ts/src/conversation-manager/sliding-window-conversation-manager.ts) implementation as a reference example.
 (( /tab "TypeScript" ))

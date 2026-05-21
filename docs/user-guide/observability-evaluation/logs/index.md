@@ -59,9 +59,9 @@ const pinoLogger = pino({
   transport: {
     target: 'pino-pretty',
     options: {
-      colorize: true
-    }
-  }
+      colorize: true,
+    },
+  },
 })
 
 configureLogging(pinoLogger)
@@ -249,7 +249,7 @@ const customLogger: Logger = {
   },
   error: (...args: unknown[]) => {
     myLoggingService.log('ERROR', ...args)
-  }
+  },
 }
 
 configureLogging(customLogger)

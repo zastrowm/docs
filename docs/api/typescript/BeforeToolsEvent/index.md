@@ -1,10 +1,14 @@
-Defined in: [src/hooks/events.ts:393](https://github.com/strands-agents/sdk-typescript/blob/5fc30c8099b8e6735d70c6ae2160f7c0dd7b23c7/src/hooks/events.ts#L393)
+Defined in: [src/hooks/events.ts:732](https://github.com/strands-agents/sdk-typescript/blob/6987b01d8ab113b5c0f336e0085579c60a7d0a57/strands-ts/src/hooks/events.ts#L732)
 
-Event triggered before executing tools. Fired when the model returns tool use blocks that need to be executed.
+Event triggered before executing tools. Fired when the model returns tool use blocks that need to be executed. Hook callbacks can set [cancel](#cancel) to prevent all tools from executing.
 
 ## Extends
 
 -   [`HookableEvent`](/docs/api/typescript/HookableEvent/index.md)
+
+## Implements
+
+-   `Interruptible`
 
 ## Constructors
 
@@ -14,15 +18,16 @@ Event triggered before executing tools. Fired when the model returns tool use bl
 new BeforeToolsEvent(data): BeforeToolsEvent;
 ```
 
-Defined in: [src/hooks/events.ts:398](https://github.com/strands-agents/sdk-typescript/blob/5fc30c8099b8e6735d70c6ae2160f7c0dd7b23c7/src/hooks/events.ts#L398)
+Defined in: [src/hooks/events.ts:745](https://github.com/strands-agents/sdk-typescript/blob/6987b01d8ab113b5c0f336e0085579c60a7d0a57/strands-ts/src/hooks/events.ts#L745)
 
 #### Parameters
 
 | Parameter | Type |
 | --- | --- |
-| `data` | { `agent`: [`AgentData`](/docs/api/typescript/AgentData/index.md); `message`: [`Message`](/docs/api/typescript/Message/index.md); } |
-| `data.agent` | [`AgentData`](/docs/api/typescript/AgentData/index.md) |
+| `data` | { `agent`: `LocalAgent`; `message`: [`Message`](/docs/api/typescript/Message/index.md); `invocationState`: [`InvocationState`](/docs/api/typescript/InvocationState/index.md); } |
+| `data.agent` | `LocalAgent` |
 | `data.message` | [`Message`](/docs/api/typescript/Message/index.md) |
+| `data.invocationState` | [`InvocationState`](/docs/api/typescript/InvocationState/index.md) |
 
 #### Returns
 
@@ -40,17 +45,17 @@ Defined in: [src/hooks/events.ts:398](https://github.com/strands-agents/sdk-type
 readonly type: "beforeToolsEvent";
 ```
 
-Defined in: [src/hooks/events.ts:394](https://github.com/strands-agents/sdk-typescript/blob/5fc30c8099b8e6735d70c6ae2160f7c0dd7b23c7/src/hooks/events.ts#L394)
+Defined in: [src/hooks/events.ts:733](https://github.com/strands-agents/sdk-typescript/blob/6987b01d8ab113b5c0f336e0085579c60a7d0a57/strands-ts/src/hooks/events.ts#L733)
 
 ---
 
 ### agent
 
 ```ts
-readonly agent: AgentData;
+readonly agent: LocalAgent;
 ```
 
-Defined in: [src/hooks/events.ts:395](https://github.com/strands-agents/sdk-typescript/blob/5fc30c8099b8e6735d70c6ae2160f7c0dd7b23c7/src/hooks/events.ts#L395)
+Defined in: [src/hooks/events.ts:734](https://github.com/strands-agents/sdk-typescript/blob/6987b01d8ab113b5c0f336e0085579c60a7d0a57/strands-ts/src/hooks/events.ts#L734)
 
 ---
 
@@ -60,4 +65,78 @@ Defined in: [src/hooks/events.ts:395](https://github.com/strands-agents/sdk-type
 readonly message: Message;
 ```
 
-Defined in: [src/hooks/events.ts:396](https://github.com/strands-agents/sdk-typescript/blob/5fc30c8099b8e6735d70c6ae2160f7c0dd7b23c7/src/hooks/events.ts#L396)
+Defined in: [src/hooks/events.ts:735](https://github.com/strands-agents/sdk-typescript/blob/6987b01d8ab113b5c0f336e0085579c60a7d0a57/strands-ts/src/hooks/events.ts#L735)
+
+---
+
+### invocationState
+
+```ts
+readonly invocationState: InvocationState;
+```
+
+Defined in: [src/hooks/events.ts:736](https://github.com/strands-agents/sdk-typescript/blob/6987b01d8ab113b5c0f336e0085579c60a7d0a57/strands-ts/src/hooks/events.ts#L736)
+
+---
+
+### cancel
+
+```ts
+cancel: string | boolean = false;
+```
+
+Defined in: [src/hooks/events.ts:743](https://github.com/strands-agents/sdk-typescript/blob/6987b01d8ab113b5c0f336e0085579c60a7d0a57/strands-ts/src/hooks/events.ts#L743)
+
+Set by hook callbacks to cancel all tool calls. When set to `true`, a default cancel message is used. When set to a string, that string is used as the tool result error message.
+
+## Methods
+
+### interrupt()
+
+```ts
+interrupt<T>(params): T;
+```
+
+Defined in: [src/hooks/events.ts:760](https://github.com/strands-agents/sdk-typescript/blob/6987b01d8ab113b5c0f336e0085579c60a7d0a57/strands-ts/src/hooks/events.ts#L760)
+
+Raises an interrupt for human-in-the-loop workflows. If a response is available (from a previous resume), returns it immediately. Otherwise, throws an InterruptError to halt agent execution.
+
+#### Type Parameters
+
+| Type Parameter | Default type |
+| --- | --- |
+| `T` | [`JSONValue`](/docs/api/typescript/JSONValue/index.md) |
+
+#### Parameters
+
+| Parameter | Type | Description |
+| --- | --- | --- |
+| `params` | [`InterruptParams`](/docs/api/typescript/InterruptParams/index.md) | Interrupt parameters including name and optional reason |
+
+#### Returns
+
+`T`
+
+The user’s response when resuming from an interrupt
+
+#### Implementation of
+
+```ts
+Interruptible.interrupt
+```
+
+---
+
+### toJSON()
+
+```ts
+toJSON(): Pick<BeforeToolsEvent, "type" | "message">;
+```
+
+Defined in: [src/hooks/events.ts:768](https://github.com/strands-agents/sdk-typescript/blob/6987b01d8ab113b5c0f336e0085579c60a7d0a57/strands-ts/src/hooks/events.ts#L768)
+
+Serializes for wire transport, excluding the agent reference, invocationState, and mutable cancel flag. Called automatically by JSON.stringify().
+
+#### Returns
+
+`Pick`<`BeforeToolsEvent`, `"type"` | `"message"`\>

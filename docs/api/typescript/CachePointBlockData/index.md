@@ -1,4 +1,4 @@
-Defined in: [src/types/messages.ts:492](https://github.com/strands-agents/sdk-typescript/blob/5fc30c8099b8e6735d70c6ae2160f7c0dd7b23c7/src/types/messages.ts#L492)
+Defined in: [src/types/messages.ts:536](https://github.com/strands-agents/sdk-typescript/blob/6987b01d8ab113b5c0f336e0085579c60a7d0a57/strands-ts/src/types/messages.ts#L536)
 
 Data for a cache point block.
 
@@ -10,6 +10,20 @@ Data for a cache point block.
 cacheType: "default";
 ```
 
-Defined in: [src/types/messages.ts:496](https://github.com/strands-agents/sdk-typescript/blob/5fc30c8099b8e6735d70c6ae2160f7c0dd7b23c7/src/types/messages.ts#L496)
+Defined in: [src/types/messages.ts:540](https://github.com/strands-agents/sdk-typescript/blob/6987b01d8ab113b5c0f336e0085579c60a7d0a57/strands-ts/src/types/messages.ts#L540)
 
 The cache type. Currently only ‘default’ is supported.
+
+---
+
+### ttl?
+
+```ts
+optional ttl?: string;
+```
+
+Defined in: [src/types/messages.ts:549](https://github.com/strands-agents/sdk-typescript/blob/6987b01d8ab113b5c0f336e0085579c60a7d0a57/strands-ts/src/types/messages.ts#L549)
+
+Optional TTL for the cache entry. When omitted, the provider’s default TTL is used.
+
+The accepted value space is provider-specific. For example, the Bedrock provider only accepts the values defined by `BedrockCacheTTL` (`'5m'` and `'1h'`). Other providers may accept different values or ignore this field.

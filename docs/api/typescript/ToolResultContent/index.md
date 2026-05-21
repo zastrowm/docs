@@ -1,7 +1,10 @@
 ```ts
 type ToolResultContent =
   | TextBlock
-  | JsonBlock;
+  | JsonBlock
+  | ImageBlock
+  | VideoBlock
+  | DocumentBlock;
 ```
 
-Defined in: [src/types/messages.ts:282](https://github.com/strands-agents/sdk-typescript/blob/5fc30c8099b8e6735d70c6ae2160f7c0dd7b23c7/src/types/messages.ts#L282)
+Defined in: [src/types/messages.ts:318](https://github.com/strands-agents/sdk-typescript/blob/6987b01d8ab113b5c0f336e0085579c60a7d0a57/strands-ts/src/types/messages.ts#L318)

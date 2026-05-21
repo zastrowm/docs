@@ -13,7 +13,7 @@ Python supports three approaches to defining tools:
 (( tab "TypeScript" ))
 TypeScript supports two main approaches:
 
--   **tool() function with [Zod](https://zod.dev/) schemas**: Create tools using the `tool()` function with Zod schema validation for type-safe input handling.
+-   **tool() function with [Zod](https://zod.dev/) or JSON schemas**: Create tools using the `tool()` function with either Zod schemas for type-safe validated input, or plain JSON Schema objects for schema-only definitions without runtime validation.
     
 -   **Class-based tools extending FunctionTool**: Create tools within classes to maintain shared state and resources.
 (( /tab "TypeScript" ))
@@ -59,7 +59,28 @@ const weatherTool = tool({
 })
 ```
 
-TypeScript uses Zod schemas for input validation and type generation. The schema’s descriptions are used by the model to understand when and how to use the tool.
+The `tool()` function accepts either a [Zod](https://zod.dev/) schema or a plain JSON Schema object as `inputSchema`. With Zod, input is validated at runtime and the callback receives typed input. With JSON Schema, the schema is passed through as-is and the callback receives `unknown`.
+
+Here’s the same tool using a JSON Schema object instead:
+
+```typescript
+const weatherTool = tool({
+  name: 'weather_forecast',
+  description: 'Get weather forecast for a city',
+  inputSchema: {
+    type: 'object',
+    properties: {
+      city: { type: 'string', description: 'The name of the city' },
+      days: { type: 'number', description: 'Number of days for the forecast' },
+    },
+    required: ['city'],
+  },
+  callback: (input) => {
+    const { city, days = 3 } = input as { city: string; days?: number }
+    return `Weather forecast for ${city} for the next ${days} days...`
+  },
+})
+```
 (( /tab "TypeScript" ))
 
 ### Overriding Tool Name, Description, and Schema
@@ -81,8 +102,20 @@ def weather_forecast(city: str, days: int = 3) -> str:
 (( /tab "Python" ))
 
 (( tab "TypeScript" ))
-```ts
-// Not supported in TypeScript
+In TypeScript, the tool name and description are always provided explicitly in the `tool()` configuration:
+
+```typescript
+const weatherTool = tool({
+  name: 'get_weather',
+  description: 'Retrieves weather forecast for a specified location',
+  inputSchema: z.object({
+    city: z.string().describe('The name of the city'),
+    days: z.number().default(3).describe('Number of days for the forecast'),
+  }),
+  callback: (input: { city: any; days: any }) => {
+    return `Weather forecast for ${input.city} for the next ${input.days} days...`
+  },
+})
 ```
 (( /tab "TypeScript" ))
 
@@ -121,9 +154,7 @@ def calculate_area(shape: str, radius: float = None, width: float = None, height
 (( /tab "Python" ))
 
 (( tab "TypeScript" ))
-```ts
-// Not supported in TypeScript
-```
+In TypeScript, `inputSchema` is always provided explicitly in the `tool()` configuration - as either a Zod schema or a JSON Schema object. See the [basic example](#basic-example) above for both approaches.
 (( /tab "TypeScript" ))
 
 ## Using and Customizing Tools:
@@ -403,28 +434,26 @@ It’s important to understand how invocation state compares to other approaches
 (( /tab "Python" ))
 
 (( tab "TypeScript" ))
-In TypeScript, tools access **agent state** through `context.agent.state`. The state provides key-value storage that persists across tool invocations but is not passed to the model:
+In TypeScript, tools access **invocation state** through `context.invocationState`. This per-invocation `Record<string, unknown>` is passed in via `InvokeOptions` and shared by reference across hooks and tools for the duration of one invocation:
 
 ```typescript
 const apiCallTool = tool({
   name: 'api_call',
   description: 'Make an API call with user context',
   inputSchema: z.object({
-    query: z.string().describe('The search query to send to the API'),
+    query: z.string().describe('The search query'),
   }),
   callback: async (input, context) => {
     if (!context) {
       throw new Error('Context is required')
     }
 
-    // Access state via context.agent.state
-    const userId = context.agent.state.get('userId') as string | undefined
+    // Access per-invocation state via context.invocationState
+    const userId = context.invocationState.userId as string | undefined
 
     const response = await fetch('https://api.example.com/search', {
       method: 'GET',
-      headers: {
-        'X-User-ID': userId || '',
-      },
+      headers: { 'X-User-ID': userId || '' },
     })
 
     return response.json()
@@ -433,17 +462,27 @@ const apiCallTool = tool({
 
 const agent = new Agent({ tools: [apiCallTool] })
 
-// Set state before invoking
-agent.state.set('userId', 'user123')
-
-const result = await agent.invoke('Get my profile data')
+// Pass invocation state when invoking
+const result = await agent.invoke('Get my profile data', {
+  invocationState: { userId: 'user123' },
+})
 ```
 
-Agent state is useful for:
+Invocation state is useful for:
 
-1.  **Request Context**: Access session IDs, user information, or request-specific data
-2.  **Multi-Agent Shared State**: In multi-agent patterns, access state shared across all agents
-3.  **Tool State Persistence**: Maintain state between tool invocations within the same agent session
+1.  **Request Context**: Access session IDs, user information, or request-specific data without polluting model context
+2.  **Multi-Agent Shared State**: In [Graph](/docs/user-guide/concepts/multi-agent/graph/index.md) and [Swarm](/docs/user-guide/concepts/multi-agent/swarm/index.md) patterns, access state shared across all agents
+3.  **Cross-Hook Counters**: Track tool call counts, model calls, or custom metrics across hooks and tools within a single invocation
+
+**Invocation State Compared To Other Approaches**
+
+-   **Tool Parameters**: Data the LLM should reason about — search queries, file paths, user requests.
+    
+-   **Invocation State** (`context.invocationState`): Request-scoped context that should not appear in prompts but affects tool behavior. Ephemeral — scoped to one invocation and accepts arbitrary values.
+    
+-   **Agent State** (`context.agent.appState`): Durable key-value storage that persists across invocations. JSON-serializable and deep-copied on read/write. Use for configuration that doesn’t change between requests.
+    
+-   **[Class-based tools](#class-based-tools)**: Instance-level configuration that requires initialization. Use for API keys, database connections, or shared resources.
 (( /tab "TypeScript" ))
 
 ### Tool Streaming
@@ -493,7 +532,9 @@ const processDatasetTool = tool({
   inputSchema: z.object({
     records: z.number().describe('Number of records to process'),
   }),
-  callback: async function* (input: { records: number }): AsyncGenerator<string, string, unknown> {
+  callback: async function* (input: {
+    records: number
+  }): AsyncGenerator<string, string, unknown> {
     const start = Date.now()
 
     for (let i = 0; i < input.records; i++) {

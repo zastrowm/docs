@@ -1,4 +1,4 @@
-Defined in: [src/types/media.ts:205](https://github.com/strands-agents/sdk-typescript/blob/5fc30c8099b8e6735d70c6ae2160f7c0dd7b23c7/src/types/media.ts#L205)
+Defined in: [src/types/media.ts:172](https://github.com/strands-agents/sdk-typescript/blob/6987b01d8ab113b5c0f336e0085579c60a7d0a57/strands-ts/src/types/media.ts#L172)
 
 Image content block.
 
@@ -15,7 +15,7 @@ Image content block.
 new ImageBlock(data): ImageBlock;
 ```
 
-Defined in: [src/types/media.ts:221](https://github.com/strands-agents/sdk-typescript/blob/5fc30c8099b8e6735d70c6ae2160f7c0dd7b23c7/src/types/media.ts#L221)
+Defined in: [src/types/media.ts:188](https://github.com/strands-agents/sdk-typescript/blob/6987b01d8ab113b5c0f336e0085579c60a7d0a57/strands-ts/src/types/media.ts#L188)
 
 #### Parameters
 
@@ -35,7 +35,7 @@ Defined in: [src/types/media.ts:221](https://github.com/strands-agents/sdk-types
 readonly type: "imageBlock";
 ```
 
-Defined in: [src/types/media.ts:209](https://github.com/strands-agents/sdk-typescript/blob/5fc30c8099b8e6735d70c6ae2160f7c0dd7b23c7/src/types/media.ts#L209)
+Defined in: [src/types/media.ts:176](https://github.com/strands-agents/sdk-typescript/blob/6987b01d8ab113b5c0f336e0085579c60a7d0a57/strands-ts/src/types/media.ts#L176)
 
 Discriminator for image content.
 
@@ -44,10 +44,10 @@ Discriminator for image content.
 ### format
 
 ```ts
-readonly format: ImageFormat;
+readonly format: "png" | "jpeg" | "jpg" | "gif" | "webp";
 ```
 
-Defined in: [src/types/media.ts:214](https://github.com/strands-agents/sdk-typescript/blob/5fc30c8099b8e6735d70c6ae2160f7c0dd7b23c7/src/types/media.ts#L214)
+Defined in: [src/types/media.ts:181](https://github.com/strands-agents/sdk-typescript/blob/6987b01d8ab113b5c0f336e0085579c60a7d0a57/strands-ts/src/types/media.ts#L181)
 
 Image format.
 
@@ -63,7 +63,7 @@ Image format.
 readonly source: ImageSource;
 ```
 
-Defined in: [src/types/media.ts:219](https://github.com/strands-agents/sdk-typescript/blob/5fc30c8099b8e6735d70c6ae2160f7c0dd7b23c7/src/types/media.ts#L219)
+Defined in: [src/types/media.ts:186](https://github.com/strands-agents/sdk-typescript/blob/6987b01d8ab113b5c0f336e0085579c60a7d0a57/strands-ts/src/types/media.ts#L186)
 
 Image source.
 
@@ -78,12 +78,13 @@ Image source.
 ```ts
 toJSON(): {
   image: {
-     format: ImageFormat;
+     format: "png" | "jpeg" | "jpg" | "gif" | "webp";
      source:   | {
         bytes: string;
       }
         | {
-        s3Location: {
+        location: {
+           type: "s3";
            uri: string;
            bucketOwner?: string;
         };
@@ -95,7 +96,7 @@ toJSON(): {
 };
 ```
 
-Defined in: [src/types/media.ts:253](https://github.com/strands-agents/sdk-typescript/blob/5fc30c8099b8e6735d70c6ae2160f7c0dd7b23c7/src/types/media.ts#L253)
+Defined in: [src/types/media.ts:220](https://github.com/strands-agents/sdk-typescript/blob/6987b01d8ab113b5c0f336e0085579c60a7d0a57/strands-ts/src/types/media.ts#L220)
 
 Serializes the ImageBlock to a JSON-compatible ContentBlockData object. Called automatically by JSON.stringify(). Uint8Array bytes are encoded as base64 string.
 
@@ -104,12 +105,13 @@ Serializes the ImageBlock to a JSON-compatible ContentBlockData object. Called a
 ```ts
 {
   image: {
-     format: ImageFormat;
+     format: "png" | "jpeg" | "jpg" | "gif" | "webp";
      source:   | {
         bytes: string;
       }
         | {
-        s3Location: {
+        location: {
+           type: "s3";
            uri: string;
            bucketOwner?: string;
         };
@@ -123,9 +125,9 @@ Serializes the ImageBlock to a JSON-compatible ContentBlockData object. Called a
 
 | Name | Type | Description | Defined in |
 | --- | --- | --- | --- |
-| `image` | { `format`: [`ImageFormat`](/docs/api/typescript/ImageFormat/index.md); `source`: | { `bytes`: `string`; } | { `s3Location`: { `uri`: `string`; `bucketOwner?`: `string`; }; } | { `url`: `string`; }; } | \- | [src/types/media.ts:253](https://github.com/strands-agents/sdk-typescript/blob/5fc30c8099b8e6735d70c6ae2160f7c0dd7b23c7/src/types/media.ts#L253) |
-| `image.format` | [`ImageFormat`](/docs/api/typescript/ImageFormat/index.md) | Image format. | [src/types/media.ts:194](https://github.com/strands-agents/sdk-typescript/blob/5fc30c8099b8e6735d70c6ae2160f7c0dd7b23c7/src/types/media.ts#L194) |
-| `image.source` | | { `bytes`: `string`; } | { `s3Location`: { `uri`: `string`; `bucketOwner?`: `string`; }; } | { `url`: `string`; } | Image source. | [src/types/media.ts:199](https://github.com/strands-agents/sdk-typescript/blob/5fc30c8099b8e6735d70c6ae2160f7c0dd7b23c7/src/types/media.ts#L199) |
+| `image` | { `format`: `"png"` | `"jpeg"` | `"jpg"` | `"gif"` | `"webp"`; `source`: | { `bytes`: `string`; } | { `location`: { `type`: `"s3"`; `uri`: `string`; `bucketOwner?`: `string`; }; } | { `url`: `string`; }; } | \- | [src/types/media.ts:220](https://github.com/strands-agents/sdk-typescript/blob/6987b01d8ab113b5c0f336e0085579c60a7d0a57/strands-ts/src/types/media.ts#L220) |
+| `image.format` | `"png"` | `"jpeg"` | `"jpg"` | `"gif"` | `"webp"` | Image format. | [src/types/media.ts:161](https://github.com/strands-agents/sdk-typescript/blob/6987b01d8ab113b5c0f336e0085579c60a7d0a57/strands-ts/src/types/media.ts#L161) |
+| `image.source` | | { `bytes`: `string`; } | { `location`: { `type`: `"s3"`; `uri`: `string`; `bucketOwner?`: `string`; }; } | { `url`: `string`; } | Image source. | [src/types/media.ts:166](https://github.com/strands-agents/sdk-typescript/blob/6987b01d8ab113b5c0f336e0085579c60a7d0a57/strands-ts/src/types/media.ts#L166) |
 
 #### Implementation of
 
@@ -141,7 +143,7 @@ JSONSerializable.toJSON
 static fromJSON(data): ImageBlock;
 ```
 
-Defined in: [src/types/media.ts:277](https://github.com/strands-agents/sdk-typescript/blob/5fc30c8099b8e6735d70c6ae2160f7c0dd7b23c7/src/types/media.ts#L277)
+Defined in: [src/types/media.ts:244](https://github.com/strands-agents/sdk-typescript/blob/6987b01d8ab113b5c0f336e0085579c60a7d0a57/strands-ts/src/types/media.ts#L244)
 
 Creates an ImageBlock instance from its wrapped data format. Base64-encoded bytes are decoded back to Uint8Array.
 
@@ -149,10 +151,10 @@ Creates an ImageBlock instance from its wrapped data format. Base64-encoded byte
 
 | Parameter | Type | Description |
 | --- | --- | --- |
-| `data` | { `image`: { `format`: [`ImageFormat`](/docs/api/typescript/ImageFormat/index.md); `source`: | { `bytes`: `string` | `Uint8Array`<`ArrayBufferLike`\>; } | { `s3Location`: { `uri`: `string`; `bucketOwner?`: `string`; }; } | { `url`: `string`; }; }; } | Wrapped ImageBlockData to deserialize (accepts both string and Uint8Array for bytes) |
-| `data.image` | { `format`: [`ImageFormat`](/docs/api/typescript/ImageFormat/index.md); `source`: | { `bytes`: `string` | `Uint8Array`<`ArrayBufferLike`\>; } | { `s3Location`: { `uri`: `string`; `bucketOwner?`: `string`; }; } | { `url`: `string`; }; } | \- |
-| `data.image.format` | [`ImageFormat`](/docs/api/typescript/ImageFormat/index.md) | Image format. |
-| `data.image.source` | | { `bytes`: `string` | `Uint8Array`<`ArrayBufferLike`\>; } | { `s3Location`: { `uri`: `string`; `bucketOwner?`: `string`; }; } | { `url`: `string`; } | Image source. |
+| `data` | { `image`: { `format`: `"png"` | `"jpeg"` | `"jpg"` | `"gif"` | `"webp"`; `source`: | { `bytes`: `string` | `Uint8Array`<`ArrayBufferLike`\>; } | { `location`: { `type`: `"s3"`; `uri`: `string`; `bucketOwner?`: `string`; }; } | { `url`: `string`; }; }; } | Wrapped ImageBlockData to deserialize (accepts both string and Uint8Array for bytes) |
+| `data.image` | { `format`: `"png"` | `"jpeg"` | `"jpg"` | `"gif"` | `"webp"`; `source`: | { `bytes`: `string` | `Uint8Array`<`ArrayBufferLike`\>; } | { `location`: { `type`: `"s3"`; `uri`: `string`; `bucketOwner?`: `string`; }; } | { `url`: `string`; }; } | \- |
+| `data.image.format` | `"png"` | `"jpeg"` | `"jpg"` | `"gif"` | `"webp"` | Image format. |
+| `data.image.source` | | { `bytes`: `string` | `Uint8Array`<`ArrayBufferLike`\>; } | { `location`: { `type`: `"s3"`; `uri`: `string`; `bucketOwner?`: `string`; }; } | { `url`: `string`; } | Image source. |
 
 #### Returns
 

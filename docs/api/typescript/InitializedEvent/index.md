@@ -1,4 +1,4 @@
-Defined in: [src/hooks/events.ts:84](https://github.com/strands-agents/sdk-typescript/blob/5fc30c8099b8e6735d70c6ae2160f7c0dd7b23c7/src/hooks/events.ts#L84)
+Defined in: [src/hooks/events.ts:116](https://github.com/strands-agents/sdk-typescript/blob/6987b01d8ab113b5c0f336e0085579c60a7d0a57/strands-ts/src/hooks/events.ts#L116)
 
 Event triggered when an agent has finished initialization. Fired after the agent has been fully constructed and all built-in components have been initialized.
 
@@ -14,14 +14,14 @@ Event triggered when an agent has finished initialization. Fired after the agent
 new InitializedEvent(data): InitializedEvent;
 ```
 
-Defined in: [src/hooks/events.ts:88](https://github.com/strands-agents/sdk-typescript/blob/5fc30c8099b8e6735d70c6ae2160f7c0dd7b23c7/src/hooks/events.ts#L88)
+Defined in: [src/hooks/events.ts:120](https://github.com/strands-agents/sdk-typescript/blob/6987b01d8ab113b5c0f336e0085579c60a7d0a57/strands-ts/src/hooks/events.ts#L120)
 
 #### Parameters
 
 | Parameter | Type |
 | --- | --- |
-| `data` | { `agent`: [`AgentData`](/docs/api/typescript/AgentData/index.md); } |
-| `data.agent` | [`AgentData`](/docs/api/typescript/AgentData/index.md) |
+| `data` | { `agent`: `LocalAgent`; } |
+| `data.agent` | `LocalAgent` |
 
 #### Returns
 
@@ -39,14 +39,30 @@ Defined in: [src/hooks/events.ts:88](https://github.com/strands-agents/sdk-types
 readonly type: "initializedEvent";
 ```
 
-Defined in: [src/hooks/events.ts:85](https://github.com/strands-agents/sdk-typescript/blob/5fc30c8099b8e6735d70c6ae2160f7c0dd7b23c7/src/hooks/events.ts#L85)
+Defined in: [src/hooks/events.ts:117](https://github.com/strands-agents/sdk-typescript/blob/6987b01d8ab113b5c0f336e0085579c60a7d0a57/strands-ts/src/hooks/events.ts#L117)
 
 ---
 
 ### agent
 
 ```ts
-readonly agent: AgentData;
+readonly agent: LocalAgent;
 ```
 
-Defined in: [src/hooks/events.ts:86](https://github.com/strands-agents/sdk-typescript/blob/5fc30c8099b8e6735d70c6ae2160f7c0dd7b23c7/src/hooks/events.ts#L86)
+Defined in: [src/hooks/events.ts:118](https://github.com/strands-agents/sdk-typescript/blob/6987b01d8ab113b5c0f336e0085579c60a7d0a57/strands-ts/src/hooks/events.ts#L118)
+
+## Methods
+
+### toJSON()
+
+```ts
+toJSON(): Pick<InitializedEvent, "type">;
+```
+
+Defined in: [src/hooks/events.ts:129](https://github.com/strands-agents/sdk-typescript/blob/6987b01d8ab113b5c0f336e0085579c60a7d0a57/strands-ts/src/hooks/events.ts#L129)
+
+Serializes for wire transport, excluding the agent reference. Called automatically by JSON.stringify().
+
+#### Returns
+
+`Pick`<`InitializedEvent`, `"type"`\>

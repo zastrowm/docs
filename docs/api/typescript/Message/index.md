@@ -1,4 +1,4 @@
-Defined in: [src/types/messages.ts:35](https://github.com/strands-agents/sdk-typescript/blob/5fc30c8099b8e6735d70c6ae2160f7c0dd7b23c7/src/types/messages.ts#L35)
+Defined in: [src/types/messages.ts:56](https://github.com/strands-agents/sdk-typescript/blob/6987b01d8ab113b5c0f336e0085579c60a7d0a57/strands-ts/src/types/messages.ts#L56)
 
 A message in a conversation between user and assistant. Each message has a role (user or assistant) and an array of content blocks.
 
@@ -14,15 +14,16 @@ A message in a conversation between user and assistant. Each message has a role 
 new Message(data): Message;
 ```
 
-Defined in: [src/types/messages.ts:51](https://github.com/strands-agents/sdk-typescript/blob/5fc30c8099b8e6735d70c6ae2160f7c0dd7b23c7/src/types/messages.ts#L51)
+Defined in: [src/types/messages.ts:77](https://github.com/strands-agents/sdk-typescript/blob/6987b01d8ab113b5c0f336e0085579c60a7d0a57/strands-ts/src/types/messages.ts#L77)
 
 #### Parameters
 
 | Parameter | Type |
 | --- | --- |
-| `data` | { `role`: [`Role`](/docs/api/typescript/Role/index.md); `content`: [`ContentBlock`](/docs/api/typescript/ContentBlock/index.md)\[\]; } |
+| `data` | { `role`: [`Role`](/docs/api/typescript/Role/index.md); `content`: [`ContentBlock`](/docs/api/typescript/ContentBlock/index.md)\[\]; `metadata?`: `MessageMetadata`; } |
 | `data.role` | [`Role`](/docs/api/typescript/Role/index.md) |
 | `data.content` | [`ContentBlock`](/docs/api/typescript/ContentBlock/index.md)\[\] |
+| `data.metadata?` | `MessageMetadata` |
 
 #### Returns
 
@@ -36,7 +37,7 @@ Defined in: [src/types/messages.ts:51](https://github.com/strands-agents/sdk-typ
 readonly type: "message";
 ```
 
-Defined in: [src/types/messages.ts:39](https://github.com/strands-agents/sdk-typescript/blob/5fc30c8099b8e6735d70c6ae2160f7c0dd7b23c7/src/types/messages.ts#L39)
+Defined in: [src/types/messages.ts:60](https://github.com/strands-agents/sdk-typescript/blob/6987b01d8ab113b5c0f336e0085579c60a7d0a57/strands-ts/src/types/messages.ts#L60)
 
 Discriminator for message type.
 
@@ -48,7 +49,7 @@ Discriminator for message type.
 readonly role: Role;
 ```
 
-Defined in: [src/types/messages.ts:44](https://github.com/strands-agents/sdk-typescript/blob/5fc30c8099b8e6735d70c6ae2160f7c0dd7b23c7/src/types/messages.ts#L44)
+Defined in: [src/types/messages.ts:65](https://github.com/strands-agents/sdk-typescript/blob/6987b01d8ab113b5c0f336e0085579c60a7d0a57/strands-ts/src/types/messages.ts#L65)
 
 The role of the message sender.
 
@@ -60,9 +61,21 @@ The role of the message sender.
 readonly content: ContentBlock[];
 ```
 
-Defined in: [src/types/messages.ts:49](https://github.com/strands-agents/sdk-typescript/blob/5fc30c8099b8e6735d70c6ae2160f7c0dd7b23c7/src/types/messages.ts#L49)
+Defined in: [src/types/messages.ts:70](https://github.com/strands-agents/sdk-typescript/blob/6987b01d8ab113b5c0f336e0085579c60a7d0a57/strands-ts/src/types/messages.ts#L70)
 
 Array of content blocks that make up this message.
+
+---
+
+### metadata?
+
+```ts
+readonly optional metadata?: MessageMetadata;
+```
+
+Defined in: [src/types/messages.ts:75](https://github.com/strands-agents/sdk-typescript/blob/6987b01d8ab113b5c0f336e0085579c60a7d0a57/strands-ts/src/types/messages.ts#L75)
+
+Optional metadata, not sent to model providers.
 
 ## Methods
 
@@ -72,7 +85,7 @@ Array of content blocks that make up this message.
 static fromMessageData(data): Message;
 ```
 
-Defined in: [src/types/messages.ts:59](https://github.com/strands-agents/sdk-typescript/blob/5fc30c8099b8e6735d70c6ae2160f7c0dd7b23c7/src/types/messages.ts#L59)
+Defined in: [src/types/messages.ts:88](https://github.com/strands-agents/sdk-typescript/blob/6987b01d8ab113b5c0f336e0085579c60a7d0a57/strands-ts/src/types/messages.ts#L88)
 
 Creates a Message instance from MessageData.
 
@@ -94,7 +107,7 @@ Creates a Message instance from MessageData.
 toJSON(): MessageData;
 ```
 
-Defined in: [src/types/messages.ts:72](https://github.com/strands-agents/sdk-typescript/blob/5fc30c8099b8e6735d70c6ae2160f7c0dd7b23c7/src/types/messages.ts#L72)
+Defined in: [src/types/messages.ts:102](https://github.com/strands-agents/sdk-typescript/blob/6987b01d8ab113b5c0f336e0085579c60a7d0a57/strands-ts/src/types/messages.ts#L102)
 
 Serializes the Message to a JSON-compatible MessageData object. Called automatically by JSON.stringify().
 
@@ -116,7 +129,7 @@ JSONSerializable.toJSON
 static fromJSON(data): Message;
 ```
 
-Defined in: [src/types/messages.ts:86](https://github.com/strands-agents/sdk-typescript/blob/5fc30c8099b8e6735d70c6ae2160f7c0dd7b23c7/src/types/messages.ts#L86)
+Defined in: [src/types/messages.ts:117](https://github.com/strands-agents/sdk-typescript/blob/6987b01d8ab113b5c0f336e0085579c60a7d0a57/strands-ts/src/types/messages.ts#L117)
 
 Creates a Message instance from MessageData. Alias for fromMessageData for API consistency.
 

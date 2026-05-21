@@ -1,4 +1,4 @@
-Defined in: [src/mcp.ts:55](https://github.com/strands-agents/sdk-typescript/blob/5fc30c8099b8e6735d70c6ae2160f7c0dd7b23c7/src/mcp.ts#L55)
+Defined in: [src/mcp.ts:119](https://github.com/strands-agents/sdk-typescript/blob/6987b01d8ab113b5c0f336e0085579c60a7d0a57/strands-ts/src/mcp.ts#L119)
 
 MCP Client for interacting with Model Context Protocol servers.
 
@@ -10,7 +10,7 @@ MCP Client for interacting with Model Context Protocol servers.
 new McpClient(args): McpClient;
 ```
 
-Defined in: [src/mcp.ts:70](https://github.com/strands-agents/sdk-typescript/blob/5fc30c8099b8e6735d70c6ae2160f7c0dd7b23c7/src/mcp.ts#L70)
+Defined in: [src/mcp.ts:141](https://github.com/strands-agents/sdk-typescript/blob/6987b01d8ab113b5c0f336e0085579c60a7d0a57/strands-ts/src/mcp.ts#L141)
 
 #### Parameters
 
@@ -30,7 +30,7 @@ Defined in: [src/mcp.ts:70](https://github.com/strands-agents/sdk-typescript/blo
 readonly static DEFAULT_TTL: 60000 = 60000;
 ```
 
-Defined in: [src/mcp.ts:57](https://github.com/strands-agents/sdk-typescript/blob/5fc30c8099b8e6735d70c6ae2160f7c0dd7b23c7/src/mcp.ts#L57)
+Defined in: [src/mcp.ts:121](https://github.com/strands-agents/sdk-typescript/blob/6987b01d8ab113b5c0f336e0085579c60a7d0a57/strands-ts/src/mcp.ts#L121)
 
 Default TTL for task polling in milliseconds (60 seconds).
 
@@ -42,7 +42,7 @@ Default TTL for task polling in milliseconds (60 seconds).
 readonly static DEFAULT_POLL_TIMEOUT: 300000 = 300000;
 ```
 
-Defined in: [src/mcp.ts:60](https://github.com/strands-agents/sdk-typescript/blob/5fc30c8099b8e6735d70c6ae2160f7c0dd7b23c7/src/mcp.ts#L60)
+Defined in: [src/mcp.ts:124](https://github.com/strands-agents/sdk-typescript/blob/6987b01d8ab113b5c0f336e0085579c60a7d0a57/strands-ts/src/mcp.ts#L124)
 
 Default poll timeout for task completion in milliseconds (5 minutes).
 
@@ -56,11 +56,99 @@ Default poll timeout for task completion in milliseconds (5 minutes).
 get client(): Client;
 ```
 
-Defined in: [src/mcp.ts:84](https://github.com/strands-agents/sdk-typescript/blob/5fc30c8099b8e6735d70c6ae2160f7c0dd7b23c7/src/mcp.ts#L84)
+Defined in: [src/mcp.ts:212](https://github.com/strands-agents/sdk-typescript/blob/6987b01d8ab113b5c0f336e0085579c60a7d0a57/strands-ts/src/mcp.ts#L212)
 
 ##### Returns
 
 `Client`
+
+---
+
+### serverCapabilities
+
+#### Get Signature
+
+```ts
+get serverCapabilities(): any;
+```
+
+Defined in: [src/mcp.ts:216](https://github.com/strands-agents/sdk-typescript/blob/6987b01d8ab113b5c0f336e0085579c60a7d0a57/strands-ts/src/mcp.ts#L216)
+
+##### Returns
+
+`any`
+
+---
+
+### serverVersion
+
+#### Get Signature
+
+```ts
+get serverVersion(): any;
+```
+
+Defined in: [src/mcp.ts:220](https://github.com/strands-agents/sdk-typescript/blob/6987b01d8ab113b5c0f336e0085579c60a7d0a57/strands-ts/src/mcp.ts#L220)
+
+##### Returns
+
+`any`
+
+---
+
+### serverInstructions
+
+#### Get Signature
+
+```ts
+get serverInstructions(): string;
+```
+
+Defined in: [src/mcp.ts:224](https://github.com/strands-agents/sdk-typescript/blob/6987b01d8ab113b5c0f336e0085579c60a7d0a57/strands-ts/src/mcp.ts#L224)
+
+##### Returns
+
+`string`
+
+---
+
+### connectionState
+
+#### Get Signature
+
+```ts
+get connectionState(): McpConnectionState;
+```
+
+Defined in: [src/mcp.ts:228](https://github.com/strands-agents/sdk-typescript/blob/6987b01d8ab113b5c0f336e0085579c60a7d0a57/strands-ts/src/mcp.ts#L228)
+
+##### Returns
+
+[`McpConnectionState`](/docs/api/typescript/McpConnectionState/index.md)
+
+---
+
+### onToolsChanged
+
+#### Set Signature
+
+```ts
+set onToolsChanged(callback): void;
+```
+
+Defined in: [src/mcp.ts:330](https://github.com/strands-agents/sdk-typescript/blob/6987b01d8ab113b5c0f336e0085579c60a7d0a57/strands-ts/src/mcp.ts#L330)
+
+Sets a callback invoked when the MCP server’s tool list changes at runtime.
+
+##### Parameters
+
+| Parameter | Type | Description |
+| --- | --- | --- |
+| `callback` | (`oldTools`, `newTools`) => `void` | Handler receiving the previous tool names and the refreshed tool instances, or undefined to remove the callback. |
+
+##### Returns
+
+`void`
 
 ## Methods
 
@@ -70,17 +158,17 @@ Defined in: [src/mcp.ts:84](https://github.com/strands-agents/sdk-typescript/blo
 connect(reconnect?): Promise<void>;
 ```
 
-Defined in: [src/mcp.ts:95](https://github.com/strands-agents/sdk-typescript/blob/5fc30c8099b8e6735d70c6ae2160f7c0dd7b23c7/src/mcp.ts#L95)
+Defined in: [src/mcp.ts:242](https://github.com/strands-agents/sdk-typescript/blob/6987b01d8ab113b5c0f336e0085579c60a7d0a57/strands-ts/src/mcp.ts#L242)
 
 Connects the MCP client to the server.
 
-This function is exposed to allow consumers to connect manually, but will be called lazily before any operations that require a connection.
+Called lazily before any operation that requires a connection. When `failOpen` is true, connection failures are swallowed and the client enters a `'failed'` state — subsequent calls are no-ops until `connect(true)` is called explicitly to retry.
 
 #### Parameters
 
-| Parameter | Type | Default value |
-| --- | --- | --- |
-| `reconnect` | `boolean` | `false` |
+| Parameter | Type | Default value | Description |
+| --- | --- | --- | --- |
+| `reconnect` | `boolean` | `false` | When true, forces a reconnect even if already connected or failed. |
 
 #### Returns
 
@@ -96,7 +184,7 @@ A promise that resolves when the connection is established.
 disconnect(): Promise<void>;
 ```
 
-Defined in: [src/mcp.ts:115](https://github.com/strands-agents/sdk-typescript/blob/5fc30c8099b8e6735d70c6ae2160f7c0dd7b23c7/src/mcp.ts#L115)
+Defined in: [src/mcp.ts:274](https://github.com/strands-agents/sdk-typescript/blob/6987b01d8ab113b5c0f336e0085579c60a7d0a57/strands-ts/src/mcp.ts#L274)
 
 Disconnects the MCP client from the server and cleans up resources.
 
@@ -108,13 +196,29 @@ A promise that resolves when the disconnection is complete.
 
 ---
 
+### \[asyncDispose\]()
+
+```ts
+asyncDispose: Promise<void>;
+```
+
+Defined in: [src/mcp.ts:285](https://github.com/strands-agents/sdk-typescript/blob/6987b01d8ab113b5c0f336e0085579c60a7d0a57/strands-ts/src/mcp.ts#L285)
+
+Enables the `await using` pattern for automatic resource cleanup. Delegates to [McpClient.disconnect](#disconnect).
+
+#### Returns
+
+`Promise`<`void`\>
+
+---
+
 ### listTools()
 
 ```ts
 listTools(): Promise<McpTool[]>;
 ```
 
-Defined in: [src/mcp.ts:127](https://github.com/strands-agents/sdk-typescript/blob/5fc30c8099b8e6735d70c6ae2160f7c0dd7b23c7/src/mcp.ts#L127)
+Defined in: [src/mcp.ts:294](https://github.com/strands-agents/sdk-typescript/blob/6987b01d8ab113b5c0f336e0085579c60a7d0a57/strands-ts/src/mcp.ts#L294)
 
 Lists the tools available on the server and returns them as executable McpTool instances.
 
@@ -129,10 +233,13 @@ A promise that resolves with an array of McpTool instances.
 ### callTool()
 
 ```ts
-callTool(tool, args): Promise<JSONValue>;
+callTool(
+   tool,
+   args,
+options?): Promise<JSONValue>;
 ```
 
-Defined in: [src/mcp.ts:154](https://github.com/strands-agents/sdk-typescript/blob/5fc30c8099b8e6735d70c6ae2160f7c0dd7b23c7/src/mcp.ts#L154)
+Defined in: [src/mcp.ts:368](https://github.com/strands-agents/sdk-typescript/blob/6987b01d8ab113b5c0f336e0085579c60a7d0a57/strands-ts/src/mcp.ts#L368)
 
 Invoke a tool on the connected MCP server using an McpTool instance.
 
@@ -144,6 +251,7 @@ When `tasksConfig` was provided to the client constructor, uses experimental tas
 | --- | --- | --- |
 | `tool` | `McpTool` | The McpTool instance to invoke. |
 | `args` | [`JSONValue`](/docs/api/typescript/JSONValue/index.md) | The arguments to pass to the tool. |
+| `options?` | [`McpCallToolOptions`](/docs/api/typescript/McpCallToolOptions/index.md) | Optional settings for the request. |
 
 #### Returns
 

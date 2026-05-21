@@ -12,7 +12,7 @@ Provides integration with llama.cpp servers running in OpenAI-compatible mode, w
 class LlamaCppModel(Model)
 ```
 
-Defined in: [src/strands/models/llamacpp.py:41](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/llamacpp.py#L41)
+Defined in: [src/strands/models/llamacpp.py:40](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/llamacpp.py#L40)
 
 llama.cpp model provider implementation.
 
@@ -47,10 +47,10 @@ Multimodal usage (requires multimodal model like Qwen2.5-Omni):
 ## LlamaCppConfig
 
 ```python
-class LlamaCppConfig(TypedDict)
+class LlamaCppConfig(BaseModelConfig)
 ```
 
-Defined in: [src/strands/models/llamacpp.py:89](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/llamacpp.py#L89)
+Defined in: [src/strands/models/llamacpp.py:88](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/llamacpp.py#L88)
 
 Configuration options for llama.cpp models.
 
@@ -94,6 +94,8 @@ Configuration options for llama.cpp models.
     -   cache\_prompt: Cache the prompt for faster generation
     -   slot\_id: Slot ID for parallel inference
     -   samplers: Custom sampler order
+-   `use_native_token_count` - Whether to use the native llama.cpp /tokenize endpoint. When True, count\_tokens() calls the server’s tokenize endpoint for accurate counts. When False (default), skips the API call and uses the local estimator.
+    
 
 #### \_\_init\_\_
 
@@ -103,7 +105,7 @@ def __init__(base_url: str = "http://localhost:8080",
              **model_config: Unpack[LlamaCppConfig]) -> None
 ```
 
-Defined in: [src/strands/models/llamacpp.py:134](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/llamacpp.py#L134)
+Defined in: [src/strands/models/llamacpp.py:137](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/llamacpp.py#L137)
 
 Initialize llama.cpp provider instance.
 
@@ -120,7 +122,7 @@ Initialize llama.cpp provider instance.
 def update_config(**model_config: Unpack[LlamaCppConfig]) -> None
 ```
 
-Defined in: [src/strands/models/llamacpp.py:177](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/llamacpp.py#L177)
+Defined in: [src/strands/models/llamacpp.py:180](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/llamacpp.py#L180)
 
 Update the llama.cpp model configuration with provided arguments.
 
@@ -135,13 +137,41 @@ Update the llama.cpp model configuration with provided arguments.
 def get_config() -> LlamaCppConfig
 ```
 
-Defined in: [src/strands/models/llamacpp.py:187](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/llamacpp.py#L187)
+Defined in: [src/strands/models/llamacpp.py:190](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/llamacpp.py#L190)
 
 Get the llama.cpp model configuration.
 
 **Returns**:
 
 The llama.cpp model configuration.
+
+#### count\_tokens
+
+```python
+@override
+async def count_tokens(
+        messages: Messages,
+        tool_specs: list[ToolSpec] | None = None,
+        system_prompt: str | None = None,
+        system_prompt_content: list[SystemContentBlock] | None = None) -> int
+```
+
+Defined in: [src/strands/models/llamacpp.py:516](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/llamacpp.py#L516)
+
+Count tokens using llama.cpp’s native /tokenize endpoint.
+
+Sends the formatted prompt to the llama.cpp server’s tokenization endpoint to get an accurate token count. Requires a llama.cpp server version that supports chat-template-aware tokenization via the `messages` field in /tokenize requests. Older server versions that only accept `\{"content": "string"}` are not supported and will fall back to estimation.
+
+**Arguments**:
+
+-   `messages` - List of message objects to count tokens for.
+-   `tool_specs` - List of tool specifications to include in the count.
+-   `system_prompt` - Plain string system prompt. Ignored if system\_prompt\_content is provided.
+-   `system_prompt_content` - Structured system prompt content blocks.
+
+**Returns**:
+
+Total input token count.
 
 #### stream
 
@@ -155,7 +185,7 @@ async def stream(messages: Messages,
                  **kwargs: Any) -> AsyncGenerator[StreamEvent, None]
 ```
 
-Defined in: [src/strands/models/llamacpp.py:513](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/llamacpp.py#L513)
+Defined in: [src/strands/models/llamacpp.py:573](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/llamacpp.py#L573)
 
 Stream conversation with the llama.cpp model.
 
@@ -187,7 +217,7 @@ async def structured_output(
         **kwargs: Any) -> AsyncGenerator[dict[str, T | Any], None]
 ```
 
-Defined in: [src/strands/models/llamacpp.py:709](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/llamacpp.py#L709)
+Defined in: [src/strands/models/llamacpp.py:769](https://github.com/strands-agents/sdk-python/blob/main/src/strands/models/llamacpp.py#L769)
 
 Get structured output using llama.cpp’s native JSON schema support.
 

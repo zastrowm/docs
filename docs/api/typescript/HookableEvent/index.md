@@ -1,4 +1,4 @@
-Defined in: [src/hooks/events.ts:69](https://github.com/strands-agents/sdk-typescript/blob/5fc30c8099b8e6735d70c6ae2160f7c0dd7b23c7/src/hooks/events.ts#L69)
+Defined in: [src/hooks/events.ts:89](https://github.com/strands-agents/sdk-typescript/blob/6987b01d8ab113b5c0f336e0085579c60a7d0a57/strands-ts/src/hooks/events.ts#L89)
 
 Base class for events that can be subscribed to via the hook system. Only events extending this class are dispatched to [HookRegistry](/docs/api/typescript/HookRegistry/index.md) callbacks. All current events extend this class. [StreamEvent](/docs/api/typescript/StreamEvent/index.md) exists as the base for potential future stream-only events that should not be hookable.
 
@@ -23,6 +23,7 @@ Base class for events that can be subscribed to via the hook system. Only events
 -   [`ToolResultEvent`](/docs/api/typescript/ToolResultEvent/index.md)
 -   [`ToolStreamUpdateEvent`](/docs/api/typescript/ToolStreamUpdateEvent/index.md)
 -   [`AgentResultEvent`](/docs/api/typescript/AgentResultEvent/index.md)
+-   [`InterruptEvent`](/docs/api/typescript/InterruptEvent/index.md)
 -   [`ModelStreamUpdateEvent`](/docs/api/typescript/ModelStreamUpdateEvent/index.md)
 
 ## Constructors

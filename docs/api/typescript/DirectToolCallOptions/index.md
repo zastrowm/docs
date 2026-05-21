@@ -1,4 +1,4 @@
-Defined in: [src/agent/tool-caller.ts:25](https://github.com/strands-agents/sdk-typescript/blob/6987b01d8ab113b5c0f336e0085579c60a7d0a57/strands-ts/src/agent/tool-caller.ts#L25)
+Defined in: [src/agent/tool-caller.ts:25](https://github.com/strands-agents/sdk-typescript/blob/fda985099c08f29d8604edcb75c8675e8eb998f4/strands-ts/src/agent/tool-caller.ts#L25)
 
 Options for direct tool call execution.
 
@@ -10,6 +10,6 @@ Options for direct tool call execution.
 optional recordDirectToolCall?: boolean;
 ```
 
-Defined in: [src/agent/tool-caller.ts:31](https://github.com/strands-agents/sdk-typescript/blob/6987b01d8ab113b5c0f336e0085579c60a7d0a57/strands-ts/src/agent/tool-caller.ts#L31)
+Defined in: [src/agent/tool-caller.ts:31](https://github.com/strands-agents/sdk-typescript/blob/fda985099c08f29d8604edcb75c8675e8eb998f4/strands-ts/src/agent/tool-caller.ts#L31)
 
 Whether to record this tool call in the agent’s message history. Defaults to `true`. Set to `false` to execute the tool without affecting conversation context.

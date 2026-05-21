@@ -382,9 +382,42 @@ const response = await agent.invoke('What is my name?')
 
 When using a stateful model, the agent automatically uses a null conversation manager and throws an error if a conversation manager is also supplied.
 
+## Advanced Features
+
+### Token Counting
+
+Token counting is used by context management strategies to estimate input tokens before each model call.
+
+(( tab "Python" ))
+The OpenAI Responses provider can use the native `responses.input_tokens.count()` API, which provides exact token counts including messages, instructions, and tool specifications.
+
+You can enable native token counting with:
+
+```python
+model = OpenAIResponsesModel(
+    model_id="gpt-4.1",
+    use_native_token_count=True,
+)
+```
+
+When disabled (or if the API call fails), falls back to estimation with a character-based heuristic (characters ÷ 4 for text, characters ÷ 2 for JSON).
+(( /tab "Python" ))
+
+(( tab "TypeScript" ))
+The OpenAI Responses provider does not currently implement native token counting in the TypeScript SDK. It uses estimation with a character-based heuristic (characters ÷ 4 for text, characters ÷ 2 for JSON).
+(( /tab "TypeScript" ))
+
 ## References
 
 -   [Python API](/docs/api/python/strands.models.openai_responses)
 -   [OpenAI Responses API](https://platform.openai.com/docs/api-reference/responses)
 -   [Amazon Bedrock Mantle](https://docs.aws.amazon.com/bedrock/latest/userguide/bedrock-mantle.html)
 -   [OpenAI Chat Completions](/docs/user-guide/concepts/model-providers/openai/index.md) (alternative provider using the Chat Completions API)
+
+## Related pages
+
+- [Build with AI](/docs/user-guide/build-with-ai/index.md) (1 shared tag)
+- [Model Context Protocol (MCP) Tools](/docs/user-guide/concepts/tools/mcp-tools/index.md) (1 shared tag)
+- [Tools Overview](/docs/user-guide/concepts/tools/index.md) (1 shared tag)
+- [Session Management](/docs/user-guide/concepts/agents/session-management/index.md) (1 shared tag)
+- [State Management](/docs/user-guide/concepts/agents/state/index.md) (1 shared tag)

@@ -1,4 +1,4 @@
-Defined in: [src/retry/backoff-strategy.ts:96](https://github.com/strands-agents/sdk-typescript/blob/6987b01d8ab113b5c0f336e0085579c60a7d0a57/strands-ts/src/retry/backoff-strategy.ts#L96)
+Defined in: [src/retry/backoff-strategy.ts:96](https://github.com/strands-agents/sdk-typescript/blob/fda985099c08f29d8604edcb75c8675e8eb998f4/strands-ts/src/retry/backoff-strategy.ts#L96)
 
 Linear backoff: delay grows as `baseMs * attempt`, capped at `maxMs`, then jittered.
 
@@ -14,7 +14,7 @@ Linear backoff: delay grows as `baseMs * attempt`, capped at `maxMs`, then jitte
 new LinearBackoff(opts?): LinearBackoff;
 ```
 
-Defined in: [src/retry/backoff-strategy.ts:101](https://github.com/strands-agents/sdk-typescript/blob/6987b01d8ab113b5c0f336e0085579c60a7d0a57/strands-ts/src/retry/backoff-strategy.ts#L101)
+Defined in: [src/retry/backoff-strategy.ts:101](https://github.com/strands-agents/sdk-typescript/blob/fda985099c08f29d8604edcb75c8675e8eb998f4/strands-ts/src/retry/backoff-strategy.ts#L101)
 
 #### Parameters
 
@@ -34,7 +34,7 @@ Defined in: [src/retry/backoff-strategy.ts:101](https://github.com/strands-agent
 nextDelay(ctx): number;
 ```
 
-Defined in: [src/retry/backoff-strategy.ts:107](https://github.com/strands-agents/sdk-typescript/blob/6987b01d8ab113b5c0f336e0085579c60a7d0a57/strands-ts/src/retry/backoff-strategy.ts#L107)
+Defined in: [src/retry/backoff-strategy.ts:107](https://github.com/strands-agents/sdk-typescript/blob/fda985099c08f29d8604edcb75c8675e8eb998f4/strands-ts/src/retry/backoff-strategy.ts#L107)
 
 Returns the delay in milliseconds before the next attempt.
 

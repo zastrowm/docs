@@ -86,8 +86,7 @@ The most powerful way to use diagnosis is through the `Experiment` class. Pass a
 
 ```python
 from strands_evals import DiagnosisConfig
-from strands_evals.detectors import ConfidenceLevel
-from strands_evals.types.detector import DiagnosisTrigger
+from strands_evals.detectors import ConfidenceLevel, DiagnosisTrigger
 
 class DiagnosisConfig(BaseModel):
     trigger: DiagnosisTrigger = DiagnosisTrigger.ON_FAILURE
@@ -106,9 +105,8 @@ class DiagnosisConfig(BaseModel):
 ```python
 from strands import Agent
 from strands_evals import Case, Experiment, DiagnosisConfig, eval_task, TracedHandler
-from strands_evals.detectors import ConfidenceLevel
+from strands_evals.detectors import ConfidenceLevel, DiagnosisTrigger
 from strands_evals.evaluators import GoalSuccessRateEvaluator
-from strands_evals.types.detector import DiagnosisTrigger
 
 @eval_task(TracedHandler())
 def my_agent_task():
@@ -211,9 +209,8 @@ This example shows the complete workflow: run evaluations with diagnosis, then a
 ```python
 from strands import Agent
 from strands_evals import Case, Experiment, DiagnosisConfig, eval_task, TracedHandler
-from strands_evals.detectors import ConfidenceLevel
+from strands_evals.detectors import ConfidenceLevel, DiagnosisTrigger
 from strands_evals.evaluators import OutputEvaluator, GoalSuccessRateEvaluator
-from strands_evals.types.detector import DiagnosisTrigger
 from strands_tools import calculator
 
 @eval_task(TracedHandler())
@@ -269,3 +266,16 @@ combined.display(include_recommendations=True)
 -   [Detectors Overview](/docs/user-guide/evals-sdk/detectors/index.md): High-level detectors guide
 -   [Task Decorator](/docs/user-guide/evals-sdk/how-to/eval_task/index.md): Simplify task functions with `@eval_task`
 -   [Remote Trace Providers](/docs/user-guide/evals-sdk/how-to/trace_providers/index.md): Fetch traces from production backends
+
+## Related pages
+
+- [Root Cause Analysis](/docs/user-guide/evals-sdk/detectors/root_cause_analysis/index.md) (3 shared tags)
+- [Detectors](/docs/user-guide/evals-sdk/detectors/index.md) (2 shared tags)
+- [Failure Detection](/docs/user-guide/evals-sdk/detectors/failure_detection/index.md) (2 shared tags)
+- [Operating Agents in Production](/docs/user-guide/deploy/operating-agents-in-production/index.md) (2 shared tags)
+- [Evaluating Remote Traces](/docs/user-guide/evals-sdk/how-to/trace_providers/index.md) (1 shared tag)
+- [Evaluation](/docs/user-guide/observability-evaluation/evaluation/index.md) (1 shared tag)
+- [Metrics](/docs/user-guide/observability-evaluation/metrics/index.md) (1 shared tag)
+- [Observability](/docs/user-guide/observability-evaluation/observability/index.md) (1 shared tag)
+- [Task Decorator](/docs/user-guide/evals-sdk/how-to/eval_task/index.md) (1 shared tag)
+- [Traces](/docs/user-guide/observability-evaluation/traces/index.md) (1 shared tag)

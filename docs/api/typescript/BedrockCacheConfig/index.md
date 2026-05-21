@@ -1,4 +1,4 @@
-Defined in: [src/models/bedrock.ts:150](https://github.com/strands-agents/sdk-typescript/blob/6987b01d8ab113b5c0f336e0085579c60a7d0a57/strands-ts/src/models/bedrock.ts#L150)
+Defined in: [src/models/bedrock.ts:150](https://github.com/strands-agents/sdk-typescript/blob/fda985099c08f29d8604edcb75c8675e8eb998f4/strands-ts/src/models/bedrock.ts#L150)
 
 Bedrock-specific prompt-caching configuration. Narrows the TTL fields onto the common [CacheConfig](/docs/api/typescript/CacheConfig/index.md) for the Bedrock provider.
 
@@ -14,7 +14,7 @@ Bedrock-specific prompt-caching configuration. Narrows the TTL fields onto the c
 optional toolsTTL?: BedrockCacheTTL;
 ```
 
-Defined in: [src/models/bedrock.ts:152](https://github.com/strands-agents/sdk-typescript/blob/6987b01d8ab113b5c0f336e0085579c60a7d0a57/strands-ts/src/models/bedrock.ts#L152)
+Defined in: [src/models/bedrock.ts:152](https://github.com/strands-agents/sdk-typescript/blob/fda985099c08f29d8604edcb75c8675e8eb998f4/strands-ts/src/models/bedrock.ts#L152)
 
 TTL applied to the auto-injected cache point appended after `toolConfig.tools`.
 
@@ -26,7 +26,7 @@ TTL applied to the auto-injected cache point appended after `toolConfig.tools`.
 optional messagesTTL?: BedrockCacheTTL;
 ```
 
-Defined in: [src/models/bedrock.ts:155](https://github.com/strands-agents/sdk-typescript/blob/6987b01d8ab113b5c0f336e0085579c60a7d0a57/strands-ts/src/models/bedrock.ts#L155)
+Defined in: [src/models/bedrock.ts:155](https://github.com/strands-agents/sdk-typescript/blob/fda985099c08f29d8604edcb75c8675e8eb998f4/strands-ts/src/models/bedrock.ts#L155)
 
 TTL applied to the auto-injected cache point appended to the last user message.
 
@@ -38,7 +38,7 @@ TTL applied to the auto-injected cache point appended to the last user message.
 strategy: "auto" | "anthropic";
 ```
 
-Defined in: [src/models/model.ts:76](https://github.com/strands-agents/sdk-typescript/blob/6987b01d8ab113b5c0f336e0085579c60a7d0a57/strands-ts/src/models/model.ts#L76)
+Defined in: [src/models/model.ts:76](https://github.com/strands-agents/sdk-typescript/blob/fda985099c08f29d8604edcb75c8675e8eb998f4/strands-ts/src/models/model.ts#L76)
 
 Caching strategy to use.
 

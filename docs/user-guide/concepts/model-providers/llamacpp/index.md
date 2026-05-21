@@ -205,9 +205,31 @@ image_message = {
 response = agent([image_message])
 ```
 
+### Token Counting
+
+Token counting is used by context management strategies to estimate input tokens before each model call.
+
+The llama.cpp provider can use the server’s native `/tokenize` endpoint for accurate estimation.
+
+You can enable native token counting with:
+
+```python
+model = LlamaCppModel(
+    host="http://localhost:8080",
+    use_native_token_count=True,
+)
+```
+
+When disabled (or if the call fails), falls back to estimation with a character-based heuristic (characters ÷ 4 for text, characters ÷ 2 for JSON).
+
 ## References
 
 -   [Python API](/docs/api/python/strands.models.model)
 -   [llama.cpp](https://github.com/ggml-org/llama.cpp)
 -   [llama.cpp Server Documentation](https://github.com/ggml-org/llama.cpp/tree/master/tools/server)
 -   [GGUF Models on Hugging Face](https://huggingface.co/models?search=gguf)
+
+## Related pages
+
+- [Llama API](/docs/user-guide/concepts/model-providers/llamaapi/index.md) (1 shared tag)
+- [Ollama](/docs/user-guide/concepts/model-providers/ollama/index.md) (1 shared tag)

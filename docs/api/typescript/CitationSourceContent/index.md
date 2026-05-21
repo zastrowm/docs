@@ -4,7 +4,7 @@ type CitationSourceContent = {
 };
 ```
 
-Defined in: [src/types/citations.ts:120](https://github.com/strands-agents/sdk-typescript/blob/6987b01d8ab113b5c0f336e0085579c60a7d0a57/strands-ts/src/types/citations.ts#L120)
+Defined in: [src/types/citations.ts:120](https://github.com/strands-agents/sdk-typescript/blob/fda985099c08f29d8604edcb75c8675e8eb998f4/strands-ts/src/types/citations.ts#L120)
 
 Source content referenced by a citation. Modeled as a union type for future extensibility.
 
@@ -16,4 +16,4 @@ Source content referenced by a citation. Modeled as a union type for future exte
 text: string;
 ```
 
-Defined in: [src/types/citations.ts:120](https://github.com/strands-agents/sdk-typescript/blob/6987b01d8ab113b5c0f336e0085579c60a7d0a57/strands-ts/src/types/citations.ts#L120)
+Defined in: [src/types/citations.ts:120](https://github.com/strands-agents/sdk-typescript/blob/fda985099c08f29d8604edcb75c8675e8eb998f4/strands-ts/src/types/citations.ts#L120)

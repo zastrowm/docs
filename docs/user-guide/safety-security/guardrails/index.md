@@ -18,10 +18,6 @@ Strands Agents SDK allows integration with different model providers, which impl
 
 ### Amazon Bedrock
 
-Not supported in TypeScript
-
-This feature is not supported in TypeScript.
-
 Amazon Bedrock provides a [built-in guardrails framework](https://docs.aws.amazon.com/bedrock/latest/userguide/guardrails.html) that integrates directly with Strands Agents SDK. If a guardrail is triggered, the Strands Agents SDK will automatically overwrite the user’s input in the conversation history. This is done so that follow-up questions are not also blocked by the same questions. This can be configured with the `guardrail_redact_input` boolean, and the `guardrail_redact_input_message` string to change the overwrite message. Additionally, the same functionality is built for the model’s output, but this is disabled by default. You can enable this with the `guardrail_redact_output` boolean, and change the overwrite message with the `guardrail_redact_output_message` string. Below is an example of how to leverage Bedrock guardrails in your code:
 
 ```python
@@ -52,6 +48,8 @@ if response.stop_reason == "guardrail_intervened":
 
 print(f"Conversation: {json.dumps(agent.messages, indent=4)}")
 ```
+
+For the TypeScript equivalent and the full configuration reference, see [Bedrock guardrails](/docs/user-guide/concepts/model-providers/amazon-bedrock/index.md#guardrails).
 
 Alternatively, if you want to implement your own soft-launching guardrails, you can utilize Hooks along with Bedrock’s ApplyGuardrail API in shadow mode. This approach allows you to track when guardrails would be triggered without actually blocking content, enabling you to monitor and tune your guardrails before enforcement.
 
@@ -152,3 +150,16 @@ Ollama doesn’t currently provide native guardrail capabilities like Bedrock. I
 -   [Amazon Bedrock Guardrails Documentation](https://docs.aws.amazon.com/bedrock/latest/userguide/guardrails.html)
 -   [Allen Institute for AI: Guardrails Project](https://www.guardrailsai.com/docs)
 -   [AWS Boto3 Python Documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/bedrock-runtime/client/apply_guardrail.html#)
+
+## Related pages
+
+- [Amazon Bedrock](/docs/user-guide/concepts/model-providers/amazon-bedrock/index.md) (3 shared tags)
+- [Amazon Nova](/docs/user-guide/concepts/model-providers/amazon-nova/index.md) (2 shared tags)
+- [Nova Sonic](/docs/user-guide/concepts/bidirectional-streaming/models/nova_sonic/index.md) (2 shared tags)
+- [Deploying Strands Agents to Amazon Bedrock AgentCore Runtime](/docs/user-guide/deploy/deploy_to_bedrock_agentcore/index.md) (2 shared tags)
+- [Python Deployment to Amazon Bedrock AgentCore Runtime](/docs/user-guide/deploy/deploy_to_bedrock_agentcore/python/index.md) (2 shared tags)
+- [TypeScript Deployment to Amazon Bedrock AgentCore Runtime](/docs/user-guide/deploy/deploy_to_bedrock_agentcore/typescript/index.md) (2 shared tags)
+- [AgentCore Evaluation Dashboard Configuration](/docs/user-guide/evals-sdk/how-to/agentcore_evaluation_dashboard/index.md) (2 shared tags)
+- [PII Redaction](/docs/user-guide/safety-security/pii-redaction/index.md) (2 shared tags)
+- [Harmfulness Evaluator](/docs/user-guide/evals-sdk/evaluators/harmfulness_evaluator/index.md) (1 shared tag)
+- [Refusal Evaluator](/docs/user-guide/evals-sdk/evaluators/refusal_evaluator/index.md) (1 shared tag)

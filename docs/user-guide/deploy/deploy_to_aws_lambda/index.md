@@ -74,7 +74,7 @@ arn:aws:lambda:{region}:856699698935:layer:strands-agents-py{python_version}-{ar
 **Example:**
 
 ```plaintext
-arn:aws:lambda:us-east-1:856699698935:layer:strands-agents-py3_12-x86_64:1
+arn:aws:lambda:us-east-1:856699698935:layer:strands-agents-py3_12-x86_64:2
 ```
 
 | Component | Options |
@@ -87,6 +87,7 @@ arn:aws:lambda:us-east-1:856699698935:layer:strands-agents-py3_12-x86_64:1
 
 | Layer Version | SDK Version |
 | --- | --- |
+| 2 | strands-agents v1.40.0 |
 | 1 | strands-agents v1.23.0 |
 
 To check the details of a layer version yourself:
@@ -291,3 +292,16 @@ For the complete example code, including all files and configurations, see the [
 -   [AWS Lambda Documentation](https://docs.aws.amazon.com/lambda/latest/dg/welcome.html)
 -   [AWS CDK Documentation](https://docs.aws.amazon.com/cdk/latest/guide/home.html)
 -   [Amazon Bedrock Documentation](https://docs.aws.amazon.com/bedrock/)
+
+## Related pages
+
+- [Deploying Strands Agents SDK Agents to Amazon EC2](/docs/user-guide/deploy/deploy_to_amazon_ec2/index.md) (2 shared tags)
+- [Deploying Strands Agents SDK Agents to Amazon EKS](/docs/user-guide/deploy/deploy_to_amazon_eks/index.md) (2 shared tags)
+- [Deploying Strands Agents SDK Agents to AWS App Runner](/docs/user-guide/deploy/deploy_to_aws_apprunner/index.md) (2 shared tags)
+- [Deploying Strands Agents SDK Agents to AWS Fargate](/docs/user-guide/deploy/deploy_to_aws_fargate/index.md) (2 shared tags)
+- [Deploy to Kubernetes](/docs/user-guide/deploy/deploy_to_kubernetes/index.md) (1 shared tag)
+- [Deploy to Terraform](/docs/user-guide/deploy/deploy_to_terraform/index.md) (1 shared tag)
+- [Deploying Strands Agents to Docker](/docs/user-guide/deploy/deploy_to_docker/index.md) (1 shared tag)
+- [Python Deployment to Docker](/docs/user-guide/deploy/deploy_to_docker/python/index.md) (1 shared tag)
+- [TypeScript Deployment to Docker](/docs/user-guide/deploy/deploy_to_docker/typescript/index.md) (1 shared tag)
+- [Deploying Strands Agents to Amazon Bedrock AgentCore Runtime](/docs/user-guide/deploy/deploy_to_bedrock_agentcore/index.md) (2 shared tags)

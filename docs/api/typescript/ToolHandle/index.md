@@ -1,4 +1,4 @@
-Defined in: [src/agent/tool-caller.ts:40](https://github.com/strands-agents/sdk-typescript/blob/6987b01d8ab113b5c0f336e0085579c60a7d0a57/strands-ts/src/agent/tool-caller.ts#L40)
+Defined in: [src/agent/tool-caller.ts:40](https://github.com/strands-agents/sdk-typescript/blob/fda985099c08f29d8604edcb75c8675e8eb998f4/strands-ts/src/agent/tool-caller.ts#L40)
 
 A handle to a specific tool, providing `.invoke()` and `.stream()` methods.
 
@@ -12,7 +12,7 @@ Returned by the Proxy get trap when accessing `agent.tool.toolName`. This aligns
 invoke: (input?, options?) => Promise<ToolResultBlock>;
 ```
 
-Defined in: [src/agent/tool-caller.ts:48](https://github.com/strands-agents/sdk-typescript/blob/6987b01d8ab113b5c0f336e0085579c60a7d0a57/strands-ts/src/agent/tool-caller.ts#L48)
+Defined in: [src/agent/tool-caller.ts:48](https://github.com/strands-agents/sdk-typescript/blob/fda985099c08f29d8604edcb75c8675e8eb998f4/strands-ts/src/agent/tool-caller.ts#L48)
 
 Invoke the tool and return the final result.
 
@@ -37,7 +37,7 @@ The tool result
 stream: (input?, options?) => AsyncGenerator<ToolStreamEvent, ToolResultBlock, undefined>;
 ```
 
-Defined in: [src/agent/tool-caller.ts:57](https://github.com/strands-agents/sdk-typescript/blob/6987b01d8ab113b5c0f336e0085579c60a7d0a57/strands-ts/src/agent/tool-caller.ts#L57)
+Defined in: [src/agent/tool-caller.ts:57](https://github.com/strands-agents/sdk-typescript/blob/fda985099c08f29d8604edcb75c8675e8eb998f4/strands-ts/src/agent/tool-caller.ts#L57)
 
 Stream the tool execution, yielding intermediate events and returning the final result.
 

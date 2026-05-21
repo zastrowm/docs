@@ -1,4 +1,4 @@
-Defined in: [src/models/streaming.ts:525](https://github.com/strands-agents/sdk-typescript/blob/6987b01d8ab113b5c0f336e0085579c60a7d0a57/strands-ts/src/models/streaming.ts#L525)
+Defined in: [src/models/streaming.ts:525](https://github.com/strands-agents/sdk-typescript/blob/fda985099c08f29d8604edcb75c8675e8eb998f4/strands-ts/src/models/streaming.ts#L525)
 
 Performance metrics for a model invocation.
 
@@ -10,7 +10,7 @@ Performance metrics for a model invocation.
 latencyMs: number;
 ```
 
-Defined in: [src/models/streaming.ts:529](https://github.com/strands-agents/sdk-typescript/blob/6987b01d8ab113b5c0f336e0085579c60a7d0a57/strands-ts/src/models/streaming.ts#L529)
+Defined in: [src/models/streaming.ts:529](https://github.com/strands-agents/sdk-typescript/blob/fda985099c08f29d8604edcb75c8675e8eb998f4/strands-ts/src/models/streaming.ts#L529)
 
 Latency in milliseconds.
 
@@ -22,6 +22,6 @@ Latency in milliseconds.
 optional timeToFirstByteMs?: number;
 ```
 
-Defined in: [src/models/streaming.ts:535](https://github.com/strands-agents/sdk-typescript/blob/6987b01d8ab113b5c0f336e0085579c60a7d0a57/strands-ts/src/models/streaming.ts#L535)
+Defined in: [src/models/streaming.ts:535](https://github.com/strands-agents/sdk-typescript/blob/fda985099c08f29d8604edcb75c8675e8eb998f4/strands-ts/src/models/streaming.ts#L535)
 
 Time to first byte in milliseconds. Latency from sending the model request to receiving the first content chunk.

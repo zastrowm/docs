@@ -1,4 +1,4 @@
-Defined in: [src/hooks/events.ts:708](https://github.com/strands-agents/sdk-typescript/blob/6987b01d8ab113b5c0f336e0085579c60a7d0a57/strands-ts/src/hooks/events.ts#L708)
+Defined in: [src/hooks/events.ts:708](https://github.com/strands-agents/sdk-typescript/blob/fda985099c08f29d8604edcb75c8675e8eb998f4/strands-ts/src/hooks/events.ts#L708)
 
 Event emitted when an interrupt is raised during agent execution. The `interrupt.source` field discriminates between tool-callback and hook-callback origins. One event fires per unanswered interrupt at the moment the agent stops to wait for responses.
 
@@ -14,7 +14,7 @@ Event emitted when an interrupt is raised during agent execution. The `interrupt
 new InterruptEvent(data): InterruptEvent;
 ```
 
-Defined in: [src/hooks/events.ts:714](https://github.com/strands-agents/sdk-typescript/blob/6987b01d8ab113b5c0f336e0085579c60a7d0a57/strands-ts/src/hooks/events.ts#L714)
+Defined in: [src/hooks/events.ts:714](https://github.com/strands-agents/sdk-typescript/blob/fda985099c08f29d8604edcb75c8675e8eb998f4/strands-ts/src/hooks/events.ts#L714)
 
 #### Parameters
 
@@ -41,7 +41,7 @@ Defined in: [src/hooks/events.ts:714](https://github.com/strands-agents/sdk-type
 readonly type: "interruptEvent";
 ```
 
-Defined in: [src/hooks/events.ts:709](https://github.com/strands-agents/sdk-typescript/blob/6987b01d8ab113b5c0f336e0085579c60a7d0a57/strands-ts/src/hooks/events.ts#L709)
+Defined in: [src/hooks/events.ts:709](https://github.com/strands-agents/sdk-typescript/blob/fda985099c08f29d8604edcb75c8675e8eb998f4/strands-ts/src/hooks/events.ts#L709)
 
 ---
 
@@ -51,7 +51,7 @@ Defined in: [src/hooks/events.ts:709](https://github.com/strands-agents/sdk-type
 readonly agent: LocalAgent;
 ```
 
-Defined in: [src/hooks/events.ts:710](https://github.com/strands-agents/sdk-typescript/blob/6987b01d8ab113b5c0f336e0085579c60a7d0a57/strands-ts/src/hooks/events.ts#L710)
+Defined in: [src/hooks/events.ts:710](https://github.com/strands-agents/sdk-typescript/blob/fda985099c08f29d8604edcb75c8675e8eb998f4/strands-ts/src/hooks/events.ts#L710)
 
 ---
 
@@ -61,7 +61,7 @@ Defined in: [src/hooks/events.ts:710](https://github.com/strands-agents/sdk-type
 readonly interrupt: Interrupt;
 ```
 
-Defined in: [src/hooks/events.ts:711](https://github.com/strands-agents/sdk-typescript/blob/6987b01d8ab113b5c0f336e0085579c60a7d0a57/strands-ts/src/hooks/events.ts#L711)
+Defined in: [src/hooks/events.ts:711](https://github.com/strands-agents/sdk-typescript/blob/fda985099c08f29d8604edcb75c8675e8eb998f4/strands-ts/src/hooks/events.ts#L711)
 
 ---
 
@@ -71,7 +71,7 @@ Defined in: [src/hooks/events.ts:711](https://github.com/strands-agents/sdk-type
 readonly invocationState: InvocationState;
 ```
 
-Defined in: [src/hooks/events.ts:712](https://github.com/strands-agents/sdk-typescript/blob/6987b01d8ab113b5c0f336e0085579c60a7d0a57/strands-ts/src/hooks/events.ts#L712)
+Defined in: [src/hooks/events.ts:712](https://github.com/strands-agents/sdk-typescript/blob/fda985099c08f29d8604edcb75c8675e8eb998f4/strands-ts/src/hooks/events.ts#L712)
 
 ## Methods
 
@@ -89,7 +89,7 @@ toJSON(): Pick<InterruptEvent, "type"> & {
 };
 ```
 
-Defined in: [src/hooks/events.ts:722](https://github.com/strands-agents/sdk-typescript/blob/6987b01d8ab113b5c0f336e0085579c60a7d0a57/strands-ts/src/hooks/events.ts#L722)
+Defined in: [src/hooks/events.ts:722](https://github.com/strands-agents/sdk-typescript/blob/fda985099c08f29d8604edcb75c8675e8eb998f4/strands-ts/src/hooks/events.ts#L722)
 
 Serializes for wire transport, excluding agent and invocationState.
 

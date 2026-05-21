@@ -1,4 +1,4 @@
-Defined in: [src/session/types.ts:20](https://github.com/strands-agents/sdk-typescript/blob/6987b01d8ab113b5c0f336e0085579c60a7d0a57/strands-ts/src/session/types.ts#L20)
+Defined in: [src/session/types.ts:20](https://github.com/strands-agents/sdk-typescript/blob/fda985099c08f29d8604edcb75c8675e8eb998f4/strands-ts/src/session/types.ts#L20)
 
 Parameters passed to SnapshotTriggerCallback to determine when to create snapshots.
 
@@ -10,6 +10,6 @@ Parameters passed to SnapshotTriggerCallback to determine when to create snapsho
 agentData: LocalAgent;
 ```
 
-Defined in: [src/session/types.ts:22](https://github.com/strands-agents/sdk-typescript/blob/6987b01d8ab113b5c0f336e0085579c60a7d0a57/strands-ts/src/session/types.ts#L22)
+Defined in: [src/session/types.ts:22](https://github.com/strands-agents/sdk-typescript/blob/fda985099c08f29d8604edcb75c8675e8eb998f4/strands-ts/src/session/types.ts#L22)
 
 Current agent data including messages and state

@@ -200,9 +200,7 @@ const model = new GoogleModel({
 })
 
 const agent = new Agent({ model })
-const response = await agent.invoke(
-  'What are the latest AI news today?'
-)
+const response = await agent.invoke('What are the latest AI news today?')
 console.log(response)
 ```
 (( /tab "TypeScript" ))
@@ -260,9 +258,11 @@ try {
 
 ### Structured Output
 
-Gemini models support structured output through their native JSON schema capabilities. When you use [`Agent.structured_output()`](/docs/api/python/strands.agent.agent#Agent.structured_output), the Strands SDK automatically converts your Pydantic models to Gemini’s JSON schema format.
+Gemini models support structured output through their native JSON schema capabilities. Pass a schema to the agent, and Strands converts it to Gemini’s JSON schema format and validates the response.
 
 (( tab "Python" ))
+Define a Pydantic model and pass it to [`agent.structured_output()`](/docs/api/python/strands.agent.agent#Agent.structured_output):
+
 ```python
 from pydantic import BaseModel, Field
 from strands import Agent
@@ -305,10 +305,43 @@ print(f"Sentiment: {result.sentiment}")
 (( /tab "Python" ))
 
 (( tab "TypeScript" ))
-```ts
-// Structured output is not yet supported for Gemini in the TypeScript SDK
+Define a Zod schema and pass it as `structuredOutputSchema`. Validated output is on `result.structuredOutput`:
+
+```typescript
+import { Agent } from '@strands-agents/sdk'
+import { GoogleModel } from '@strands-agents/sdk/models/google'
+import { z } from 'zod'
+
+const MovieReview = z.object({
+  title: z.string().describe('Movie title'),
+  rating: z.number().min(1).max(10).describe('Rating from 1-10'),
+  genre: z.string().describe('Primary genre'),
+  sentiment: z.enum(['positive', 'negative', 'neutral']).describe('Overall sentiment'),
+  summary: z.string().describe('Brief summary of the review'),
+})
+
+const model = new GoogleModel({
+  apiKey: '<KEY>',
+  modelId: 'gemini-2.5-flash',
+})
+
+const agent = new Agent({ model, structuredOutputSchema: MovieReview })
+
+const result = await agent.invoke(
+  `Just watched "The Matrix" - what an incredible sci-fi masterpiece!
+   The groundbreaking visual effects and philosophical themes make this
+   a must-watch. Keanu Reeves delivers a solid performance. 9/10!`
+)
+
+const review = result.structuredOutput as z.infer<typeof MovieReview>
+console.log(`Movie: ${review.title}`)
+console.log(`Rating: ${review.rating}/10`)
+console.log(`Genre: ${review.genre}`)
+console.log(`Sentiment: ${review.sentiment}`)
 ```
 (( /tab "TypeScript" ))
+
+For schema patterns, error handling, and per-invocation overrides, see [Structured Output](/docs/user-guide/concepts/agents/structured-output/index.md).
 
 ### Custom client
 
@@ -493,6 +526,38 @@ const result = await agent.invoke([
 -   **Documents**: PDF and other binary formats (automatically detected via MIME type)
 -   **Video**: MP4 and other video formats (automatically detected via MIME type)
 
+### Token Counting
+
+Token counting is used by context management strategies to estimate input tokens before each model call.
+
+(( tab "Python" ))
+The Google provider can use the native `models.count_tokens()` API for message content. However, the Gemini API does not support counting system instructions or tool specifications natively. These are estimated separately using a character-based heuristic (characters ÷ 4 for text, characters ÷ 2 for JSON).
+
+You can enable native token counting with:
+
+```python
+model = GoogleModel(
+    model_id="gemini-2.5-flash",
+    use_native_token_count=True,
+)
+```
+(( /tab "Python" ))
+
+(( tab "TypeScript" ))
+The Google provider can use the native `models.countTokens()` API for message content. However, the Gemini API does not support counting system instructions or tool specifications natively. These are estimated separately using a character-based heuristic (characters ÷ 4 for text, characters ÷ 2 for JSON).
+
+You can enable native token counting with:
+
+```typescript
+const model = new GoogleModel({
+  modelId: 'gemini-2.5-flash',
+  useNativeTokenCount: true,
+})
+```
+
+When disabled (or if the API call fails), falls back to estimation using the character-based heuristic.
+(( /tab "TypeScript" ))
+
 ## References
 
 -   [Python API](/docs/api/python/strands.models.model)
@@ -500,3 +565,16 @@ const result = await agent.invoke([
 -   [Google GenAI SDK documentation](https://googleapis.github.io/python-genai/)
 -   [Google AI Studio](https://aistudio.google.com/)
 -   [@google/genai TypeScript SDK](https://github.com/googleapis/js-genai)
+
+## Related pages
+
+- [Vercel](/docs/user-guide/concepts/model-providers/vercel/index.md) (1 shared tag)
+- [Multimodal Correctness Evaluator](/docs/user-guide/evals-sdk/evaluators/multimodal_correctness_evaluator/index.md) (1 shared tag)
+- [Multimodal Faithfulness Evaluator](/docs/user-guide/evals-sdk/evaluators/multimodal_faithfulness_evaluator/index.md) (1 shared tag)
+- [Multimodal Instruction Following Evaluator](/docs/user-guide/evals-sdk/evaluators/multimodal_instruction_following_evaluator/index.md) (1 shared tag)
+- [Multimodal Output Evaluator](/docs/user-guide/evals-sdk/evaluators/multimodal_output_evaluator/index.md) (1 shared tag)
+- [Multimodal Overall Quality Evaluator](/docs/user-guide/evals-sdk/evaluators/multimodal_overall_quality_evaluator/index.md) (1 shared tag)
+- [OpenAI](/docs/user-guide/concepts/model-providers/openai/index.md) (1 shared tag)
+- [Writer](/docs/user-guide/concepts/model-providers/writer/index.md) (1 shared tag)
+- [Amazon Nova](/docs/user-guide/concepts/model-providers/amazon-nova/index.md) (1 shared tag)
+- [Amazon Bedrock](/docs/user-guide/concepts/model-providers/amazon-bedrock/index.md) (1 shared tag)

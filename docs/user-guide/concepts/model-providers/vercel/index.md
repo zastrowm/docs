@@ -165,6 +165,43 @@ for await (const event of agent.stream('Tell me a story')) {
 }
 ```
 
+## Structured Output
+
+The adapter supports structured output through the underlying provider’s native capabilities. Define a Zod schema, pass it as `structuredOutputSchema`, and read validated output from `result.structuredOutput`:
+
+```typescript
+import { Agent } from '@strands-agents/sdk'
+import { VercelModel } from '@strands-agents/sdk/models/vercel'
+import { openai } from '@ai-sdk/openai'
+import { z } from 'zod'
+
+const MovieReview = z.object({
+  title: z.string().describe('Movie title'),
+  rating: z.number().min(1).max(10).describe('Rating from 1-10'),
+  genre: z.string().describe('Primary genre'),
+  sentiment: z.enum(['positive', 'negative', 'neutral']).describe('Overall sentiment'),
+  summary: z.string().describe('Brief summary of the review'),
+})
+
+const agent = new Agent({
+  model: new VercelModel({ provider: openai('gpt-4o') }),
+  structuredOutputSchema: MovieReview,
+})
+
+const result = await agent.invoke(
+  `Just watched "The Matrix" - what an incredible sci-fi masterpiece!
+   The groundbreaking visual effects and philosophical themes make this
+   a must-watch. Keanu Reeves delivers a solid performance. 9/10!`
+)
+
+const review = result.structuredOutput as z.infer<typeof MovieReview>
+console.log(`Movie: ${review.title}`)
+console.log(`Rating: ${review.rating}/10`)
+console.log(`Sentiment: ${review.sentiment}`)
+```
+
+For schema patterns, error handling, and per-invocation overrides, see [Structured Output](/docs/user-guide/concepts/agents/structured-output/index.md).
+
 ## Supported features
 
 The `VercelModel` adapter handles:
@@ -220,3 +257,16 @@ Authentication is handled by the underlying Vercel provider package. Refer to th
 -   [Vercel AI SDK](https://sdk.vercel.ai/)
 -   [Language Model Specification v3](https://github.com/vercel/ai/tree/main/packages/provider/src/language-model/v3)
 -   [Vercel AI SDK Providers](https://sdk.vercel.ai/docs/foundations/providers-and-models)
+
+## Related pages
+
+- [Google](/docs/user-guide/concepts/model-providers/google/index.md) (1 shared tag)
+- [Multimodal Correctness Evaluator](/docs/user-guide/evals-sdk/evaluators/multimodal_correctness_evaluator/index.md) (1 shared tag)
+- [Multimodal Faithfulness Evaluator](/docs/user-guide/evals-sdk/evaluators/multimodal_faithfulness_evaluator/index.md) (1 shared tag)
+- [Multimodal Instruction Following Evaluator](/docs/user-guide/evals-sdk/evaluators/multimodal_instruction_following_evaluator/index.md) (1 shared tag)
+- [Multimodal Output Evaluator](/docs/user-guide/evals-sdk/evaluators/multimodal_output_evaluator/index.md) (1 shared tag)
+- [Multimodal Overall Quality Evaluator](/docs/user-guide/evals-sdk/evaluators/multimodal_overall_quality_evaluator/index.md) (1 shared tag)
+- [OpenAI](/docs/user-guide/concepts/model-providers/openai/index.md) (1 shared tag)
+- [Writer](/docs/user-guide/concepts/model-providers/writer/index.md) (1 shared tag)
+- [Amazon Nova](/docs/user-guide/concepts/model-providers/amazon-nova/index.md) (1 shared tag)
+- [Amazon Bedrock](/docs/user-guide/concepts/model-providers/amazon-bedrock/index.md) (1 shared tag)

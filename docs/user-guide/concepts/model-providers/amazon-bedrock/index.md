@@ -349,6 +349,23 @@ const response = await agent.invoke('Write a short story about an AI assistant.'
 ```
 (( /tab "TypeScript" ))
 
+#### TypeScript Request Timeout
+
+The TypeScript SDK applies a default `requestTimeout` of 120000 ms (120 seconds) when constructing the Bedrock Runtime client, since the underlying AWS SDK defaults to `0` (disabled), which lets a stuck connection hang. Override it by passing your own value through `clientConfig.requestHandler`:
+
+```typescript
+import { BedrockModel } from '@strands-agents/sdk/models/bedrock'
+
+const bedrockModel = new BedrockModel({
+  modelId: 'us.anthropic.claude-sonnet-4-6',
+  clientConfig: {
+    requestHandler: { requestTimeout: 60_000 },
+  },
+})
+```
+
+Passing a fully-constructed handler instance (rather than an options bag) bypasses the default; the handler’s own timeouts apply unchanged.
+
 ## Advanced Features
 
 ### Streaming vs Non-Streaming Mode
@@ -1106,8 +1123,10 @@ const response = await agent.invoke(
 
 ### Structured Output
 
+Amazon Bedrock models support structured output through their tool calling capabilities. Pass a schema to the agent, and Strands converts it to Bedrock’s tool specification format and validates the response.
+
 (( tab "Python" ))
-Amazon Bedrock models support structured output through their tool calling capabilities. When you use `Agent.structured_output()`, the Strands SDK converts your schema to Bedrock’s tool specification format.
+Define a Pydantic model and pass it to `agent.structured_output()`:
 
 ```python
 from pydantic import BaseModel, Field
@@ -1145,8 +1164,75 @@ print(f"Rating: {result.rating}")
 (( /tab "Python" ))
 
 (( tab "TypeScript" ))
-```ts
-// Structured output is not yet supported in the TypeScript SDK
+Define a Zod schema and pass it as `structuredOutputSchema`. Validated output is on `result.structuredOutput`:
+
+```typescript
+import { Agent } from '@strands-agents/sdk'
+import { BedrockModel } from '@strands-agents/sdk/models/bedrock'
+import { z } from 'zod'
+
+const ProductAnalysis = z.object({
+  name: z.string().describe('Product name'),
+  category: z.string().describe('Product category'),
+  price: z.number().describe('Price in USD'),
+  features: z.array(z.string()).describe('Key product features'),
+  rating: z.number().min(1).max(5).optional().describe('Customer rating 1-5'),
+})
+
+const bedrockModel = new BedrockModel()
+const agent = new Agent({
+  model: bedrockModel,
+  structuredOutputSchema: ProductAnalysis,
+})
+
+const result = await agent.invoke(
+  `Analyze this product: The UltraBook Pro is a premium laptop computer
+   priced at $1,299. It features a 15-inch 4K display, 16GB RAM, 512GB SSD,
+   and 12-hour battery life. Customer reviews average 4.5 stars.`
+)
+
+const product = result.structuredOutput as z.infer<typeof ProductAnalysis>
+console.log(`Product: ${product.name}`)
+console.log(`Category: ${product.category}`)
+console.log(`Price: $${product.price}`)
+console.log(`Features: ${product.features.join(', ')}`)
+console.log(`Rating: ${product.rating}`)
+```
+(( /tab "TypeScript" ))
+
+For schema patterns, error handling, and per-invocation overrides, see [Structured Output](/docs/user-guide/concepts/agents/structured-output/index.md).
+
+### Token Counting
+
+Token counting is used by context management strategies to estimate input tokens before each model call.
+
+(( tab "Python" ))
+The Bedrock provider can use the native `count_tokens` API via the `CountTokens` action in the Converse API. This includes system prompts, messages, and tool specifications in the count.
+
+Not all Bedrock models support the `CountTokens` API. When a model doesn’t support it or the caller doesn’t have the required IAM permissions, the provider caches this result and falls back to estimation with a character-based heuristic (characters ÷ 4 for text, characters ÷ 2 for JSON) for subsequent calls.
+
+You can enable native token counting with:
+
+```python
+model = BedrockModel(
+    model_id="anthropic.claude-sonnet-4-20250514-v1:0",
+    use_native_token_count=True,
+)
+```
+(( /tab "Python" ))
+
+(( tab "TypeScript" ))
+The Bedrock provider can use the native `CountTokensCommand` API. This includes system prompts, messages, and tool specifications in the count.
+
+Not all Bedrock models support the `CountTokens` API. When a model doesn’t support it or the caller doesn’t have the required IAM permissions, the provider caches this result and falls back to estimation with a character-based heuristic (characters ÷ 4 for text, characters ÷ 2 for JSON) for subsequent calls.
+
+You can enable native token counting with:
+
+```typescript
+const model = new BedrockModel({
+  modelId: ‘anthropic.claude-sonnet-4-20250514-v1:0’,
+  useNativeTokenCount: true,
+})
 ```
 (( /tab "TypeScript" ))
 
@@ -1203,3 +1289,16 @@ Strands uses a default Claude 4 Sonnet inference model from the region of your c
 -   [Amazon Bedrock Documentation](https://docs.aws.amazon.com/bedrock/)
 -   [Bedrock Model IDs Reference](https://docs.aws.amazon.com/bedrock/latest/userguide/model-ids.html)
 -   [Bedrock Pricing](https://aws.amazon.com/bedrock/pricing/)
+
+## Related pages
+
+- [Guardrails](/docs/user-guide/safety-security/guardrails/index.md) (3 shared tags)
+- [Amazon Nova](/docs/user-guide/concepts/model-providers/amazon-nova/index.md) (3 shared tags)
+- [Nova Sonic](/docs/user-guide/concepts/bidirectional-streaming/models/nova_sonic/index.md) (2 shared tags)
+- [Deploying Strands Agents to Amazon Bedrock AgentCore Runtime](/docs/user-guide/deploy/deploy_to_bedrock_agentcore/index.md) (2 shared tags)
+- [Python Deployment to Amazon Bedrock AgentCore Runtime](/docs/user-guide/deploy/deploy_to_bedrock_agentcore/python/index.md) (2 shared tags)
+- [TypeScript Deployment to Amazon Bedrock AgentCore Runtime](/docs/user-guide/deploy/deploy_to_bedrock_agentcore/typescript/index.md) (2 shared tags)
+- [AgentCore Evaluation Dashboard Configuration](/docs/user-guide/evals-sdk/how-to/agentcore_evaluation_dashboard/index.md) (2 shared tags)
+- [PII Redaction](/docs/user-guide/safety-security/pii-redaction/index.md) (2 shared tags)
+- [Result Caching](/docs/user-guide/evals-sdk/how-to/result_caching/index.md) (1 shared tag)
+- [Harmfulness Evaluator](/docs/user-guide/evals-sdk/evaluators/harmfulness_evaluator/index.md) (1 shared tag)
